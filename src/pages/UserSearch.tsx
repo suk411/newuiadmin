@@ -165,60 +165,67 @@ export default function UserSearch() {
       {user && (<>
         <div className="stat-cards" style={{ marginTop: 'var(--space-3)' }}>
           <div className="stat-card">
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%' }}>
               <span className="stat-card__label">User ID</span>
               <div style={{ display: 'flex', gap: 6, alignItems: 'center' }}>
                 <span className={`badge ${statusBadge(user.account.status)}`}>{user.account.status}</span>
                 <button className="btn-filled" style={{ fontSize: 10, padding: '2px 8px' }} onClick={() => { setNewStatus(user.account.status); setShowStatusDialog(true) }}>Change Status</button>
               </div>
             </div>
-            <div className="stat-card__value text-blue" style={{ fontSize: 16 }}>{user.user.userId}</div>
-            {user.account.statusRemark && <div className="stat-card__change">Reason: {user.account.statusRemark}</div>}
-            <hr style={{ margin: '8px 0', border: 'none', borderTop: '1px solid var(--color-border, rgb(188,198,222))' }} />
-            <div className="stat-card__label">Mobile</div>
-            <div className="stat-card__value" style={{ fontSize: 14 }}>{user.user.mobile}</div>
-            <div className="stat-card__change">{user.account.vipLevel}</div>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8, width: '100%', marginTop: 4 }}>
+              <div><div className="stat-card__value text-blue" style={{ fontSize: 16 }}>{user.user.userId}</div></div>
+              <div style={{ textAlign: 'right' }}><span className="stat-card__change">{user.account.vipLevel}</span></div>
+              <div><div className="stat-card__label">Mobile</div><div className="stat-card__value" style={{ fontSize: 14 }}>{user.user.mobile}</div></div>
+              <div style={{ textAlign: 'right' }}>{user.account.statusRemark && <div className="stat-card__change">Reason: {user.account.statusRemark}</div>}</div>
+            </div>
           </div>
           <div className="stat-card">
-            <div className="stat-card__label">Balance</div>
-            <div className="stat-card__value text-green">₹{user.account.balance.toLocaleString('en-IN')}</div>
-            <div className="stat-card__change up">Withdrawable: ₹{user.account.withdrawable.toLocaleString('en-IN')}</div>
-            <hr style={{ margin: '8px 0', border: 'none', borderTop: '1px solid var(--color-border, rgb(188,198,222))' }} />
-            <div className="stat-card__label">Total Deposits</div>
-            <div className="stat-card__value text-orange" style={{ fontSize: 16 }}>₹{user.account.totalDeposits.toLocaleString('en-IN')}</div>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 12, width: '100%' }}>
+              <div><div className="stat-card__label">Balance</div><div className="stat-card__value text-green">₹{user.account.balance.toLocaleString('en-IN')}</div></div>
+              <div><div className="stat-card__label">Withdrawable</div><div className="stat-card__value" style={{ fontSize: 16, color: '#409eff' }}>₹{user.account.withdrawable.toLocaleString('en-IN')}</div></div>
+              <div><div className="stat-card__label">Total Deposits</div><div className="stat-card__value text-orange" style={{ fontSize: 16 }}>₹{user.account.totalDeposits.toLocaleString('en-IN')}</div></div>
+            </div>
           </div>
           <div className="stat-card">
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%' }}>
               <span className="stat-card__label">Payment Methods</span>
               <button className="btn-filled" style={{ fontSize: 10, padding: '2px 8px' }} onClick={handleLoadPaymentMethods}>View</button>
             </div>
-<div style={{ fontSize: 12, lineHeight: 1.6 }}><strong>Holder Name:</strong> {user.paymentMethods?.holderName || '-'}</div>
-            <div style={{ fontSize: 12, lineHeight: 1.6 }}><strong>Bank Name:</strong> {user.paymentMethods?.bank?.bankName || '-'}</div>
-            <div style={{ fontSize: 12, lineHeight: 1.6 }}><strong>IFSC:</strong> {user.paymentMethods?.bank?.ifsc || '-'}</div>
-            <div style={{ fontSize: 12, lineHeight: 1.6 }}><strong>Account No:</strong> {user.paymentMethods?.bank?.accountNo || '-'}</div>
-            <div style={{ fontSize: 12, lineHeight: 1.6 }}><strong>UPI:</strong> {user.paymentMethods?.upi?.address || '-'}</div>
-            <div style={{ fontSize: 12, lineHeight: 1.6 }}><strong>UPAY:</strong> {user.paymentMethods?.upay?.address || '-'}</div>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '4px 24px', width: '100%', marginTop: 4 }}>
+              <div style={{ fontSize: 12, lineHeight: 1.8 }}><strong>Holder Name:</strong> {user.paymentMethods?.holderName || '-'}</div>
+              <div style={{ fontSize: 12, lineHeight: 1.8 }}><strong>Bank Name:</strong> {user.paymentMethods?.bank?.bankName || '-'}</div>
+              <div style={{ fontSize: 12, lineHeight: 1.8 }}><strong>IFSC:</strong> {user.paymentMethods?.bank?.ifsc || '-'}</div>
+              <div style={{ fontSize: 12, lineHeight: 1.8 }}><strong>Account No:</strong> {user.paymentMethods?.bank?.accountNo || '-'}</div>
+              <div style={{ fontSize: 12, lineHeight: 1.8 }}><strong>UPI:</strong> {user.paymentMethods?.upi?.address || '-'}</div>
+              <div style={{ fontSize: 12, lineHeight: 1.8 }}><strong>UPAY:</strong> {user.paymentMethods?.upay?.address || '-'}</div>
+            </div>
           </div>
           <div className="stat-card">
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <span className="stat-card__label">Last IP</span>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%' }}>
+              <span className="stat-card__label">Location & IP</span>
               <button className="btn-filled" style={{ fontSize: 10, padding: '2px 8px' }} onClick={handleLoadSameIp} disabled={ipUsersLoading}>{ipUsersLoading ? 'Loading...' : 'Same IP Users'}</button>
             </div>
-            <div className="stat-card__value" style={{ fontSize: 16 }}>{user.lastIp}</div>
-            {user.deviceInfo && <div className="stat-card__change">{user.deviceInfo.city ?? ''}{user.deviceInfo.city && user.deviceInfo.region ? ', ' : ''}{user.deviceInfo.region ?? ''}</div>}
-            <hr style={{ margin: '8px 0', border: 'none', borderTop: '1px solid var(--color-border, rgb(188,198,222))' }} />
-            <div className="stat-card__label">Created</div>
-            <div className="stat-card__value" style={{ fontSize: 16 }}>{formatDateTime12(user.user.createdAt)}</div>
-          </div>
-          <div className="stat-card">
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <span className="stat-card__label">Turnover</span>
-              <div style={{ display: 'flex', gap: 6, alignItems: 'center' }}>
-                <span className="stat-card__change">₹{user.account.total_turnover_completed.toLocaleString('en-IN')}</span>
-                <button className="btn-filled" style={{ fontSize: 10, padding: '2px 8px' }} onClick={() => setShowTurnover(true)}>View Batches</button>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8, width: '100%', marginTop: 4 }}>
+              <div>
+                <div className="stat-card__label">Last IP</div>
+                <div className="stat-card__value" style={{ fontSize: 14 }}>{user.lastIp}</div>
+                {user.deviceInfo && <div className="stat-card__change">{user.deviceInfo.city ?? ''}{user.deviceInfo.city && user.deviceInfo.region ? ', ' : ''}{user.deviceInfo.region ?? ''}</div>}
+              </div>
+              <div style={{ textAlign: 'right' }}>
+                <div className="stat-card__label">Created</div>
+                <div className="stat-card__value" style={{ fontSize: 14 }}>{formatDateTime12(user.user.createdAt)}</div>
               </div>
             </div>
-            <div className="stat-card__value text-orange">₹{user.account.turnover_requirement.toLocaleString('en-IN')}</div>
+          </div>
+          <div className="stat-card">
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%' }}>
+              <span className="stat-card__label">Turnover</span>
+              <button className="btn-filled" style={{ fontSize: 10, padding: '2px 8px' }} onClick={() => setShowTurnover(true)}>View Batches</button>
+            </div>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, width: '100%', marginTop: 4 }}>
+              <div><div className="stat-card__label">Requirement</div><div className="stat-card__value text-orange">₹{user.account.turnover_requirement.toLocaleString('en-IN')}</div></div>
+              <div><div className="stat-card__label">Completed</div><div className="stat-card__value text-green">₹{user.account.total_turnover_completed.toLocaleString('en-IN')}</div></div>
+            </div>
           </div>
         </div>
 
