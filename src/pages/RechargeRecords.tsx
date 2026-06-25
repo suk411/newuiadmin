@@ -1,12 +1,23 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useCallback } from 'react'
+import axios from 'axios'
 import { fetchDeposits, approveDeposit } from '../api/deposits'
 import type { DepositRecord, DepositFilters } from '../api/deposits'
 import RechargeFilters from '../components/RechargeFilters'
 import RechargeTable from '../components/RechargeTable'
 import ApproveDialog from '../components/ApproveDialog'
 import Pagination from '../components/Pagination'
+import Toast, { nextId } from '../components/Toast'
+import type { ToastMsg } from '../components/Toast'
 
 const DEFAULT_LIMIT = 20
+
+function extractError(err: unknown): string {
+  if (axios.isAxiosError(err) && err.response?.data?.msg) {
+    return err.response.data.msg
+  }
+  if (err instanceof Error) return err.message
+  return 'Something went wrong'
+}
 
 export default function RechargeRecords() {
   const [records, setRecords] = useState<DepositRecord[]>([])
@@ -17,6 +28,16 @@ export default function RechargeRecords() {
   const [currentFilters, setCurrentFilters] = useState<DepositFilters | null>(null)
   const [approving, setApproving] = useState(false)
   const [approveTarget, setApproveTarget] = useState<DepositRecord | null>(null)
+  const [toasts, setToasts] = useState<ToastMsg[]>([])
+
+  const addToast = useCallback((text: string) => {
+    const id = nextId()
+    setToasts((prev) => [...prev, { id, text }])
+  }, [])
+
+  const removeToast = useCallback((id: number) => {
+    setToasts((prev) => prev.filter((t) => t.id !== id))
+  }, [])
 
   const loadRecords = useCallback(async (filters: DepositFilters) => {
     setLoading(true)
@@ -28,18 +49,15 @@ export default function RechargeRecords() {
       setPage(res.page ?? 1)
       setCurrentFilters(filters)
     } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : 'Failed to load recharge records'
+      const msg = extractError(err)
       setError(msg)
+      addToast(msg)
       setRecords([])
       setTotal(0)
     } finally {
       setLoading(false)
     }
-  }, [])
-
-  useEffect(() => {
-    loadRecords({ page: 1, limit: DEFAULT_LIMIT })
-  }, [loadRecords])
+  }, [addToast])
 
   const handleSearch = (filters: DepositFilters) => {
     loadRecords(filters)
@@ -64,8 +82,10 @@ export default function RechargeRecords() {
       if (currentFilters) {
         loadRecords({ ...currentFilters, page, limit: DEFAULT_LIMIT })
       }
-    } catch {
-      setError('Failed to approve deposit')
+    } catch (err: unknown) {
+      const msg = extractError(err)
+      setError(msg)
+      addToast(msg)
     } finally {
       setApproving(false)
     }
@@ -76,17 +96,18 @@ export default function RechargeRecords() {
   }
 
   return (
-    <div>
+    <div className="content">
       <RechargeFilters onSearch={handleSearch} loading={loading} />
+
+      <Toast toasts={toasts} onRemove={removeToast} />
 
       {error && (
         <div
           style={{
-            margin: 'var(--space-4) var(--space-8)',
             padding: 'var(--space-3) var(--space-4)',
             background: '#fef2f2',
             color: '#dc2626',
-            borderRadius: 'var(--radius-md)',
+            borderRadius: 'var(--radius-sm)',
             fontSize: '13px',
           }}
         >
@@ -99,7 +120,6 @@ export default function RechargeRecords() {
         loading={loading}
         onApprove={handleApproveClick}
       />
-
       {total > 0 && (
         <Pagination
           page={page}

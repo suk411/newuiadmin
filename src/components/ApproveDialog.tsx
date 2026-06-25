@@ -15,7 +15,7 @@ export default function ApproveDialog({ record, loading, onConfirm, onCancel }: 
         <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-3)', fontSize: '14px' }}>
           <p><strong>Order ID:</strong> {record.orderId}</p>
           <p><strong>User ID:</strong> {record.userId}</p>
-          <p><strong>Mobile:</strong> {record.mobile}</p>
+          <p><strong>Channel:</strong> {record.channelName}</p>
           <p><strong>Amount:</strong> ₹{Number(record.amount).toLocaleString('en-IN')}</p>
         </div>
         <div className="dialog-actions">

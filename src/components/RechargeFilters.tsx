@@ -24,15 +24,17 @@ export default function RechargeFilters({ onSearch, loading }: Props) {
     setFilters((prev) => ({ ...prev, [field]: value }))
   }
 
+  const hasAnyFilter = filters.userId || filters.mobile || filters.orderId || filters.status || filters.dateFrom || filters.dateTo
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
+    if (!hasAnyFilter) return
     onSearch({ ...filters, page: 1 })
   }
 
   const handleReset = () => {
     const reset = emptyFilters()
     setFilters(reset)
-    onSearch(reset)
   }
 
   return (
@@ -91,8 +93,8 @@ export default function RechargeFilters({ onSearch, loading }: Props) {
       </div>
       <div className="filter-group" style={{ alignSelf: 'flex-end' }}>
         <div style={{ display: 'flex', gap: 'var(--space-3)' }}>
-          <button type="submit" className="btn-filled" disabled={loading}>
-            {loading ? <span className="spinner" /> : null}
+          <button type="submit" className="btn-filled" disabled={loading || !hasAnyFilter}
+            style={{ opacity: loading || !hasAnyFilter ? 0.6 : 1 }}>
             Search
           </button>
           <button type="button" className="btn-outline" onClick={handleReset}>

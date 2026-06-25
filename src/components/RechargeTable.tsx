@@ -8,85 +8,76 @@ interface Props {
 
 function formatDateTime(dateStr: string) {
   const d = new Date(dateStr)
-  return d.toLocaleString('en-IN', {
-    year: 'numeric',
-    month: '2-digit',
-    day: '2-digit',
-    hour: '2-digit',
-    minute: '2-digit',
-    hour12: false,
-  })
+  const y = d.getFullYear()
+  const mo = String(d.getMonth() + 1).padStart(2, '0')
+  const dd = String(d.getDate()).padStart(2, '0')
+  const hh = String(d.getHours()).padStart(2, '0')
+  const mm = String(d.getMinutes()).padStart(2, '0')
+  return `${y}-${mo}-${dd} ${hh}:${mm}`
 }
 
-const statusLabels: Record<string, string> = {
-  pending: 'Pending',
-  approved: 'Approved',
-  rejected: 'Rejected',
+const statusMap: Record<string, { label: string; className: string }> = {
+  SUCCESS: { label: 'Success', className: 'badge--success' },
+  PENDING: { label: 'Pending', className: 'badge--warning' },
+  FAILED: { label: 'Failed', className: 'badge--danger' },
 }
 
 export default function RechargeTable({ records, loading, onApprove }: Props) {
   if (loading) {
     return (
-      <div className="table-container">
-        <div className="empty-state" style={{ padding: '48px 0' }}>
-          <span className="spinner" />
-        </div>
+      <div className="table-wrap" style={{ padding: '48px 0', textAlign: 'center' }}>
+        <span className="loading-spinner" />
       </div>
     )
   }
 
   if (records.length === 0) {
     return (
-      <div className="table-container">
-        <div className="empty-state" style={{ padding: '48px 0' }}>
-          No recharge records found
-        </div>
+      <div className="empty-state">
+        <div className="empty-state__icon">📋</div>
+        No recharge records found
       </div>
     )
   }
 
   return (
-    <div className="table-container">
-      <table className="data-table">
+    <div className="table-wrap">
+      <table className="table">
         <thead>
           <tr>
             <th>Order ID</th>
-            <th>User ID</th>
-            <th>Mobile</th>
+            <th>User</th>
             <th>Amount</th>
+            <th>Method</th>
             <th>Status</th>
-            <th>Channel</th>
             <th>Date</th>
-            <th>Action</th>
+            <th>Actions</th>
           </tr>
         </thead>
         <tbody>
-          {records.map((record) => (
-            <tr key={record.id}>
-              <td style={{ fontFamily: 'monospace', fontSize: '12px' }}>{record.orderId}</td>
-              <td>{record.userId}</td>
-              <td>{record.mobile}</td>
-              <td style={{ fontWeight: 600 }}>₹{Number(record.amount).toLocaleString('en-IN')}</td>
-              <td>
-                <span className={`badge badge-${record.status}`}>
-                  {statusLabels[record.status] || record.status}
-                </span>
-              </td>
-              <td>{record.channel || '—'}</td>
-              <td style={{ fontSize: '12px', whiteSpace: 'nowrap' }}>{formatDateTime(record.createdAt)}</td>
-              <td>
-                {record.status === 'pending' && (
-                  <button
-                    className="btn-success"
-                    onClick={() => onApprove(record)}
-                    style={{ padding: '2px 10px', fontSize: '12px' }}
-                  >
-                    Approve
-                  </button>
-                )}
-              </td>
-            </tr>
-          ))}
+          {records.map((record) => {
+            const st = statusMap[record.status] || { label: record.status, className: 'badge--info' }
+            return (
+              <tr key={record.orderId} tabIndex={0}>
+                <td style={{ fontFamily: 'monospace', fontSize: '12px' }}>{record.orderId}</td>
+                <td>{record.userId}</td>
+                <td>{record.currency === 'INR' ? '₹' : '$'}{Number(record.amount).toLocaleString('en-IN')}</td>
+                <td>{record.channelName}</td>
+                <td><span className={`badge ${st.className}`}>{st.label}</span></td>
+                <td style={{ whiteSpace: 'nowrap' }}>{formatDateTime(record.createdAt)}</td>
+                <td>
+                  <div className="cell-actions">
+                    {record.status === 'PENDING' && (
+                      <>
+                        <button className="btn btn--success btn--sm" onClick={() => onApprove(record)}>Approve</button>
+                        <button className="btn btn--danger btn--sm">Reject</button>
+                      </>
+                    )}
+                  </div>
+                </td>
+              </tr>
+            )
+          })}
         </tbody>
       </table>
     </div>

@@ -1,5 +1,3 @@
-import { useState } from 'react'
-
 interface Props {
   page: number
   total: number
@@ -8,7 +6,6 @@ interface Props {
 }
 
 export default function Pagination({ page, total, limit, onChange }: Props) {
-  const [goto, setGoto] = useState('')
   const totalPages = Math.max(1, Math.ceil(total / limit))
 
   const pages: (number | string)[] = []
@@ -21,47 +18,31 @@ export default function Pagination({ page, total, limit, onChange }: Props) {
   if (end < totalPages - 1) pages.push('...')
   if (end < totalPages) pages.push(totalPages)
 
-  const handleGoto = (e: React.FormEvent) => {
-    e.preventDefault()
-    const p = parseInt(goto, 10)
-    if (p >= 1 && p <= totalPages) {
-      onChange(p)
-      setGoto('')
-    }
-  }
+  const from = (page - 1) * limit + 1
+  const to = Math.min(page * limit, total)
 
   return (
     <div className="pagination">
-      <button disabled={page <= 1} onClick={() => onChange(page - 1)}>
-        ‹ Prev
+      <span>Showing {from}–{to} of {total}</span>
+      <button className="pagination__btn" disabled={page <= 1} onClick={() => onChange(page - 1)}>
+        ‹
       </button>
       {pages.map((p, i) =>
         typeof p === 'string' ? (
-          <span key={`ellipsis-${i}`} style={{ color: 'var(--color-text-secondary)' }}>...</span>
+          <span key={`ellipsis-${i}`}>...</span>
         ) : (
           <button
             key={p}
-            className={p === page ? 'active' : ''}
+            className={`pagination__btn ${p === page ? 'active' : ''}`}
             onClick={() => onChange(p)}
           >
             {p}
           </button>
         ),
       )}
-      <button disabled={page >= totalPages} onClick={() => onChange(page + 1)}>
-        Next ›
+      <button className="pagination__btn" disabled={page >= totalPages} onClick={() => onChange(page + 1)}>
+        ›
       </button>
-      <form className="goto-input" onSubmit={handleGoto}>
-        <span style={{ fontSize: '12px', color: 'var(--color-text-secondary)' }}>Go to</span>
-        <input
-          type="number"
-          min={1}
-          max={totalPages}
-          value={goto}
-          onChange={(e) => setGoto(e.target.value)}
-          placeholder=""
-        />
-      </form>
     </div>
   )
 }

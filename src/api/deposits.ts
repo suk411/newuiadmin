@@ -1,16 +1,18 @@
 import axiosInstance from './axiosInstance'
 
 export interface DepositRecord {
-  id: string
-  userId: string
-  mobile: string
   orderId: string
+  userId: number
   amount: number
-  status: 'pending' | 'approved' | 'rejected'
+  receivedAmount: number
+  currency: string
+  status: 'SUCCESS' | 'PENDING' | 'FAILED'
+  gatewayOrderNo: string
+  channelName: string
+  bonusOptIn: boolean
+  bonusAmount: number
   createdAt: string
   updatedAt: string
-  channel?: string
-  remark?: string
 }
 
 export interface DepositListResponse {
@@ -40,8 +42,14 @@ export async function fetchDeposits(filters: DepositFilters): Promise<DepositLis
   if (filters.dateFrom) params.dateFrom = filters.dateFrom
   if (filters.dateTo) params.dateTo = filters.dateTo
 
-  const { data } = await axiosInstance.get<DepositListResponse>('/deposits', { params })
-  return data
+  const response = await axiosInstance.get('/deposits', { params })
+  const body = response.data
+
+  if (body.items && Array.isArray(body.items)) {
+    return { data: body.items, total: body.total ?? 0, page: body.page ?? 1, limit: body.limit ?? filters.limit }
+  }
+
+  return { data: [], total: 0, page: 1, limit: filters.limit }
 }
 
 export async function approveDeposit(orderId: string): Promise<void> {
