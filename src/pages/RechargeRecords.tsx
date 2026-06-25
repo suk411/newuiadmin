@@ -77,10 +77,6 @@ export default function RechargeRecords() {
 
   return (
     <div>
-      <div className="page-header">
-        <h2>Recharge Records</h2>
-      </div>
-
       <RechargeFilters onSearch={handleSearch} loading={loading} />
 
       {error && (
