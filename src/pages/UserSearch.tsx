@@ -92,9 +92,11 @@ export default function UserSearch() {
       {user && (<>
         <div className="stat-cards" style={{ marginTop: 'var(--space-3)' }}>
           <div className="stat-card">
-            <div className="stat-card__label">User ID</div>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <span className="stat-card__label">User ID</span>
+              <span className={`badge ${statusBadge(user.status)}`}>{user.status}</span>
+            </div>
             <div className="stat-card__value text-blue">{user.userId}</div>
-            <div className="stat-card__change"><span className={`badge ${statusBadge(user.status)}`}>{user.status}</span></div>
             <hr style={{ margin: '8px 0', border: 'none', borderTop: '1px solid var(--color-border, rgb(188,198,222))' }} />
             <div className="stat-card__label">Mobile</div>
             <div className="stat-card__value" style={{ fontSize: 16 }}>{user.mobile}</div>
