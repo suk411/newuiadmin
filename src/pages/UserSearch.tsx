@@ -191,12 +191,12 @@ export default function UserSearch() {
               <span className="stat-card__label">Payment Methods</span>
               <button className="btn-filled" style={{ fontSize: 10, padding: '2px 8px' }} onClick={handleLoadPaymentMethods}>View</button>
             </div>
-<div style={{ fontSize: 11, marginTop: 2 }}><strong>Holder Name:</strong> {user.paymentMethods?.holderName || '-'}</div>
-            <div style={{ fontSize: 11, marginTop: 2 }}><strong>Bank Name:</strong> {user.paymentMethods?.bank?.bankName || '-'}</div>
-            <div style={{ fontSize: 11, marginTop: 2 }}><strong>IFSC:</strong> {user.paymentMethods?.bank?.ifsc || '-'}</div>
-            <div style={{ fontSize: 11, marginTop: 2 }}><strong>Account No:</strong> {user.paymentMethods?.bank?.accountNo || '-'}</div>
-            <div style={{ fontSize: 11, marginTop: 2 }}><strong>UPI:</strong> {user.paymentMethods?.upi?.address || '-'}</div>
-            <div style={{ fontSize: 11, marginTop: 2 }}><strong>UPAY:</strong> {user.paymentMethods?.upay?.address || '-'}</div>
+<div style={{ fontSize: 12, lineHeight: 1.6 }}><strong>Holder Name:</strong> {user.paymentMethods?.holderName || '-'}</div>
+            <div style={{ fontSize: 12, lineHeight: 1.6 }}><strong>Bank Name:</strong> {user.paymentMethods?.bank?.bankName || '-'}</div>
+            <div style={{ fontSize: 12, lineHeight: 1.6 }}><strong>IFSC:</strong> {user.paymentMethods?.bank?.ifsc || '-'}</div>
+            <div style={{ fontSize: 12, lineHeight: 1.6 }}><strong>Account No:</strong> {user.paymentMethods?.bank?.accountNo || '-'}</div>
+            <div style={{ fontSize: 12, lineHeight: 1.6 }}><strong>UPI:</strong> {user.paymentMethods?.upi?.address || '-'}</div>
+            <div style={{ fontSize: 12, lineHeight: 1.6 }}><strong>UPAY:</strong> {user.paymentMethods?.upay?.address || '-'}</div>
           </div>
           <div className="stat-card">
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
