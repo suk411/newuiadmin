@@ -92,7 +92,8 @@ export async function fetchUsersByIp(ip: string): Promise<{ users: Array<{ userI
 
 export async function viewUserPaymentMethods(userId: string): Promise<PaymentMethods> {
   const res = await axiosInstance.get('/user/payment-methods', { params: { userId } })
-  return res.data
+  const body = res.data.data ?? res.data
+  return body
 }
 
 export async function updatePaymentMethod(id: string, data: Record<string, unknown>): Promise<void> {

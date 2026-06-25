@@ -222,19 +222,24 @@ export default function UserSearch() {
 
         {showStatusDialog && user && (
           <div className="dialog-overlay" onClick={() => { setShowStatusDialog(false); setStatusRemark('') }}>
-            <div className="dialog" onClick={(e) => e.stopPropagation()}>
-              <h3>Change Status — User #{user.user.userId}</h3>
-              <div className="filter-group" style={{ marginBottom: 12 }}><label>Status</label>
-                <select value={newStatus} onChange={(e) => setNewStatus(e.target.value)}>
-                  <option value="active">Active</option>
-                  <option value="suspended">Suspended</option>
-                  <option value="ban">Ban</option>
-                  <option value="banned">Banned</option>
-                  <option value="inactive">Inactive</option>
-                </select>
+            <div className="dialog" onClick={(e) => e.stopPropagation()} style={{ width: '70vw', height: '80vh', display: 'flex', flexDirection: 'column', padding: 0 }}>
+              <div style={{ padding: 'var(--space-6) var(--space-7)', borderBottom: '1px solid var(--color-border, rgb(188,198,222))', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexShrink: 0 }}>
+                <h3 style={{ margin: 0, fontSize: 14 }}>Change Status — User #{user.user.userId}</h3>
+                <button className="btn-outline" style={{ fontSize: 11, padding: '2px 8px' }} onClick={() => { setShowStatusDialog(false); setStatusRemark('') }}>✕</button>
               </div>
-              <div className="filter-group"><label>Remark *</label><input placeholder="Enter remark (required)" value={statusRemark} onChange={(e) => setStatusRemark(e.target.value)} /></div>
-              <div className="dialog-actions">
+              <div style={{ padding: 'var(--space-6) var(--space-7)', flex: 1, overflow: 'auto' }}>
+                <div className="filter-group" style={{ marginBottom: 12 }}><label>Status</label>
+                  <select value={newStatus} onChange={(e) => setNewStatus(e.target.value)}>
+                    <option value="active">Active</option>
+                    <option value="suspended">Suspended</option>
+                    <option value="ban">Ban</option>
+                    <option value="banned">Banned</option>
+                    <option value="inactive">Inactive</option>
+                  </select>
+                </div>
+                <div className="filter-group"><label>Remark *</label><input placeholder="Enter remark (required)" value={statusRemark} onChange={(e) => setStatusRemark(e.target.value)} /></div>
+              </div>
+              <div style={{ padding: 'var(--space-6) var(--space-7)', borderTop: '1px solid var(--color-border, rgb(188,198,222))', display: 'flex', justifyContent: 'flex-end', gap: 'var(--space-3)', flexShrink: 0 }}>
                 <button className="btn-outline" onClick={() => { setShowStatusDialog(false); setStatusRemark('') }} disabled={updatingStatus}>Cancel</button>
                 <button className="btn-filled" onClick={handleStatusChange} disabled={updatingStatus || !statusRemark.trim()}>{updatingStatus ? 'Updating...' : 'Update'}</button>
               </div>
@@ -243,7 +248,7 @@ export default function UserSearch() {
         )}
         {showIpUsers && (
           <div className="dialog-overlay" onClick={() => { setShowIpUsers(false); setIpUsers([]) }}>
-            <div className="dialog" onClick={(e) => e.stopPropagation()} style={{ width: '60vw', maxHeight: '80vh', display: 'flex', flexDirection: 'column', padding: 0 }}>
+            <div className="dialog" onClick={(e) => e.stopPropagation()} style={{ width: '70vw', height: '80vh', display: 'flex', flexDirection: 'column', padding: 0 }}>
               <div style={{ padding: 'var(--space-6) var(--space-7)', borderBottom: '1px solid var(--color-border, rgb(188,198,222))', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexShrink: 0 }}>
                 <span style={{ fontWeight: 700 }}>Users with IP: {user?.lastIp}</span>
                 <button className="btn-outline" style={{ fontSize: 11, padding: '2px 8px' }} onClick={() => { setShowIpUsers(false); setIpUsers([]) }}>✕</button>
@@ -271,7 +276,7 @@ export default function UserSearch() {
         )}
         {showPmDialog && user && (
           <div className="dialog-overlay" onClick={() => setShowPmDialog(false)}>
-            <div className="dialog" onClick={(e) => e.stopPropagation()} style={{ width: '50vw', maxHeight: '80vh', display: 'flex', flexDirection: 'column', padding: 0 }}>
+            <div className="dialog" onClick={(e) => e.stopPropagation()} style={{ width: '70vw', height: '80vh', display: 'flex', flexDirection: 'column', padding: 0 }}>
               <div style={{ padding: 'var(--space-6) var(--space-7)', borderBottom: '1px solid var(--color-border, rgb(188,198,222))', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexShrink: 0 }}>
                 <span style={{ fontWeight: 700 }}>Payment Methods — User #{user.user.userId}</span>
                 <button className="btn-outline" style={{ fontSize: 11, padding: '2px 8px' }} onClick={() => setShowPmDialog(false)}>✕</button>
