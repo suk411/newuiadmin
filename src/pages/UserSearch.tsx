@@ -26,9 +26,10 @@ export default function UserSearch() {
   const [userId, setUserId] = useState('')
   const [mobile, setMobile] = useState('')
   const [showTurnover, setShowTurnover] = useState(false)
-  const [showBanDialog, setShowBanDialog] = useState(false)
-  const [banRemark, setBanRemark] = useState('')
-  const [banning, setBanning] = useState(false)
+  const [showStatusDialog, setShowStatusDialog] = useState(false)
+  const [newStatus, setNewStatus] = useState<string>('active')
+  const [statusRemark, setStatusRemark] = useState('')
+  const [updatingStatus, setUpdatingStatus] = useState(false)
   const [showIpUsers, setShowIpUsers] = useState(false)
   const [ipUsers, setIpUsers] = useState<Array<{ userId: number; mobile: string; createdAt: string }>>([])
   const [ipUsersLoading, setIpUsersLoading] = useState(false)
@@ -72,18 +73,18 @@ export default function UserSearch() {
     }
   }
 
-  const handleBan = async () => {
+  const handleStatusChange = async () => {
     if (!user) return
-    setBanning(true)
+    setUpdatingStatus(true)
     try {
-      await updateUserStatus({ userId: user.user.userId, status: 'banned', remark: banRemark })
-      setUser({ ...user, account: { ...user.account, status: 'banned' as const } })
-      setShowBanDialog(false)
-      setBanRemark('')
+      await updateUserStatus({ userId: user.user.userId, status: newStatus as 'active' | 'suspended' | 'inactive' | 'ban' | 'banned', remark: statusRemark })
+      setUser({ ...user, account: { ...user.account, status: newStatus as any } })
+      setShowStatusDialog(false)
+      setStatusRemark('')
     } catch (err: unknown) {
       setError(extractError(err))
     } finally {
-      setBanning(false)
+      setUpdatingStatus(false)
     }
   }
 
@@ -139,7 +140,7 @@ export default function UserSearch() {
             <div className="stat-card__label">Mobile</div>
             <div className="stat-card__value" style={{ fontSize: 16 }}>{user.user.mobile}</div>
             <div className="stat-card__change">{user.account.vipLevel}</div>
-            {user.account.status === 'active' && <div style={{ marginTop: 8 }}><button className="btn-filled" style={{ fontSize: 11, padding: '4px 10px', background: '#ef4444', borderColor: '#ef4444' }} onClick={() => setShowBanDialog(true)}>Ban User</button></div>}
+            <div style={{ marginTop: 8 }}><button className="btn-filled" style={{ fontSize: 11, padding: '4px 10px' }} onClick={() => { setNewStatus(user.account.status); setShowStatusDialog(true) }}>Change Status</button></div>
           </div>
           <div className="stat-card">
             <div className="stat-card__label">Balance</div>
@@ -168,14 +169,23 @@ export default function UserSearch() {
           </div>
         </div>
 
-        {showBanDialog && user && (
-          <div className="dialog-overlay" onClick={() => { setShowBanDialog(false); setBanRemark('') }}>
+        {showStatusDialog && user && (
+          <div className="dialog-overlay" onClick={() => { setShowStatusDialog(false); setStatusRemark('') }}>
             <div className="dialog" onClick={(e) => e.stopPropagation()}>
-              <h3>Ban User #{user.user.userId}</h3>
-              <div className="filter-group"><label>Reason (optional)</label><input placeholder="Enter reason" value={banRemark} onChange={(e) => setBanRemark(e.target.value)} /></div>
+              <h3>Change Status — User #{user.user.userId}</h3>
+              <div className="filter-group" style={{ marginBottom: 12 }}><label>Status</label>
+                <select value={newStatus} onChange={(e) => setNewStatus(e.target.value)}>
+                  <option value="active">Active</option>
+                  <option value="suspended">Suspended</option>
+                  <option value="ban">Ban</option>
+                  <option value="banned">Banned</option>
+                  <option value="inactive">Inactive</option>
+                </select>
+              </div>
+              <div className="filter-group"><label>Remark (optional)</label><input placeholder="Enter remark" value={statusRemark} onChange={(e) => setStatusRemark(e.target.value)} /></div>
               <div className="dialog-actions">
-                <button className="btn-outline" onClick={() => { setShowBanDialog(false); setBanRemark('') }} disabled={banning}>Cancel</button>
-                <button className="btn-filled" style={{ background: '#ef4444', borderColor: '#ef4444' }} onClick={handleBan} disabled={banning}>{banning ? 'Banning...' : 'Confirm Ban'}</button>
+                <button className="btn-outline" onClick={() => { setShowStatusDialog(false); setStatusRemark('') }} disabled={updatingStatus}>Cancel</button>
+                <button className="btn-filled" onClick={handleStatusChange} disabled={updatingStatus}>{updatingStatus ? 'Updating...' : 'Update'}</button>
               </div>
             </div>
           </div>
