@@ -120,9 +120,11 @@ export default function UserSearch() {
             <div className="stat-card__value" style={{ fontSize: 16 }}>{formatDateTime12(user.user.createdAt)}</div>
           </div>
           <div className="stat-card">
-            <div className="stat-card__label">Turnover</div>
-            <div className="stat-card__value text-orange">₹{user.account.total_turnover_completed.toLocaleString('en-IN')}</div>
-            <div className="stat-card__change">of ₹{user.account.turnover_requirement.toLocaleString('en-IN')}</div>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <span className="stat-card__label">Turnover</span>
+              <span className="stat-card__change">₹{user.account.total_turnover_completed.toLocaleString('en-IN')}</span>
+            </div>
+            <div className="stat-card__value text-orange">₹{user.account.turnover_requirement.toLocaleString('en-IN')}</div>
             <div style={{ marginTop: 8 }}><button className="btn-filled" style={{ fontSize: 11, padding: '4px 10px' }} onClick={() => setShowTurnover(true)}>View Batches</button></div>
           </div>
         </div>
