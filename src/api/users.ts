@@ -13,7 +13,7 @@ export interface UserAccount {
   withdrawable: number
   totalDeposits: number
   totalWithdrawals: number
-  status: 'active' | 'suspended' | 'inactive' | 'banned'
+  status: 'active' | 'suspended' | 'inactive' | 'ban' | 'banned'
   statusRemark?: string
   vipLevel: string
   withdrawDailyLimit: number
@@ -76,7 +76,7 @@ export async function searchUserByMobile(mobile: string): Promise<UserSearchResp
   return res.data.data ?? res.data
 }
 
-export async function updateUserStatus(data: { userId: number; status: 'active' | 'suspended' | 'inactive' | 'banned'; remark?: string }): Promise<void> {
+export async function updateUserStatus(data: { userId: number; status: 'active' | 'suspended' | 'inactive' | 'ban' | 'banned'; remark?: string }): Promise<void> {
   await axiosInstance.patch('/user', data)
 }
 

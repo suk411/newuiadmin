@@ -16,6 +16,7 @@ function statusBadge(status: string): string {
     case 'suspended': return 'badge--warning'
     case 'blocked':
     case 'inactive':
+    case 'ban':
     case 'banned': return 'badge--danger'
     default: return 'badge--info'
   }
