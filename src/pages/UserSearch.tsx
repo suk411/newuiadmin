@@ -94,9 +94,15 @@ export default function UserSearch() {
           <div style={{ padding: 'var(--space-6) var(--space-7)', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'var(--space-5)', fontSize: '13px' }}>
             <div><strong>User ID:</strong> {user.userId}</div>
             <div><strong>Mobile:</strong> {user.mobile}</div>
-            <div><strong>Name:</strong> {user.name}</div>
+            <div><strong>VIP Level:</strong> {user.vipLevel}</div>
             <div><strong>Balance:</strong> ₹{user.balance.toLocaleString('en-IN')}</div>
+            <div><strong>Withdrawable:</strong> ₹{user.withdrawable.toLocaleString('en-IN')}</div>
+            <div><strong>Total Deposits:</strong> ₹{user.totalDeposits.toLocaleString('en-IN')}</div>
+            <div><strong>Turnover Required:</strong> ₹{user.turnover_requirement.toLocaleString('en-IN')}</div>
+            <div><strong>Turnover Completed:</strong> ₹{user.total_turnover_completed.toLocaleString('en-IN')}</div>
             <div><strong>Status:</strong> <span className={`badge ${statusBadge(user.status)}`}>{user.status}</span></div>
+            <div><strong>Last IP:</strong> {user.lastIp}</div>
+            {user.deviceInfo && <div><strong>Location:</strong> {user.deviceInfo.city}, {user.deviceInfo.region}</div>}
             <div><strong>Created:</strong> {formatDateTime12(user.createdAt)}</div>
           </div>
         </div>

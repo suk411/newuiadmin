@@ -1,22 +1,40 @@
 import axiosInstance from './axiosInstance'
 
+export interface DeviceInfo {
+  ip: string
+  city: string
+  region: string
+}
+
 export interface UserData {
   userId: number
   mobile: string
-  name: string
-  status: string
-  balance: number
+  admin: boolean
   createdAt: string
+  updatedAt: string
+  vipLevel: string
+  vipSince: string
+  totalDeposits: number
+  status: string
+  statusRemark: string
+  balance: number
+  withdrawable: number
+  turnover_requirement: number
+  total_turnover_completed: number
+  lastIp: string
+  deviceInfo: DeviceInfo | null
 }
 
 export async function searchUser(userId: string): Promise<UserData> {
   const res = await axiosInstance.get('/user', { params: { userId } })
-  return res.data.data ?? res.data
+  const body = res.data.data ?? res.data
+  return { ...body.user, ...body.account, lastIp: body.lastIp ?? '', deviceInfo: body.deviceInfo ?? null }
 }
 
 export async function searchUserByMobile(mobile: string): Promise<UserData> {
   const res = await axiosInstance.get('/user', { params: { mobile } })
-  return res.data.data ?? res.data
+  const body = res.data.data ?? res.data
+  return { ...body.user, ...body.account, lastIp: body.lastIp ?? '', deviceInfo: body.deviceInfo ?? null }
 }
 
 export async function updateUserStatus(data: { userId: number; status: string }): Promise<void> {
