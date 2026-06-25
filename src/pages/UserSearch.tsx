@@ -83,6 +83,7 @@ export default function UserSearch() {
     try {
       const data = await viewUserPaymentMethods(String(user.user.userId))
       setPmData(data)
+      setUser({ ...user, paymentMethods: data })
       setPmForm({})
       setPmType('BANK')
       setShowPmDialog(true)
