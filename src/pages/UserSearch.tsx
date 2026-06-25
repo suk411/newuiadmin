@@ -133,14 +133,16 @@ export default function UserSearch() {
           <div className="stat-card">
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
               <span className="stat-card__label">User ID</span>
-              <span className={`badge ${statusBadge(user.account.status)}`}>{user.account.status}</span>
+              <div style={{ display: 'flex', gap: 6, alignItems: 'center' }}>
+                <span className={`badge ${statusBadge(user.account.status)}`}>{user.account.status}</span>
+                <button className="btn-filled" style={{ fontSize: 10, padding: '2px 8px' }} onClick={() => { setNewStatus(user.account.status); setShowStatusDialog(true) }}>Change Status</button>
+              </div>
             </div>
             <div className="stat-card__value text-blue">{user.user.userId}</div>
             <hr style={{ margin: '8px 0', border: 'none', borderTop: '1px solid var(--color-border, rgb(188,198,222))' }} />
             <div className="stat-card__label">Mobile</div>
             <div className="stat-card__value" style={{ fontSize: 16 }}>{user.user.mobile}</div>
             <div className="stat-card__change">{user.account.vipLevel}</div>
-            <div style={{ marginTop: 8 }}><button className="btn-filled" style={{ fontSize: 11, padding: '4px 10px' }} onClick={() => { setNewStatus(user.account.status); setShowStatusDialog(true) }}>Change Status</button></div>
           </div>
           <div className="stat-card">
             <div className="stat-card__label">Balance</div>
@@ -151,21 +153,25 @@ export default function UserSearch() {
             <div className="stat-card__value text-orange" style={{ fontSize: 16 }}>₹{user.account.totalDeposits.toLocaleString('en-IN')}</div>
           </div>
           <div className="stat-card">
-            <div className="stat-card__label">Last IP</div>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <span className="stat-card__label">Last IP</span>
+              <button className="btn-filled" style={{ fontSize: 10, padding: '2px 8px' }} onClick={handleLoadSameIp} disabled={ipUsersLoading}>{ipUsersLoading ? 'Loading...' : 'Same IP Users'}</button>
+            </div>
             <div className="stat-card__value" style={{ fontSize: 16 }}>{user.lastIp}</div>
             {user.deviceInfo && <div className="stat-card__change">{user.deviceInfo.city ?? ''}{user.deviceInfo.city && user.deviceInfo.region ? ', ' : ''}{user.deviceInfo.region ?? ''}</div>}
             <hr style={{ margin: '8px 0', border: 'none', borderTop: '1px solid var(--color-border, rgb(188,198,222))' }} />
             <div className="stat-card__label">Created</div>
             <div className="stat-card__value" style={{ fontSize: 16 }}>{formatDateTime12(user.user.createdAt)}</div>
-            <div style={{ marginTop: 8 }}><button className="btn-filled" style={{ fontSize: 11, padding: '4px 10px' }} onClick={handleLoadSameIp} disabled={ipUsersLoading}>{ipUsersLoading ? 'Loading...' : 'Same IP Users'}</button></div>
           </div>
           <div className="stat-card">
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
               <span className="stat-card__label">Turnover</span>
-              <span className="stat-card__change">₹{user.account.total_turnover_completed.toLocaleString('en-IN')}</span>
+              <div style={{ display: 'flex', gap: 6, alignItems: 'center' }}>
+                <span className="stat-card__change">₹{user.account.total_turnover_completed.toLocaleString('en-IN')}</span>
+                <button className="btn-filled" style={{ fontSize: 10, padding: '2px 8px' }} onClick={() => setShowTurnover(true)}>View Batches</button>
+              </div>
             </div>
             <div className="stat-card__value text-orange">₹{user.account.turnover_requirement.toLocaleString('en-IN')}</div>
-            <div style={{ marginTop: 8 }}><button className="btn-filled" style={{ fontSize: 11, padding: '4px 10px' }} onClick={() => setShowTurnover(true)}>View Batches</button></div>
           </div>
         </div>
 
@@ -182,10 +188,10 @@ export default function UserSearch() {
                   <option value="inactive">Inactive</option>
                 </select>
               </div>
-              <div className="filter-group"><label>Remark (optional)</label><input placeholder="Enter remark" value={statusRemark} onChange={(e) => setStatusRemark(e.target.value)} /></div>
+              <div className="filter-group"><label>Remark *</label><input placeholder="Enter remark (required)" value={statusRemark} onChange={(e) => setStatusRemark(e.target.value)} /></div>
               <div className="dialog-actions">
                 <button className="btn-outline" onClick={() => { setShowStatusDialog(false); setStatusRemark('') }} disabled={updatingStatus}>Cancel</button>
-                <button className="btn-filled" onClick={handleStatusChange} disabled={updatingStatus}>{updatingStatus ? 'Updating...' : 'Update'}</button>
+                <button className="btn-filled" onClick={handleStatusChange} disabled={updatingStatus || !statusRemark.trim()}>{updatingStatus ? 'Updating...' : 'Update'}</button>
               </div>
             </div>
           </div>
