@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { loginAdmin } from '../api/auth'
+import bgLogo from '../assets/bgLogo.png'
 
 interface Props {
   onLogin: (token: string) => void
@@ -31,7 +32,12 @@ export default function Login({ onLogin }: Props) {
   }
 
   return (
-    <div className="login-page">
+    <div
+      className="login-page"
+      style={{
+        background: `var(--color-bg) url(${bgLogo}) center / cover no-repeat`,
+      }}
+    >
       <form className="login-card" onSubmit={handleSubmit}>
         <h1>Admin Login</h1>
 

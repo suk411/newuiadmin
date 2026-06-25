@@ -376,6 +376,7 @@
   align-items: center;
   justify-content: center;
   background: var(--color-bg);
+  position: relative;
 }
 
 .login-card {
