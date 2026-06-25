@@ -1,6 +1,6 @@
 import { useState, useMemo } from 'react'
 import axios from 'axios'
-import { searchUser, searchUserByMobile, updateUserStatus } from '../api/users'
+import { searchUser, searchUserByMobile, updateUserStatus, fetchUsersByIp } from '../api/users'
 import type { UserSearchResponse } from '../api/users'
 import { formatDateTime12 } from '../utils/format'
 
@@ -29,6 +29,9 @@ export default function UserSearch() {
   const [showBanDialog, setShowBanDialog] = useState(false)
   const [banRemark, setBanRemark] = useState('')
   const [banning, setBanning] = useState(false)
+  const [showIpUsers, setShowIpUsers] = useState(false)
+  const [ipUsers, setIpUsers] = useState<Array<{ userId: number; mobile: string; createdAt: string }>>([])
+  const [ipUsersLoading, setIpUsersLoading] = useState(false)
   const [user, setUser] = useState<UserSearchResponse | null>(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -52,6 +55,20 @@ export default function UserSearch() {
       setError(extractError(err))
     } finally {
       setLoading(false)
+    }
+  }
+
+  const handleLoadSameIp = async () => {
+    if (!user) return
+    setIpUsersLoading(true)
+    try {
+      const res = await fetchUsersByIp(user.lastIp)
+      setIpUsers(res.users ?? [])
+      setShowIpUsers(true)
+    } catch (err: unknown) {
+      setError(extractError(err))
+    } finally {
+      setIpUsersLoading(false)
     }
   }
 
@@ -139,6 +156,7 @@ export default function UserSearch() {
             <hr style={{ margin: '8px 0', border: 'none', borderTop: '1px solid var(--color-border, rgb(188,198,222))' }} />
             <div className="stat-card__label">Created</div>
             <div className="stat-card__value" style={{ fontSize: 16 }}>{formatDateTime12(user.user.createdAt)}</div>
+            <div style={{ marginTop: 8 }}><button className="btn-filled" style={{ fontSize: 11, padding: '4px 10px' }} onClick={handleLoadSameIp} disabled={ipUsersLoading}>{ipUsersLoading ? 'Loading...' : 'Same IP Users'}</button></div>
           </div>
           <div className="stat-card">
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -158,6 +176,34 @@ export default function UserSearch() {
               <div className="dialog-actions">
                 <button className="btn-outline" onClick={() => { setShowBanDialog(false); setBanRemark('') }} disabled={banning}>Cancel</button>
                 <button className="btn-filled" style={{ background: '#ef4444', borderColor: '#ef4444' }} onClick={handleBan} disabled={banning}>{banning ? 'Banning...' : 'Confirm Ban'}</button>
+              </div>
+            </div>
+          </div>
+        )}
+        {showIpUsers && (
+          <div className="dialog-overlay" onClick={() => { setShowIpUsers(false); setIpUsers([]) }}>
+            <div className="dialog" onClick={(e) => e.stopPropagation()} style={{ width: '60vw', maxHeight: '80vh', display: 'flex', flexDirection: 'column', padding: 0 }}>
+              <div style={{ padding: 'var(--space-6) var(--space-7)', borderBottom: '1px solid var(--color-border, rgb(188,198,222))', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexShrink: 0 }}>
+                <span style={{ fontWeight: 700 }}>Users with IP: {user?.lastIp}</span>
+                <button className="btn-outline" style={{ fontSize: 11, padding: '2px 8px' }} onClick={() => { setShowIpUsers(false); setIpUsers([]) }}>✕</button>
+              </div>
+              <div className="table-wrap" style={{ padding: 'var(--space-6) var(--space-7)', flex: 1, overflow: 'auto' }}>
+                {ipUsers.length === 0 ? (
+                  <div className="empty-state"><div className="empty-state__icon">👥</div>No other users found</div>
+                ) : (
+                  <table className="table">
+                    <thead><tr><th>User ID</th><th>Mobile</th><th>Created</th></tr></thead>
+                    <tbody>
+                      {ipUsers.map((u) => (
+                        <tr key={u.userId} tabIndex={0}>
+                          <td>{u.userId}</td>
+                          <td>{u.mobile}</td>
+                          <td style={{ whiteSpace: 'nowrap' }}>{formatDateTime12(u.createdAt)}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                )}
               </div>
             </div>
           </div>
