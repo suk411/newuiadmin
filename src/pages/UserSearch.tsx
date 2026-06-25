@@ -1,7 +1,7 @@
 import { useState, useMemo } from 'react'
 import axios from 'axios'
 import { searchUser, searchUserByMobile } from '../api/users'
-import type { UserData } from '../api/users'
+import type { UserSearchResponse } from '../api/users'
 import { formatDateTime12 } from '../utils/format'
 
 function extractError(err: unknown): string {
@@ -24,7 +24,7 @@ export default function UserSearch() {
   const [userId, setUserId] = useState('')
   const [mobile, setMobile] = useState('')
   const [showTurnover, setShowTurnover] = useState(false)
-  const [user, setUser] = useState<UserData | null>(null)
+  const [user, setUser] = useState<UserSearchResponse | null>(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
@@ -95,34 +95,34 @@ export default function UserSearch() {
           <div className="stat-card">
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
               <span className="stat-card__label">User ID</span>
-              <span className={`badge ${statusBadge(user.status)}`}>{user.status}</span>
+              <span className={`badge ${statusBadge(user.account.status)}`}>{user.account.status}</span>
             </div>
-            <div className="stat-card__value text-blue">{user.userId}</div>
+            <div className="stat-card__value text-blue">{user.user.userId}</div>
             <hr style={{ margin: '8px 0', border: 'none', borderTop: '1px solid var(--color-border, rgb(188,198,222))' }} />
             <div className="stat-card__label">Mobile</div>
-            <div className="stat-card__value" style={{ fontSize: 16 }}>{user.mobile}</div>
-            <div className="stat-card__change">{user.vipLevel}</div>
+            <div className="stat-card__value" style={{ fontSize: 16 }}>{user.user.mobile}</div>
+            <div className="stat-card__change">{user.account.vipLevel}</div>
           </div>
           <div className="stat-card">
             <div className="stat-card__label">Balance</div>
-            <div className="stat-card__value text-green">₹{user.balance.toLocaleString('en-IN')}</div>
-            <div className="stat-card__change up">Withdrawable: ₹{user.withdrawable.toLocaleString('en-IN')}</div>
+            <div className="stat-card__value text-green">₹{user.account.balance.toLocaleString('en-IN')}</div>
+            <div className="stat-card__change up">Withdrawable: ₹{user.account.withdrawable.toLocaleString('en-IN')}</div>
             <hr style={{ margin: '8px 0', border: 'none', borderTop: '1px solid var(--color-border, rgb(188,198,222))' }} />
             <div className="stat-card__label">Total Deposits</div>
-            <div className="stat-card__value text-orange" style={{ fontSize: 16 }}>₹{user.totalDeposits.toLocaleString('en-IN')}</div>
+            <div className="stat-card__value text-orange" style={{ fontSize: 16 }}>₹{user.account.totalDeposits.toLocaleString('en-IN')}</div>
           </div>
           <div className="stat-card">
             <div className="stat-card__label">Last IP</div>
             <div className="stat-card__value" style={{ fontSize: 16 }}>{user.lastIp}</div>
-            {user.deviceInfo && <div className="stat-card__change">{user.deviceInfo.city}, {user.deviceInfo.region}</div>}
+            {user.deviceInfo && <div className="stat-card__change">{user.deviceInfo.city ?? ''}{user.deviceInfo.city && user.deviceInfo.region ? ', ' : ''}{user.deviceInfo.region ?? ''}</div>}
             <hr style={{ margin: '8px 0', border: 'none', borderTop: '1px solid var(--color-border, rgb(188,198,222))' }} />
             <div className="stat-card__label">Created</div>
-            <div className="stat-card__value" style={{ fontSize: 16 }}>{formatDateTime12(user.createdAt)}</div>
+            <div className="stat-card__value" style={{ fontSize: 16 }}>{formatDateTime12(user.user.createdAt)}</div>
           </div>
           <div className="stat-card">
             <div className="stat-card__label">Turnover</div>
-            <div className="stat-card__value text-orange">₹{user.total_turnover_completed.toLocaleString('en-IN')}</div>
-            <div className="stat-card__change">of ₹{user.turnover_requirement.toLocaleString('en-IN')}</div>
+            <div className="stat-card__value text-orange">₹{user.account.total_turnover_completed.toLocaleString('en-IN')}</div>
+            <div className="stat-card__change">of ₹{user.account.turnover_requirement.toLocaleString('en-IN')}</div>
             <div style={{ marginTop: 8 }}><button className="btn-filled" style={{ fontSize: 11, padding: '4px 10px' }} onClick={() => setShowTurnover(true)}>View Batches</button></div>
           </div>
         </div>
@@ -136,14 +136,14 @@ export default function UserSearch() {
               </div>
               <div className="table-wrap" style={{ padding: 'var(--space-6) var(--space-7)' }}>
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 'var(--space-5)', marginBottom: 'var(--space-6)', fontSize: 12 }}>
-                  <div><span style={{ color: '#888' }}>Total Required</span><div style={{ fontWeight: 700, fontSize: 16 }}>₹{user.turnover_requirement.toLocaleString('en-IN')}</div></div>
-                  <div><span style={{ color: '#888' }}>Total Completed</span><div style={{ fontWeight: 700, fontSize: 16, color: '#22c55e' }}>₹{user.total_turnover_completed.toLocaleString('en-IN')}</div></div>
-                  <div><span style={{ color: '#888' }}>Remaining</span><div style={{ fontWeight: 700, fontSize: 16, color: '#ef4444' }}>₹{(user.turnover_requirement - user.total_turnover_completed).toLocaleString('en-IN')}</div></div>
+                  <div><span style={{ color: '#888' }}>Total Required</span><div style={{ fontWeight: 700, fontSize: 16 }}>₹{user.account.turnover_requirement.toLocaleString('en-IN')}</div></div>
+                  <div><span style={{ color: '#888' }}>Total Completed</span><div style={{ fontWeight: 700, fontSize: 16, color: '#22c55e' }}>₹{user.account.total_turnover_completed.toLocaleString('en-IN')}</div></div>
+                  <div><span style={{ color: '#888' }}>Remaining</span><div style={{ fontWeight: 700, fontSize: 16, color: '#ef4444' }}>₹{(user.account.turnover_requirement - user.account.total_turnover_completed).toLocaleString('en-IN')}</div></div>
                 </div>
                 <table className="table">
                   <thead><tr><th>Type</th><th>Amount</th><th>Multiplier</th><th>Required</th><th>Completed</th><th>Remaining</th><th>Created</th></tr></thead>
                   <tbody>
-                    {user.turnover_batches.map((b, i) => (
+                    {user.account.turnover_batches.map((b, i) => (
                       <tr key={i} tabIndex={0}>
                         <td><span className={`badge ${b.type === 'DEPOSIT_BONUS' ? 'badge--warning' : 'badge--info'}`}>{b.type}</span></td>
                         <td>₹{b.amount.toLocaleString('en-IN')}</td>
