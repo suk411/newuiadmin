@@ -6,6 +6,15 @@ export interface DeviceInfo {
   region: string
 }
 
+export interface TurnoverBatch {
+  type: string
+  amount: number
+  multiplier: number
+  required: number
+  completed: number
+  createdAt: string
+}
+
 export interface UserData {
   userId: number
   mobile: string
@@ -21,6 +30,7 @@ export interface UserData {
   withdrawable: number
   turnover_requirement: number
   total_turnover_completed: number
+  turnover_batches: TurnoverBatch[]
   lastIp: string
   deviceInfo: DeviceInfo | null
 }
@@ -28,13 +38,13 @@ export interface UserData {
 export async function searchUser(userId: string): Promise<UserData> {
   const res = await axiosInstance.get('/user', { params: { userId } })
   const body = res.data.data ?? res.data
-  return { ...body.user, ...body.account, lastIp: body.lastIp ?? '', deviceInfo: body.deviceInfo ?? null }
+  return { ...body.user, ...body.account, turnover_batches: body.account?.turnover_batches ?? [], lastIp: body.lastIp ?? '', deviceInfo: body.deviceInfo ?? null }
 }
 
 export async function searchUserByMobile(mobile: string): Promise<UserData> {
   const res = await axiosInstance.get('/user', { params: { mobile } })
   const body = res.data.data ?? res.data
-  return { ...body.user, ...body.account, lastIp: body.lastIp ?? '', deviceInfo: body.deviceInfo ?? null }
+  return { ...body.user, ...body.account, turnover_batches: body.account?.turnover_batches ?? [], lastIp: body.lastIp ?? '', deviceInfo: body.deviceInfo ?? null }
 }
 
 export async function updateUserStatus(data: { userId: number; status: string }): Promise<void> {

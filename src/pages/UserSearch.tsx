@@ -120,6 +120,27 @@ export default function UserSearch() {
             <div className="stat-card__value" style={{ fontSize: 16 }}>{formatDateTime12(user.createdAt)}</div>
           </div>
         </div>
+
+        <section className="card" style={{ marginTop: 'var(--space-3)' }}>
+          <div className="table-wrap">
+            <table className="table">
+              <thead><tr><th>Type</th><th>Amount</th><th>Multiplier</th><th>Required</th><th>Completed</th><th>Remaining</th><th>Created</th></tr></thead>
+              <tbody>
+                {user.turnover_batches.map((b, i) => (
+                  <tr key={i} tabIndex={0}>
+                    <td><span className={`badge ${b.type === 'DEPOSIT_BONUS' ? 'badge--warning' : 'badge--info'}`}>{b.type}</span></td>
+                    <td>₹{b.amount.toLocaleString('en-IN')}</td>
+                    <td>{b.multiplier}x</td>
+                    <td>₹{b.required.toLocaleString('en-IN')}</td>
+                    <td>₹{b.completed.toLocaleString('en-IN')}</td>
+                    <td>₹{(b.required - b.completed).toLocaleString('en-IN')}</td>
+                    <td style={{ whiteSpace: 'nowrap' }}>{formatDateTime12(b.createdAt)}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </section>
       </>)}
     </div>
   )
