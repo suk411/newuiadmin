@@ -89,24 +89,36 @@ export default function UserSearch() {
         </div>
       )}
 
-      {user && (
+      {user && (<>
+        <div className="stat-cards" style={{ marginTop: 'var(--space-3)' }}>
+          <div className="stat-card">
+            <span className="stat-card__label">User ID</span>
+            <span className="stat-card__value text-blue">{user.userId}</span>
+            <span className="stat-card__change"><span className={`badge ${statusBadge(user.status)}`}>{user.status}</span></span>
+          </div>
+          <div className="stat-card">
+            <span className="stat-card__label">Mobile</span>
+            <span className="stat-card__value">{user.mobile}</span>
+            <span className="stat-card__change">{user.vipLevel}</span>
+          </div>
+          <div className="stat-card">
+            <span className="stat-card__label">Balance</span>
+            <span className="stat-card__value text-green">₹{user.balance.toLocaleString('en-IN')}</span>
+            <span className="stat-card__change up">Withdrawable: ₹{user.withdrawable.toLocaleString('en-IN')}</span>
+          </div>
+        </div>
+
         <div className="card" style={{ margin: 'var(--space-3)' }}>
           <div style={{ padding: 'var(--space-6) var(--space-7)', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'var(--space-5)', fontSize: '13px' }}>
-            <div><strong>User ID:</strong> {user.userId}</div>
-            <div><strong>Mobile:</strong> {user.mobile}</div>
-            <div><strong>VIP Level:</strong> {user.vipLevel}</div>
-            <div><strong>Balance:</strong> ₹{user.balance.toLocaleString('en-IN')}</div>
-            <div><strong>Withdrawable:</strong> ₹{user.withdrawable.toLocaleString('en-IN')}</div>
             <div><strong>Total Deposits:</strong> ₹{user.totalDeposits.toLocaleString('en-IN')}</div>
             <div><strong>Turnover Required:</strong> ₹{user.turnover_requirement.toLocaleString('en-IN')}</div>
             <div><strong>Turnover Completed:</strong> ₹{user.total_turnover_completed.toLocaleString('en-IN')}</div>
-            <div><strong>Status:</strong> <span className={`badge ${statusBadge(user.status)}`}>{user.status}</span></div>
             <div><strong>Last IP:</strong> {user.lastIp}</div>
             {user.deviceInfo && <div><strong>Location:</strong> {user.deviceInfo.city}, {user.deviceInfo.region}</div>}
             <div><strong>Created:</strong> {formatDateTime12(user.createdAt)}</div>
           </div>
         </div>
-      )}
+      </>)}
     </div>
   )
 }
