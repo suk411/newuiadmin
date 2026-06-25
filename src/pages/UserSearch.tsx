@@ -1,6 +1,6 @@
 import { useState, useMemo } from 'react'
 import axios from 'axios'
-import { searchUser, searchUserByMobile } from '../api/users'
+import { searchUser, searchUserByMobile, updateUserStatus } from '../api/users'
 import type { UserSearchResponse } from '../api/users'
 import { formatDateTime12 } from '../utils/format'
 
@@ -15,7 +15,8 @@ function statusBadge(status: string): string {
     case 'active': return 'badge--success'
     case 'suspended': return 'badge--warning'
     case 'blocked':
-    case 'inactive': return 'badge--danger'
+    case 'inactive':
+    case 'banned': return 'badge--danger'
     default: return 'badge--info'
   }
 }
@@ -24,6 +25,9 @@ export default function UserSearch() {
   const [userId, setUserId] = useState('')
   const [mobile, setMobile] = useState('')
   const [showTurnover, setShowTurnover] = useState(false)
+  const [showBanDialog, setShowBanDialog] = useState(false)
+  const [banRemark, setBanRemark] = useState('')
+  const [banning, setBanning] = useState(false)
   const [user, setUser] = useState<UserSearchResponse | null>(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -47,6 +51,21 @@ export default function UserSearch() {
       setError(extractError(err))
     } finally {
       setLoading(false)
+    }
+  }
+
+  const handleBan = async () => {
+    if (!user) return
+    setBanning(true)
+    try {
+      await updateUserStatus({ userId: user.user.userId, status: 'banned', remark: banRemark })
+      setUser({ ...user, account: { ...user.account, status: 'banned' as const } })
+      setShowBanDialog(false)
+      setBanRemark('')
+    } catch (err: unknown) {
+      setError(extractError(err))
+    } finally {
+      setBanning(false)
     }
   }
 
@@ -88,7 +107,7 @@ export default function UserSearch() {
         <div style={{ padding: 'var(--space-3) var(--space-4)', background: '#fef2f2', color: '#dc2626', borderRadius: 'var(--radius-sm)', fontSize: '13px', margin: 'var(--space-3)' }}>
           {error}
         </div>
-      )}
+      )  }
 
       {user && (<>
         <div className="stat-cards" style={{ marginTop: 'var(--space-3)' }}>
@@ -102,6 +121,7 @@ export default function UserSearch() {
             <div className="stat-card__label">Mobile</div>
             <div className="stat-card__value" style={{ fontSize: 16 }}>{user.user.mobile}</div>
             <div className="stat-card__change">{user.account.vipLevel}</div>
+            {user.account.status === 'active' && <div style={{ marginTop: 8 }}><button className="btn-filled" style={{ fontSize: 11, padding: '4px 10px', background: '#ef4444', borderColor: '#ef4444' }} onClick={() => setShowBanDialog(true)}>Ban User</button></div>}
           </div>
           <div className="stat-card">
             <div className="stat-card__label">Balance</div>
@@ -129,6 +149,18 @@ export default function UserSearch() {
           </div>
         </div>
 
+        {showBanDialog && user && (
+          <div className="dialog-overlay" onClick={() => { setShowBanDialog(false); setBanRemark('') }}>
+            <div className="dialog" onClick={(e) => e.stopPropagation()}>
+              <h3>Ban User #{user.user.userId}</h3>
+              <div className="filter-group"><label>Reason (optional)</label><input placeholder="Enter reason" value={banRemark} onChange={(e) => setBanRemark(e.target.value)} /></div>
+              <div className="dialog-actions">
+                <button className="btn-outline" onClick={() => { setShowBanDialog(false); setBanRemark('') }} disabled={banning}>Cancel</button>
+                <button className="btn-filled" style={{ background: '#ef4444', borderColor: '#ef4444' }} onClick={handleBan} disabled={banning}>{banning ? 'Banning...' : 'Confirm Ban'}</button>
+              </div>
+            </div>
+          </div>
+        )}
         {showTurnover && (
           <div className="dialog-overlay" onClick={() => setShowTurnover(false)}>
             <div className="dialog" onClick={(e) => e.stopPropagation()} style={{ width: '70vw', height: '80vh', display: 'flex', flexDirection: 'column', padding: 0 }}>
