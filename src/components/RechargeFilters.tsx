@@ -91,11 +91,11 @@ export default function RechargeFilters({ onSearch, loading }: Props) {
       </div>
       <div className="filter-group" style={{ alignSelf: 'flex-end' }}>
         <div style={{ display: 'flex', gap: 'var(--space-3)' }}>
-          <button type="submit" className="btn btn-primary" disabled={loading}>
+          <button type="submit" className="btn-filled" disabled={loading}>
             {loading ? <span className="spinner" /> : null}
             Search
           </button>
-          <button type="button" className="btn btn-secondary" onClick={handleReset}>
+          <button type="button" className="btn-outline" onClick={handleReset}>
             Reset
           </button>
         </div>

@@ -77,7 +77,7 @@ export default function RechargeTable({ records, loading, onApprove }: Props) {
               <td>
                 {record.status === 'pending' && (
                   <button
-                    className="btn btn-success"
+                    className="btn-success"
                     onClick={() => onApprove(record)}
                     style={{ padding: '2px 10px', fontSize: '12px' }}
                   >

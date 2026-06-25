@@ -14,13 +14,13 @@
   --font-body: 'Helvetica Neue', Helvetica, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', Arial, sans-serif;
 
   --space-1: 2px;
-  --space-2: 4px;
-  --space-3: 6px;
-  --space-4: 8px;
-  --space-5: 10px;
-  --space-6: 12px;
-  --space-7: 16px;
-  --space-8: 20px;
+  --space-2: 6px;
+  --space-3: 7px;
+  --space-4: 20px;
+  --space-5: 8px;
+  --space-6: 10px;
+  --space-7: 12px;
+  --space-8: 5px;
 
   --radius-sm: 3px;
   --radius-md: 4px;
@@ -37,7 +37,7 @@
   --motion-slow: 300ms;
 
   font-family: var(--font-body);
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 400;
   line-height: 1.15;
   color: var(--color-text);

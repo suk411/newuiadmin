@@ -19,10 +19,10 @@ export default function ApproveDialog({ record, loading, onConfirm, onCancel }: 
           <p><strong>Amount:</strong> ₹{Number(record.amount).toLocaleString('en-IN')}</p>
         </div>
         <div className="dialog-actions">
-          <button className="btn btn-secondary" onClick={onCancel} disabled={loading}>
+          <button className="btn-outline" onClick={onCancel} disabled={loading}>
             Cancel
           </button>
-          <button className="btn btn-primary" onClick={onConfirm} disabled={loading}>
+          <button className="btn-filled" onClick={onConfirm} disabled={loading}>
             {loading ? <span className="spinner" /> : null}
             Confirm Approve
           </button>
