@@ -190,11 +190,10 @@ export default function UserSearch() {
               <span className="stat-card__label">Payment Methods</span>
               <button className="btn-filled" style={{ fontSize: 10, padding: '2px 8px' }} onClick={handleLoadPaymentMethods}>View</button>
             </div>
-            {user.paymentMethods?.holderName && <div className="stat-card__change">{user.paymentMethods.holderName}</div>}
-            {user.paymentMethods?.bank?.bankName && <div style={{ fontSize: 11 }}>Bank: {user.paymentMethods.bank.bankName} / {user.paymentMethods.bank.accountNo}</div>}
-            {user.paymentMethods?.upi?.address && <div style={{ fontSize: 11 }}>UPI: {user.paymentMethods.upi.address}</div>}
-            {user.paymentMethods?.upay?.address && <div style={{ fontSize: 11 }}>UPAY: {user.paymentMethods.upay.address}</div>}
-            {!user.paymentMethods?.holderName && !user.paymentMethods?.bank?.bankName && !user.paymentMethods?.upi?.address && !user.paymentMethods?.upay?.address && <div className="stat-card__change">None</div>}
+            <div style={{ fontSize: 11 }}>Holder: {user.paymentMethods?.holderName || '-'}</div>
+            <div style={{ fontSize: 11 }}>Bank: {user.paymentMethods?.bank?.bankName || '-'} / {user.paymentMethods?.bank?.ifsc || '-'} / {user.paymentMethods?.bank?.accountNo || '-'}</div>
+            <div style={{ fontSize: 11 }}>UPI: {user.paymentMethods?.upi?.address || '-'}</div>
+            <div style={{ fontSize: 11 }}>UPAY: {user.paymentMethods?.upay?.address || '-'}</div>
           </div>
           <div className="stat-card">
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
