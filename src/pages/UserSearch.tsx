@@ -2,6 +2,7 @@ import { useState } from 'react'
 import axios from 'axios'
 import { searchUser, searchUserByMobile } from '../api/users'
 import type { UserData } from '../api/users'
+import { formatDateTime12 } from '../utils/format'
 
 function extractError(err: unknown): string {
   if (axios.isAxiosError(err) && err.response?.data?.msg) return err.response.data.msg
@@ -50,7 +51,7 @@ export default function UserSearch() {
 
   return (
     <div className="content">
-      <div className="filters-bar">
+      <form className="filters-bar" onSubmit={(e) => { e.preventDefault(); handleSearch() }}>
         <div className="filter-group">
           <label>User ID</label>
           <input
@@ -58,7 +59,6 @@ export default function UserSearch() {
             placeholder="Enter User ID"
             value={userId}
             onChange={(e) => setUserId(e.target.value)}
-            onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
           />
         </div>
         <div className="filter-group">
@@ -68,12 +68,11 @@ export default function UserSearch() {
             placeholder="Enter Mobile Number"
             value={mobile}
             onChange={(e) => setMobile(e.target.value)}
-            onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
           />
         </div>
         <div className="filter-group" style={{ alignSelf: 'flex-end' }}>
           <div style={{ display: 'flex', gap: 'var(--space-3)' }}>
-            <button className="btn-filled" onClick={handleSearch} disabled={loading || (!userId.trim() && !mobile.trim())}
+            <button type="submit" className="btn-filled" disabled={loading || (!userId.trim() && !mobile.trim())}
               style={{ opacity: loading || (!userId.trim() && !mobile.trim()) ? 0.6 : 1 }}>
               {loading ? 'Searching...' : 'Search'}
             </button>
@@ -82,7 +81,7 @@ export default function UserSearch() {
             </button>
           </div>
         </div>
-      </div>
+      </form>
 
       {error && (
         <div style={{ padding: 'var(--space-3) var(--space-4)', background: '#fef2f2', color: '#dc2626', borderRadius: 'var(--radius-sm)', fontSize: '13px', margin: 'var(--space-3)' }}>
@@ -92,17 +91,13 @@ export default function UserSearch() {
 
       {user && (
         <div className="card" style={{ margin: 'var(--space-3)' }}>
-          <div className="card__header">
-            <span className="card__title">User Profile</span>
-            <span className={`badge ${statusBadge(user.status)}`}>{user.status}</span>
-          </div>
           <div style={{ padding: 'var(--space-6) var(--space-7)', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'var(--space-5)', fontSize: '13px' }}>
             <div><strong>User ID:</strong> {user.userId}</div>
             <div><strong>Mobile:</strong> {user.mobile}</div>
             <div><strong>Name:</strong> {user.name}</div>
-            <div><strong>Balance:</strong> {user.balance.toLocaleString()}</div>
-            <div><strong>Status:</strong> {user.status}</div>
-            <div><strong>Created:</strong> {user.createdAt}</div>
+            <div><strong>Balance:</strong> ₹{user.balance.toLocaleString('en-IN')}</div>
+            <div><strong>Status:</strong> <span className={`badge ${statusBadge(user.status)}`}>{user.status}</span></div>
+            <div><strong>Created:</strong> {formatDateTime12(user.createdAt)}</div>
           </div>
         </div>
       )}

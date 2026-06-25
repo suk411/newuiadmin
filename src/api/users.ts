@@ -11,12 +11,12 @@ export interface UserData {
 
 export async function searchUser(userId: string): Promise<UserData> {
   const res = await axiosInstance.get('/user', { params: { userId } })
-  return res.data
+  return res.data.data ?? res.data
 }
 
 export async function searchUserByMobile(mobile: string): Promise<UserData> {
   const res = await axiosInstance.get('/user', { params: { mobile } })
-  return res.data
+  return res.data.data ?? res.data
 }
 
 export async function updateUserStatus(data: { userId: number; status: string }): Promise<void> {
