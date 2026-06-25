@@ -1,7 +1,7 @@
 import { useState, useMemo } from 'react'
 import axios from 'axios'
-import { searchUser, searchUserByMobile, updateUserStatus, fetchUsersByIp } from '../api/users'
-import type { UserSearchResponse } from '../api/users'
+import { searchUser, searchUserByMobile, updateUserStatus, fetchUsersByIp, viewUserPaymentMethods, updateUserPayments } from '../api/users'
+import type { UserSearchResponse, PaymentMethods } from '../api/users'
 import { formatDateTime12 } from '../utils/format'
 
 function extractError(err: unknown): string {
@@ -33,6 +33,11 @@ export default function UserSearch() {
   const [showIpUsers, setShowIpUsers] = useState(false)
   const [ipUsers, setIpUsers] = useState<Array<{ userId: number; mobile: string; createdAt: string }>>([])
   const [ipUsersLoading, setIpUsersLoading] = useState(false)
+  const [showPmDialog, setShowPmDialog] = useState(false)
+  const [pmData, setPmData] = useState<PaymentMethods | null>(null)
+  const [pmType, setPmType] = useState<'BANK' | 'UPI' | 'UPAY'>('BANK')
+  const [pmForm, setPmForm] = useState<Record<string, string>>({})
+  const [pmUpdating, setPmUpdating] = useState(false)
   const [user, setUser] = useState<UserSearchResponse | null>(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -70,6 +75,34 @@ export default function UserSearch() {
       setError(extractError(err))
     } finally {
       setIpUsersLoading(false)
+    }
+  }
+
+  const handleLoadPaymentMethods = async () => {
+    if (!user) return
+    try {
+      const data = await viewUserPaymentMethods(String(user.user.userId))
+      setPmData(data)
+      setPmForm({})
+      setPmType('BANK')
+      setShowPmDialog(true)
+    } catch (err: unknown) {
+      setError(extractError(err))
+    }
+  }
+
+  const handleUpdatePayment = async () => {
+    if (!user) return
+    setPmUpdating(true)
+    try {
+      const body = { userId: user.user.userId, type: pmType, ...pmForm } as any
+      await updateUserPayments(body)
+      setShowPmDialog(false)
+      setPmForm({})
+    } catch (err: unknown) {
+      setError(extractError(err))
+    } finally {
+      setPmUpdating(false)
     }
   }
 
@@ -154,6 +187,19 @@ export default function UserSearch() {
           </div>
           <div className="stat-card">
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <span className="stat-card__label">Payment Methods</span>
+              <button className="btn-filled" style={{ fontSize: 10, padding: '2px 8px' }} onClick={handleLoadPaymentMethods}>View</button>
+            </div>
+            <div className="stat-card__value" style={{ fontSize: 14 }}>
+              {user.paymentMethods?.bank ? 'Bank' : ''}{user.paymentMethods?.bank && (user.paymentMethods?.upi || user.paymentMethods?.upay) ? ' / ' : ''}
+              {user.paymentMethods?.upi ? 'UPI' : ''}{user.paymentMethods?.upi && user.paymentMethods?.upay ? ' / ' : ''}
+              {user.paymentMethods?.upay ? 'UPAY' : ''}
+              {!user.paymentMethods?.bank && !user.paymentMethods?.upi && !user.paymentMethods?.upay ? 'None' : ''}
+            </div>
+            {user.paymentMethods?.holderName && <div className="stat-card__change">{user.paymentMethods.holderName}</div>}
+          </div>
+          <div className="stat-card">
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
               <span className="stat-card__label">Last IP</span>
               <button className="btn-filled" style={{ fontSize: 10, padding: '2px 8px' }} onClick={handleLoadSameIp} disabled={ipUsersLoading}>{ipUsersLoading ? 'Loading...' : 'Same IP Users'}</button>
             </div>
@@ -220,6 +266,54 @@ export default function UserSearch() {
                     </tbody>
                   </table>
                 )}
+              </div>
+            </div>
+          </div>
+        )}
+        {showPmDialog && user && (
+          <div className="dialog-overlay" onClick={() => setShowPmDialog(false)}>
+            <div className="dialog" onClick={(e) => e.stopPropagation()} style={{ width: '50vw', maxHeight: '80vh', display: 'flex', flexDirection: 'column', padding: 0 }}>
+              <div style={{ padding: 'var(--space-6) var(--space-7)', borderBottom: '1px solid var(--color-border, rgb(188,198,222))', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexShrink: 0 }}>
+                <span style={{ fontWeight: 700 }}>Payment Methods — User #{user.user.userId}</span>
+                <button className="btn-outline" style={{ fontSize: 11, padding: '2px 8px' }} onClick={() => setShowPmDialog(false)}>✕</button>
+              </div>
+              <div style={{ padding: 'var(--space-6) var(--space-7)', flex: 1, overflow: 'auto' }}>
+                {pmData && (
+                  <div style={{ marginBottom: 'var(--space-6)', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'var(--space-5)', fontSize: 12 }}>
+                    {pmData.bank && <div><strong>Bank:</strong> {pmData.bank.bankName} / {pmData.bank.ifsc} / {pmData.bank.accountNo}</div>}
+                    {pmData.upi && <div><strong>UPI:</strong> {pmData.upi.address}</div>}
+                    {pmData.upay && <div><strong>UPAY:</strong> {pmData.upay.address}</div>}
+                    {pmData.holderName && <div><strong>Holder:</strong> {pmData.holderName}</div>}
+                    {!pmData.bank && !pmData.upi && !pmData.upay && <div style={{ color: '#888' }}>No payment methods on file</div>}
+                  </div>
+                )}
+                <hr style={{ margin: '12px 0', border: 'none', borderTop: '1px solid var(--color-border, rgb(188,198,222))' }} />
+                <div style={{ fontWeight: 600, marginBottom: 8, fontSize: 13 }}>Add / Update Payment</div>
+                <div className="filter-group" style={{ marginBottom: 10 }}><label>Type</label>
+                  <select value={pmType} onChange={(e) => { setPmType(e.target.value as any); setPmForm({}) }}>
+                    <option value="BANK">Bank</option>
+                    <option value="UPI">UPI</option>
+                    <option value="UPAY">UPAY</option>
+                  </select>
+                </div>
+                {pmType === 'BANK' && (<>
+                  <div className="filter-group"><label>Bank Name</label><input placeholder="e.g. SBI" value={pmForm.bankName ?? ''} onChange={(e) => setPmForm({ ...pmForm, bankName: e.target.value })} /></div>
+                  <div className="filter-group"><label>IFSC</label><input placeholder="e.g. SBIN0001234" value={pmForm.ifsc ?? ''} onChange={(e) => setPmForm({ ...pmForm, ifsc: e.target.value })} /></div>
+                  <div className="filter-group"><label>Account No</label><input placeholder="Account number" value={pmForm.accountNo ?? ''} onChange={(e) => setPmForm({ ...pmForm, accountNo: e.target.value })} /></div>
+                  <div className="filter-group"><label>Account Holder</label><input placeholder="Holder name" value={pmForm.accountHolder ?? ''} onChange={(e) => setPmForm({ ...pmForm, accountHolder: e.target.value })} /></div>
+                </>)}
+                {pmType === 'UPI' && (<>
+                  <div className="filter-group"><label>UPI ID</label><input placeholder="e.g. name@paytm" value={pmForm.upiId ?? ''} onChange={(e) => setPmForm({ ...pmForm, upiId: e.target.value })} /></div>
+                  <div className="filter-group"><label>Account Holder</label><input placeholder="Holder name" value={pmForm.accountHolder ?? ''} onChange={(e) => setPmForm({ ...pmForm, accountHolder: e.target.value })} /></div>
+                </>)}
+                {pmType === 'UPAY' && (<>
+                  <div className="filter-group"><label>RPL ID</label><input placeholder="e.g. RPL123456" value={pmForm.rplId ?? ''} onChange={(e) => setPmForm({ ...pmForm, rplId: e.target.value })} /></div>
+                  <div className="filter-group"><label>Account Holder</label><input placeholder="Holder name" value={pmForm.accountHolder ?? ''} onChange={(e) => setPmForm({ ...pmForm, accountHolder: e.target.value })} /></div>
+                </>)}
+              </div>
+              <div style={{ padding: 'var(--space-6) var(--space-7)', borderTop: '1px solid var(--color-border, rgb(188,198,222))', display: 'flex', justifyContent: 'flex-end', gap: 'var(--space-3)' }}>
+                <button className="btn-outline" onClick={() => setShowPmDialog(false)} disabled={pmUpdating}>Cancel</button>
+                <button className="btn-filled" onClick={handleUpdatePayment} disabled={pmUpdating || Object.keys(pmForm).length === 0}>{pmUpdating ? 'Saving...' : 'Save Payment'}</button>
               </div>
             </div>
           </div>
