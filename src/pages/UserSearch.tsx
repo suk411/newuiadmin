@@ -190,10 +190,12 @@ export default function UserSearch() {
               <span className="stat-card__label">Payment Methods</span>
               <button className="btn-filled" style={{ fontSize: 10, padding: '2px 8px' }} onClick={handleLoadPaymentMethods}>View</button>
             </div>
-            <div style={{ fontSize: 11 }}>Holder: {user.paymentMethods?.holderName || '-'}</div>
-            <div style={{ fontSize: 11 }}>Bank: {user.paymentMethods?.bank?.bankName || '-'} / {user.paymentMethods?.bank?.ifsc || '-'} / {user.paymentMethods?.bank?.accountNo || '-'}</div>
-            <div style={{ fontSize: 11 }}>UPI: {user.paymentMethods?.upi?.address || '-'}</div>
-            <div style={{ fontSize: 11 }}>UPAY: {user.paymentMethods?.upay?.address || '-'}</div>
+<div style={{ fontSize: 11, marginTop: 2 }}><strong>Holder Name:</strong> {user.paymentMethods?.holderName || '-'}</div>
+            <div style={{ fontSize: 11, marginTop: 2 }}><strong>Bank Name:</strong> {user.paymentMethods?.bank?.bankName || '-'}</div>
+            <div style={{ fontSize: 11, marginTop: 2 }}><strong>IFSC:</strong> {user.paymentMethods?.bank?.ifsc || '-'}</div>
+            <div style={{ fontSize: 11, marginTop: 2 }}><strong>Account No:</strong> {user.paymentMethods?.bank?.accountNo || '-'}</div>
+            <div style={{ fontSize: 11, marginTop: 2 }}><strong>UPI:</strong> {user.paymentMethods?.upi?.address || '-'}</div>
+            <div style={{ fontSize: 11, marginTop: 2 }}><strong>UPAY:</strong> {user.paymentMethods?.upay?.address || '-'}</div>
           </div>
           <div className="stat-card">
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -276,12 +278,13 @@ export default function UserSearch() {
               </div>
               <div style={{ padding: 'var(--space-6) var(--space-7)', flex: 1, overflow: 'auto' }}>
                 {pmData && (
-                  <div style={{ marginBottom: 'var(--space-6)', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'var(--space-5)', fontSize: 13 }}>
-                    {pmData.holderName && <div><strong>Holder Name:</strong> {pmData.holderName}</div>}
-                    {pmData.bank?.bankName && <div><strong>Bank:</strong> {pmData.bank.bankName} / {pmData.bank.ifsc} / {pmData.bank.accountNo}</div>}
-                    {pmData.upi?.address && <div><strong>UPI:</strong> {pmData.upi.address}</div>}
-                    {pmData.upay?.address && <div><strong>UPAY:</strong> {pmData.upay.address}</div>}
-                    {!pmData.holderName && !pmData.bank?.bankName && !pmData.upi?.address && !pmData.upay?.address && <div style={{ color: '#888' }}>No payment methods on file</div>}
+                  <div style={{ marginBottom: 'var(--space-6)', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'var(--space-3)', fontSize: 13 }}>
+                    <div><strong>Holder Name:</strong> {pmData.holderName || '-'}</div>
+                    <div><strong>Bank Name:</strong> {pmData.bank?.bankName || '-'}</div>
+                    <div><strong>IFSC:</strong> {pmData.bank?.ifsc || '-'}</div>
+                    <div><strong>Account No:</strong> {pmData.bank?.accountNo || '-'}</div>
+                    <div><strong>UPI:</strong> {pmData.upi?.address || '-'}</div>
+                    <div><strong>UPAY:</strong> {pmData.upay?.address || '-'}</div>
                   </div>
                 )}
                 <hr style={{ margin: '12px 0', border: 'none', borderTop: '1px solid var(--color-border, rgb(188,198,222))' }} />
