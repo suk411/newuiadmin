@@ -1,12 +1,16 @@
 import axiosInstance from './axiosInstance'
 
 export interface TransactionRecord {
-  id: string
+  orderId: string
   userId: number
   type: string
   amount: number
+  charge: number
+  balanceAfter: number
   status: string
+  remark: string
   createdAt: string
+  updatedAt: string
 }
 
 export interface TransactionListResponse {

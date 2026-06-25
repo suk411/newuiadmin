@@ -2,7 +2,7 @@ import { useState } from 'react'
 import axios from 'axios'
 import { fetchTransactions } from '../api/transactions'
 import type { TransactionRecord } from '../api/transactions'
-import { formatDateTime } from '../utils/format'
+import { formatDateTime12 } from '../utils/format'
 
 const LIMIT = 20
 
@@ -52,7 +52,7 @@ export default function Transactions() {
 
   return (
     <div className="content">
-      <div className="filters-bar">
+      <form className="filters-bar" onSubmit={(e) => { e.preventDefault(); load() }}>
         <div className="filter-group"><label>User ID</label><input placeholder="User ID" value={userId} onChange={(e) => setUserId(e.target.value)} /></div>
         <div className="filter-group"><label>Order ID</label><input placeholder="Order ID" value={orderId} onChange={(e) => setOrderId(e.target.value)} /></div>
         <div className="filter-group"><label>Transaction ID</label><input placeholder="Transaction ID" value={transactionId} onChange={(e) => setTransactionId(e.target.value)} /></div>
@@ -68,12 +68,12 @@ export default function Transactions() {
         <div className="filter-group"><label>To</label><input type="date" value={dateTo} onChange={(e) => setDateTo(e.target.value)} /></div>
         <div className="filter-group" style={{ alignSelf: 'flex-end' }}>
           <div style={{ display: 'flex', gap: 'var(--space-3)' }}>
-            <button className="btn-filled" onClick={() => load()} disabled={loading || !hasAny}
+            <button type="submit" className="btn-filled" disabled={loading || !hasAny}
               style={{ opacity: loading || !hasAny ? 0.6 : 1 }}>Search</button>
             <button type="button" className="btn-outline" onClick={() => { setUserId(''); setOrderId(''); setTransactionId(''); setType(''); setDateFrom(''); setDateTo(''); setRecords([]); setTotal(0) }}>Reset</button>
           </div>
         </div>
-      </div>
+      </form>
 
       {error && <div style={{ padding: '8px 12px', background: '#fef2f2', color: '#dc2626', borderRadius: 4, fontSize: 13 }}>{error}</div>}
 
@@ -88,16 +88,20 @@ export default function Transactions() {
         
         <div className="table-wrap">
           <table className="table">
-            <thead><tr><th>ID</th><th>User</th><th>Type</th><th>Amount</th><th>Status</th><th>Date</th></tr></thead>
+            <thead><tr><th>User ID</th><th>Order ID</th><th>Type</th><th>Amount</th><th>Charge</th><th>Balance</th><th>Status</th><th>Remark</th><th>Created</th><th>Updated</th></tr></thead>
             <tbody>
               {records.map((r) => (
-                <tr key={r.id} tabIndex={0}>
-                  <td style={{ fontFamily: 'monospace', fontSize: 12 }}>{r.id}</td>
+                <tr key={r.orderId} tabIndex={0}>
                   <td>{r.userId}</td>
+                  <td style={{ fontFamily: 'monospace', fontSize: 12 }}>{r.orderId}</td>
                   <td>{r.type}</td>
                   <td>₹{r.amount.toLocaleString('en-IN')}</td>
-                  <td><span className={`badge ${r.status === 'success' ? 'badge--success' : r.status === 'failed' ? 'badge--danger' : 'badge--warning'}`}>{r.status}</span></td>
-                  <td style={{ whiteSpace: 'nowrap' }}>{formatDateTime(r.createdAt)}</td>
+                  <td>₹{r.charge.toLocaleString('en-IN')}</td>
+                  <td>₹{r.balanceAfter.toLocaleString('en-IN')}</td>
+                  <td><span className={`badge ${r.status === 'SUCCESS' ? 'badge--success' : r.status === 'FAILED' ? 'badge--danger' : 'badge--warning'}`}>{r.status}</span></td>
+                  <td>{r.remark || '-'}</td>
+                  <td style={{ whiteSpace: 'nowrap' }}>{formatDateTime12(r.createdAt)}</td>
+                  <td style={{ whiteSpace: 'nowrap' }}>{formatDateTime12(r.updatedAt)}</td>
                 </tr>
               ))}
             </tbody>
