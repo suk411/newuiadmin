@@ -91,47 +91,32 @@ export default function UserSearch() {
 
       {user && (<>
         <div className="stat-cards" style={{ marginTop: 'var(--space-3)' }}>
-          <section className="card">
-            <div style={{ padding: 'var(--space-6) var(--space-7)', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'var(--space-5)', fontSize: '13px' }}>
-              <div>
-                <div className="stat-card__label" style={{ marginBottom: 2 }}>User ID</div>
-                <div style={{ fontSize: 20, fontWeight: 700, color: '#409eff', lineHeight: 1.2 }}>{user.userId}</div>
-                <div style={{ marginTop: 4 }}><span className={`badge ${statusBadge(user.status)}`}>{user.status}</span></div>
-              </div>
-              <div>
-                <div className="stat-card__label" style={{ marginBottom: 2 }}>Mobile</div>
-                <div style={{ fontSize: 20, fontWeight: 700, color: '#303133', lineHeight: 1.2 }}>{user.mobile}</div>
-                <div style={{ fontSize: 10, color: '#888', marginTop: 4 }}>{user.vipLevel}</div>
-              </div>
-            </div>
-          </section>
-          <section className="card">
-            <div style={{ padding: 'var(--space-6) var(--space-7)', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'var(--space-5)', fontSize: '13px' }}>
-              <div>
-                <div className="stat-card__label" style={{ marginBottom: 2 }}>Balance</div>
-                <div style={{ fontSize: 20, fontWeight: 700, color: '#22c55e', lineHeight: 1.2 }}>₹{user.balance.toLocaleString('en-IN')}</div>
-                <div style={{ fontSize: 10, color: '#67c23a', marginTop: 4 }}>Withdrawable: ₹{user.withdrawable.toLocaleString('en-IN')}</div>
-              </div>
-              <div>
-                <div className="stat-card__label" style={{ marginBottom: 2 }}>Total Deposits</div>
-                <div style={{ fontSize: 20, fontWeight: 700, color: '#f97316', lineHeight: 1.2 }}>₹{user.totalDeposits.toLocaleString('en-IN')}</div>
-                <div style={{ fontSize: 10, color: '#888', marginTop: 4 }}>Turnover: ₹{user.turnover_requirement.toLocaleString('en-IN')} / ₹{user.total_turnover_completed.toLocaleString('en-IN')}</div>
-              </div>
-            </div>
-          </section>
-          <section className="card">
-            <div style={{ padding: 'var(--space-6) var(--space-7)', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'var(--space-5)', fontSize: '13px' }}>
-              <div>
-                <div className="stat-card__label" style={{ marginBottom: 2 }}>Last IP</div>
-                <div style={{ fontSize: 20, fontWeight: 700, lineHeight: 1.2 }}>{user.lastIp}</div>
-                {user.deviceInfo && <div style={{ fontSize: 10, color: '#888', marginTop: 4 }}>{user.deviceInfo.city}, {user.deviceInfo.region}</div>}
-              </div>
-              <div>
-                <div className="stat-card__label" style={{ marginBottom: 2 }}>Created</div>
-                <div style={{ fontSize: 20, fontWeight: 700, lineHeight: 1.2 }}>{formatDateTime12(user.createdAt)}</div>
-              </div>
-            </div>
-          </section>
+          <div className="stat-card">
+            <div className="stat-card__label">User ID</div>
+            <div className="stat-card__value text-blue">{user.userId}</div>
+            <div className="stat-card__change"><span className={`badge ${statusBadge(user.status)}`}>{user.status}</span></div>
+            <hr style={{ margin: '8px 0', border: 'none', borderTop: '1px solid var(--color-border, rgb(188,198,222))' }} />
+            <div className="stat-card__label">Mobile</div>
+            <div className="stat-card__value" style={{ fontSize: 16 }}>{user.mobile}</div>
+            <div className="stat-card__change">{user.vipLevel}</div>
+          </div>
+          <div className="stat-card">
+            <div className="stat-card__label">Balance</div>
+            <div className="stat-card__value text-green">₹{user.balance.toLocaleString('en-IN')}</div>
+            <div className="stat-card__change up">Withdrawable: ₹{user.withdrawable.toLocaleString('en-IN')}</div>
+            <hr style={{ margin: '8px 0', border: 'none', borderTop: '1px solid var(--color-border, rgb(188,198,222))' }} />
+            <div className="stat-card__label">Total Deposits</div>
+            <div className="stat-card__value text-orange" style={{ fontSize: 16 }}>₹{user.totalDeposits.toLocaleString('en-IN')}</div>
+            <div className="stat-card__change">Turnover: {user.total_turnover_completed.toLocaleString('en-IN')} / {user.turnover_requirement.toLocaleString('en-IN')}</div>
+          </div>
+          <div className="stat-card">
+            <div className="stat-card__label">Last IP</div>
+            <div className="stat-card__value" style={{ fontSize: 16 }}>{user.lastIp}</div>
+            {user.deviceInfo && <div className="stat-card__change">{user.deviceInfo.city}, {user.deviceInfo.region}</div>}
+            <hr style={{ margin: '8px 0', border: 'none', borderTop: '1px solid var(--color-border, rgb(188,198,222))' }} />
+            <div className="stat-card__label">Created</div>
+            <div className="stat-card__value" style={{ fontSize: 16 }}>{formatDateTime12(user.createdAt)}</div>
+          </div>
         </div>
       </>)}
     </div>
