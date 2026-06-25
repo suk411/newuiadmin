@@ -90,23 +90,25 @@ export default function UserSearch() {
       )}
 
       {user && (<>
-        <div className="stat-cards" style={{ marginTop: 'var(--space-3)' }}>
-          <div className="stat-card">
-            <span className="stat-card__label">User ID</span>
-            <span className="stat-card__value text-blue">{user.userId}</span>
-            <span className="stat-card__change"><span className={`badge ${statusBadge(user.status)}`}>{user.status}</span></span>
+        <section className="card" style={{ marginTop: 'var(--space-3)' }}>
+          <div style={{ padding: 'var(--space-6) var(--space-7)', display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 'var(--space-5)', fontSize: '13px' }}>
+            <div>
+              <div style={{ fontSize: 10, color: '#888', textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: 2 }}>User ID</div>
+              <div style={{ fontSize: 18, fontWeight: 700, color: '#409eff' }}>{user.userId}</div>
+              <div style={{ marginTop: 4 }}><span className={`badge ${statusBadge(user.status)}`}>{user.status}</span></div>
+            </div>
+            <div>
+              <div style={{ fontSize: 10, color: '#888', textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: 2 }}>Mobile</div>
+              <div style={{ fontSize: 18, fontWeight: 700, color: '#303133' }}>{user.mobile}</div>
+              <div style={{ fontSize: 10, color: '#888', marginTop: 4 }}>{user.vipLevel}</div>
+            </div>
+            <div>
+              <div style={{ fontSize: 10, color: '#888', textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: 2 }}>Balance</div>
+              <div style={{ fontSize: 18, fontWeight: 700, color: '#22c55e' }}>₹{user.balance.toLocaleString('en-IN')}</div>
+              <div style={{ fontSize: 10, color: '#67c23a', marginTop: 4 }}>Withdrawable: ₹{user.withdrawable.toLocaleString('en-IN')}</div>
+            </div>
           </div>
-          <div className="stat-card">
-            <span className="stat-card__label">Mobile</span>
-            <span className="stat-card__value">{user.mobile}</span>
-            <span className="stat-card__change">{user.vipLevel}</span>
-          </div>
-          <div className="stat-card">
-            <span className="stat-card__label">Balance</span>
-            <span className="stat-card__value text-green">₹{user.balance.toLocaleString('en-IN')}</span>
-            <span className="stat-card__change up">Withdrawable: ₹{user.withdrawable.toLocaleString('en-IN')}</span>
-          </div>
-        </div>
+        </section>
 
         <div className="card" style={{ margin: 'var(--space-3)' }}>
           <div style={{ padding: 'var(--space-6) var(--space-7)', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'var(--space-5)', fontSize: '13px' }}>
