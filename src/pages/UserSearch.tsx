@@ -145,7 +145,7 @@ export default function UserSearch() {
                   <tbody>
                     {user.account.turnover_batches.map((b, i) => (
                       <tr key={i} tabIndex={0}>
-                        <td><span className={`badge ${b.type === 'DEPOSIT_BONUS' ? 'badge--warning' : 'badge--info'}`}>{b.type}</span></td>
+                        <td>{b.type}</td>
                         <td>₹{b.amount.toLocaleString('en-IN')}</td>
                         <td>{b.multiplier}x</td>
                         <td>₹{b.required.toLocaleString('en-IN')}</td>
