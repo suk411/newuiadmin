@@ -37,14 +37,11 @@ export default function Dashboard() {
         <h2 className="section-title">Deposits</h2>
         <div className="stat-cards" style={{ marginTop: 12 }}>
           <div className="stat-card">
-            <span className="stat-card__label">Total Recharges</span>
-            <span className="stat-card__value">{dep?.count != null ? dep.count.toLocaleString() : '—'}</span>
-            <span className="stat-card__change up">{dep?.count ?? 0} orders</span>
-          </div>
-          <div className="stat-card">
-            <span className="stat-card__label">Volume (INR)</span>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <span className="stat-card__label">Total Recharges</span>
+              <span className="stat-card__change up">{dep?.count ?? 0} orders</span>
+            </div>
             <span className="stat-card__value text-orange">{dep?.total != null ? `₹${Number(dep.total).toLocaleString('en-IN')}` : '—'}</span>
-            <span className="stat-card__change up">Total amount</span>
           </div>
           <div className="stat-card">
             <span className="stat-card__label">Pending</span>

@@ -2,7 +2,8 @@ import { useState } from 'react'
 import axios from 'axios'
 import { fetchWithdrawals, approveWithdrawal, cancelWithdrawal } from '../api/withdrawals'
 import type { WithdrawalRecord } from '../api/withdrawals'
-import { formatDateTime } from '../utils/format'
+import { formatDateTime12 } from '../utils/format'
+import WithdrawApproveDialog from '../components/WithdrawApproveDialog'
 
 const LIMIT = 20
 
@@ -21,8 +22,11 @@ export default function Withdrawals() {
   const [userId, setUserId] = useState('')
   const [orderId, setOrderId] = useState('')
   const [status, setStatus] = useState('')
+  const [chargeFrom, setChargeFrom] = useState('')
   const [dateFrom, setDateFrom] = useState('')
   const [dateTo, setDateTo] = useState('')
+  const [actionLoading, setActionLoading] = useState<string | null>(null)
+  const [approveTarget, setApproveTarget] = useState<any | null>(null)
 
   const load = async (p = 1) => {
     setLoading(true)
@@ -32,6 +36,7 @@ export default function Withdrawals() {
       if (userId) params.userId = userId
       if (orderId) params.orderId = orderId
       if (status) params.status = status
+      if (chargeFrom) params.chargeFrom = chargeFrom
       if (dateFrom) params.dateFrom = dateFrom
       if (dateTo) params.dateTo = dateTo
       const res = await fetchWithdrawals(params)
@@ -45,9 +50,45 @@ export default function Withdrawals() {
     }
   }
 
+  const handleApproveClick = (record: any) => {
+    setApproveTarget(record)
+  }
+
+  const handleApproveConfirm = async (chargeFrom: string) => {
+    if (!approveTarget) return
+    setActionLoading(approveTarget.orderId)
+    try {
+      await approveWithdrawal(approveTarget.orderId, chargeFrom)
+      setApproveTarget(null)
+      load(page)
+    } catch (err: unknown) {
+      setError(extractError(err))
+    } finally {
+      setActionLoading(null)
+    }
+  }
+
+  const handleApproveCancel = () => {
+    setApproveTarget(null)
+  }
+
+  const handleCancel = async (orderId: string) => {
+    const reason = prompt('Enter cancellation reason:')
+    if (!reason) return
+    setActionLoading(orderId)
+    try {
+      await cancelWithdrawal(orderId, reason)
+      load(page)
+    } catch (err: unknown) {
+      setError(extractError(err))
+    } finally {
+      setActionLoading(null)
+    }
+  }
+
   return (
     <div className="content">
-      <div className="filters-bar">
+      <form className="filters-bar" onSubmit={(e) => { e.preventDefault(); load() }}>
         <div className="filter-group"><label>User ID</label><input placeholder="User ID" value={userId} onChange={(e) => setUserId(e.target.value)} /></div>
         <div className="filter-group"><label>Order ID</label><input placeholder="Order ID" value={orderId} onChange={(e) => setOrderId(e.target.value)} /></div>
         <div className="filter-group"><label>Status</label>
@@ -58,16 +99,23 @@ export default function Withdrawals() {
             <option value="cancelled">Cancelled</option>
           </select>
         </div>
+        <div className="filter-group"><label>Charge From</label>
+          <select value={chargeFrom} onChange={(e) => setChargeFrom(e.target.value)}>
+            <option value="">All</option>
+            <option value="platform">Platform</option>
+            <option value="user">User</option>
+          </select>
+        </div>
         <div className="filter-group"><label>From</label><input type="date" value={dateFrom} onChange={(e) => setDateFrom(e.target.value)} /></div>
         <div className="filter-group"><label>To</label><input type="date" value={dateTo} onChange={(e) => setDateTo(e.target.value)} /></div>
         <div className="filter-group" style={{ alignSelf: 'flex-end' }}>
           <div style={{ display: 'flex', gap: 'var(--space-3)' }}>
-            <button className="btn-filled" onClick={() => load()} disabled={loading}
+            <button type="submit" className="btn-filled" disabled={loading}
               style={{ opacity: loading ? 0.6 : 1 }}>Search</button>
-            <button type="button" className="btn-outline" onClick={() => { setUserId(''); setOrderId(''); setStatus(''); setDateFrom(''); setDateTo(''); setRecords([]); setTotal(0) }}>Reset</button>
+            <button type="button" className="btn-outline" onClick={() => { setUserId(''); setOrderId(''); setStatus(''); setChargeFrom(''); setDateFrom(''); setDateTo(''); setRecords([]); setTotal(0) }}>Reset</button>
           </div>
         </div>
-      </div>
+      </form>
 
       {error && <div style={{ padding: '8px 12px', background: '#fef2f2', color: '#dc2626', borderRadius: 4, fontSize: 13 }}>{error}</div>}
 
@@ -82,17 +130,40 @@ export default function Withdrawals() {
         
         <div className="table-wrap">
           <table className="table">
-            <thead><tr><th>Order ID</th><th>User</th><th>Amount</th><th>Status</th><th>Date</th></tr></thead>
+            <thead><tr><th>User ID</th><th>Order ID</th><th>Payment</th><th>Channel</th><th>Amount</th><th>Charge</th><th>Charge From</th><th>Note</th><th>Created</th><th>Updated</th><th>Status</th><th>Actions</th></tr></thead>
             <tbody>
-              {records.map((r) => (
+              {records.map((r: any) => {
+                const pd = r.paymentDetails || {}
+                const payInfo = pd.upiId ? `UPI: ${pd.upiId}` : pd.accountNo ? `${pd.bankName || ''} ${pd.holderName || ''} ${pd.accountNo}`.trim() : '—'
+                return (
                 <tr key={r.orderId} tabIndex={0}>
-                  <td style={{ fontFamily: 'monospace', fontSize: 12 }}>{r.orderId}</td>
                   <td>{r.userId}</td>
-                  <td>₹{r.amount.toLocaleString('en-IN')}</td>
-                  <td><span className={`badge ${r.status === 'approved' ? 'badge--success' : r.status === 'cancelled' ? 'badge--danger' : 'badge--warning'}`}>{r.status}</span></td>
-                  <td style={{ whiteSpace: 'nowrap' }}>{formatDateTime(r.createdAt)}</td>
+                  <td style={{ fontFamily: 'monospace', fontSize: 12 }}>{r.orderId}</td>
+                  <td style={{ fontSize: 12, maxWidth: 160, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }} title={payInfo}>{payInfo}</td>
+                  <td>{r.channelName || '—'}</td>
+                  <td>₹{Number(r.amount).toLocaleString('en-IN')}</td>
+                  <td>{r.charge != null ? `₹${Number(r.charge).toLocaleString('en-IN')}` : '—'}</td>
+                  <td style={{ fontSize: 12 }}>{r.chargeFrom || '—'}</td>
+                  <td style={{ fontSize: 12, maxWidth: 120, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }} title={r.note || ''}>{r.note || '—'}</td>
+                  <td style={{ whiteSpace: 'nowrap', fontSize: 12 }}>{formatDateTime12(r.createdAt)}</td>
+                  <td style={{ whiteSpace: 'nowrap', fontSize: 12 }}>{r.updatedAt ? formatDateTime12(r.updatedAt) : '—'}</td>
+                  <td><span className={`badge ${['SUCCESS', 'approved'].includes(r.status) ? 'badge--success' : ['FAILED', 'cancelled'].includes(r.status) ? 'badge--danger' : 'badge--warning'}`}>{r.status}</span></td>
+                  <td>
+                    <div className="cell-actions">
+                      {['PENDING', 'pending'].includes(r.status) && (
+                        <>
+                          <button className="btn btn--success btn--sm" onClick={() => handleApproveClick(r)} disabled={actionLoading === r.orderId}>
+                            {actionLoading === r.orderId ? '...' : 'Approve'}
+                          </button>
+                          <button className="btn btn--danger btn--sm" onClick={() => handleCancel(r.orderId)} disabled={actionLoading === r.orderId}>
+                            {actionLoading === r.orderId ? '...' : 'Cancel'}
+                          </button>
+                        </>
+                      )}
+                    </div>
+                  </td>
                 </tr>
-              ))}
+              )})}
             </tbody>
           </table>
         </div>
@@ -105,6 +176,19 @@ export default function Withdrawals() {
           </div>
         )}
       </section></>
+      )}
+
+      {approveTarget && (
+        <WithdrawApproveDialog
+          orderId={approveTarget.orderId}
+          userId={approveTarget.userId}
+          amount={approveTarget.amount}
+          channelName={approveTarget.channelName}
+          defaultChargeFrom={chargeFrom || 'platform'}
+          loading={actionLoading === approveTarget.orderId}
+          onConfirm={handleApproveConfirm}
+          onCancel={handleApproveCancel}
+        />
       )}
     </div>
   )
