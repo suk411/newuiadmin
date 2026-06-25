@@ -28,6 +28,7 @@ export interface UserAccount {
 }
 
 export interface PaymentMethods {
+  userId?: number
   holderName?: string
   isDefault?: boolean
   bank?: { bankName: string; ifsc: string; accountNo: string }
