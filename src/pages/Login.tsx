@@ -6,21 +6,21 @@ interface Props {
 }
 
 export default function Login({ onLogin }: Props) {
-  const [number, setNumber] = useState('')
+  const [mobile, setMobile] = useState('')
   const [password, setPassword] = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (!number.trim() || !password.trim()) {
-      setError('Please enter number and password')
+    if (!mobile.trim() || !password.trim()) {
+      setError('Please enter mobile and password')
       return
     }
     setLoading(true)
     setError(null)
     try {
-      const res = await loginAdmin(number.trim(), password)
+      const res = await loginAdmin(mobile.trim(), password)
       localStorage.setItem('token', res.token)
       onLogin(res.token)
     } catch {
@@ -36,12 +36,12 @@ export default function Login({ onLogin }: Props) {
         <h1>Admin Login</h1>
 
         <div className="login-field">
-          <label>Number</label>
+          <label>Mobile</label>
           <input
             type="text"
-            placeholder="Enter your number"
-            value={number}
-            onChange={(e) => setNumber(e.target.value)}
+            placeholder="Enter your mobile number"
+            value={mobile}
+            onChange={(e) => setMobile(e.target.value)}
             autoComplete="username"
           />
         </div>

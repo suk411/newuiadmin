@@ -9,7 +9,7 @@ export interface LoginResponse {
   token: string
 }
 
-export async function loginAdmin(number: string, password: string): Promise<LoginResponse> {
-  const { data } = await axios.post<LoginResponse>(LOGIN_URL, { number, password })
+export async function loginAdmin(mobile: string, password: string): Promise<LoginResponse> {
+  const { data } = await axios.post<LoginResponse>(LOGIN_URL, { mobile, password })
   return data
 }
