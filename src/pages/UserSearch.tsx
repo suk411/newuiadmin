@@ -172,10 +172,11 @@ export default function UserSearch() {
                 <button className="btn-filled" style={{ fontSize: 10, padding: '2px 8px' }} onClick={() => { setNewStatus(user.account.status); setShowStatusDialog(true) }}>Change Status</button>
               </div>
             </div>
-            <div className="stat-card__value text-blue">{user.user.userId}</div>
+            <div className="stat-card__value text-blue" style={{ fontSize: 16 }}>{user.user.userId}</div>
+            {user.account.statusRemark && <div className="stat-card__change">Reason: {user.account.statusRemark}</div>}
             <hr style={{ margin: '8px 0', border: 'none', borderTop: '1px solid var(--color-border, rgb(188,198,222))' }} />
             <div className="stat-card__label">Mobile</div>
-            <div className="stat-card__value" style={{ fontSize: 16 }}>{user.user.mobile}</div>
+            <div className="stat-card__value" style={{ fontSize: 14 }}>{user.user.mobile}</div>
             <div className="stat-card__change">{user.account.vipLevel}</div>
           </div>
           <div className="stat-card">
