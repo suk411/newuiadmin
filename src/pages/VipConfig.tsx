@@ -11,7 +11,7 @@ function extractError(err: unknown): string {
 
 export default function VipConfig() {
   const [tiers, setTiers] = useState<VipTier[]>([])
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState('')
   const [editIndex, setEditIndex] = useState<number | null>(null)
@@ -62,26 +62,32 @@ export default function VipConfig() {
     <div className="content">
       {error && <div style={{ padding: '8px 12px', background: '#fef2f2', color: '#dc2626', borderRadius: 4, fontSize: 13, marginBottom: 8 }}>{error}</div>}
 
-      <section className="card">
-        <div className="table-wrap">
-          <table className="table">
-            <thead><tr><th>Level</th><th>Name</th><th>Min Deposit (₹)</th><th>Weekly Bonus (₹)</th><th>Upgrade Bonus (₹)</th><th>Weekly Deposit Req. (₹)</th><th>Actions</th></tr></thead>
-            <tbody>
-              {tiers.map((t, i) => (
-                <tr key={i}>
-                  <td>VIP {i + 1}</td>
-                  <td>{t.name}</td>
-                  <td>{t.minDeposit.toLocaleString('en-IN')}</td>
-                  <td>{t.weeklyBonus.toLocaleString('en-IN')}</td>
-                  <td>{t.upgradeBonus.toLocaleString('en-IN')}</td>
-                  <td>{t.weeklyDepositRequirement.toLocaleString('en-IN')}</td>
-                  <td><div className="cell-actions"><button className="btn btn--primary btn--sm" onClick={() => openEdit(i)}>Edit</button></div></td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+      {loading ? (
+        <div className="table-wrap" style={{ padding: '48px 0', textAlign: 'center' }}>
+          <span className="loading-spinner" />
         </div>
-      </section>
+      ) : (
+        <section className="card">
+          <div className="table-wrap">
+            <table className="table">
+              <thead><tr><th>Level</th><th>Name</th><th>Min Deposit (₹)</th><th>Weekly Bonus (₹)</th><th>Upgrade Bonus (₹)</th><th>Weekly Deposit Req. (₹)</th><th>Actions</th></tr></thead>
+              <tbody>
+                {tiers.map((t, i) => (
+                  <tr key={i}>
+                    <td>VIP {i + 1}</td>
+                    <td>{t.name}</td>
+                    <td>{t.minDeposit.toLocaleString('en-IN')}</td>
+                    <td>{t.weeklyBonus.toLocaleString('en-IN')}</td>
+                    <td>{t.upgradeBonus.toLocaleString('en-IN')}</td>
+                    <td>{t.weeklyDepositRequirement.toLocaleString('en-IN')}</td>
+                    <td><div className="cell-actions"><button className="btn btn--primary btn--sm" onClick={() => openEdit(i)}>Edit</button></div></td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </section>
+      )}
 
       {editIndex != null && form && (
         <div className="dialog-overlay" onClick={closeEdit}>

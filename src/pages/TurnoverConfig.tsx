@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import axios from 'axios'
 import { fetchTurnoverConfig, updateTurnoverConfig } from '../api/turnoverConfig'
 import type { TurnoverRule } from '../api/turnoverConfig'
@@ -11,7 +11,7 @@ function extractError(err: unknown): string {
 
 export default function TurnoverConfig() {
   const [rules, setRules] = useState<TurnoverRule[]>([])
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState('')
   const [editIndex, setEditIndex] = useState<number | null>(null)
@@ -29,7 +29,7 @@ export default function TurnoverConfig() {
     }
   }
 
-  if (!loading && rules.length === 0) load()
+  useEffect(() => { load() }, [])
 
   const openEdit = (i: number) => {
     setEditIndex(i)
@@ -62,24 +62,30 @@ export default function TurnoverConfig() {
     <div className="content">
       {error && <div style={{ padding: '8px 12px', background: '#fef2f2', color: '#dc2626', borderRadius: 4, fontSize: 13, marginBottom: 8 }}>{error}</div>}
 
-      <section className="card">
-        <div className="table-wrap">
-          <table className="table">
-            <thead><tr><th>Type</th><th>Description</th><th>Multiplier</th><th>Active</th><th>Actions</th></tr></thead>
-            <tbody>
-              {rules.map((r, i) => (
-                <tr key={r._id || i}>
-                  <td>{r.type}</td>
-                  <td>{r.description}</td>
-                  <td>{r.multiplier}</td>
-                  <td><span className={`badge ${r.active ? 'badge--success' : 'badge--danger'}`}>{r.active ? 'Yes' : 'No'}</span></td>
-                  <td><div className="cell-actions"><button className="btn btn--primary btn--sm" onClick={() => openEdit(i)}>Edit</button></div></td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+      {loading ? (
+        <div className="table-wrap" style={{ padding: '48px 0', textAlign: 'center' }}>
+          <span className="loading-spinner" />
         </div>
-      </section>
+      ) : (
+        <section className="card">
+          <div className="table-wrap">
+            <table className="table">
+              <thead><tr><th>Type</th><th>Description</th><th>Multiplier</th><th>Active</th><th>Actions</th></tr></thead>
+              <tbody>
+                {rules.map((r, i) => (
+                  <tr key={r._id || i}>
+                    <td>{r.type}</td>
+                    <td>{r.description}</td>
+                    <td>{r.multiplier}</td>
+                    <td><span style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}><span style={{ width: 10, height: 10, borderRadius: '50%', background: r.active ? '#22c55e' : '#ef4444', display: 'inline-block' }} />{r.active ? 'Active' : 'Inactive'}</span></td>
+                    <td><div className="cell-actions"><button className="btn btn--primary btn--sm" onClick={() => openEdit(i)}>Edit</button></div></td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </section>
+      )}
 
       {editIndex != null && form && (
         <div className="dialog-overlay" onClick={closeEdit}>
