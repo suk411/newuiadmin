@@ -1,12 +1,18 @@
 import axiosInstance from './axiosInstance'
 
 export interface GiftCode {
+  _id?: string
   code: string
-  description: string
-  amount: number
+  rewardAmount: number
+  turnoverMultiplier: number
+  maxRedemptions: number
+  usedCount: number
+  expiryDate: string
+  minDepositToday: number
   isActive: boolean
+  description: string
   createdAt: string
-  redeemedBy?: string[]
+  updatedAt?: string
 }
 
 export interface GiftCodeListResponse {
