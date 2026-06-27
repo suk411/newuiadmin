@@ -10,7 +10,8 @@ export interface VipTier {
 
 export async function fetchVipConfig(): Promise<VipTier[]> {
   const res = await axiosInstance.get('/vip-config')
-  return res.data
+  const body = res.data
+  return Array.isArray(body) ? body : (body.levels ?? [])
 }
 
 export async function updateVipConfig(data: VipTier[]): Promise<void> {
