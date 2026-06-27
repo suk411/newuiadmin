@@ -61,7 +61,7 @@ export default function RechargeTable({ records, loading, onApprove }: Props) {
               <tr key={record.orderId} tabIndex={0}>
                 <td style={{ fontFamily: 'monospace', fontSize: '12px' }}>{record.orderId}</td>
                 <td>{record.userId}</td>
-                <td>{record.currency === 'INR' ? '₹' : '$'}{Number(record.amount).toLocaleString('en-IN')}</td>
+                <td>{record.currency === 'INR' ? '₹' : '$'}{Number(record.amount).toLocaleString('en-IN')}{record.bonusOptIn && record.bonusAmount > 0 && <span style={{ color: '#999' }}> +{Number(record.bonusAmount).toLocaleString('en-IN')}</span>}</td>
                 <td>{record.channelName}</td>
                 <td><span className={`badge ${st.className}`}>{st.label}</span></td>
                 <td style={{ whiteSpace: 'nowrap' }}>{formatDateTime(record.createdAt)}</td>
