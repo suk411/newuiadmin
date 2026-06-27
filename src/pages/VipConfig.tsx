@@ -91,7 +91,7 @@ export default function VipConfig() {
 
       {editIndex != null && form && (
         <div className="dialog-overlay" onClick={closeEdit}>
-          <div className="dialog" onClick={(e) => e.stopPropagation()} style={{ width: '480px', display: 'flex', flexDirection: 'column', padding: 0 }}>
+          <div className="dialog" onClick={(e) => e.stopPropagation()} style={{ width: '520px', display: 'flex', flexDirection: 'column', padding: 0 }}>
             <div style={{ padding: 'var(--space-6) var(--space-7)', borderBottom: '1px solid var(--color-border, rgb(188,198,222))', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexShrink: 0 }}>
               <h3 style={{ margin: 0 }}>Edit VIP {editIndex + 1}</h3>
               <button className="btn-outline" style={{ fontSize: 11, padding: '2px 8px' }} onClick={closeEdit}>✕</button>
