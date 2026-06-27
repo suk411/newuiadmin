@@ -148,12 +148,12 @@ export default function GiftCodes() {
 
       {showCreate && (
         <div className="dialog-overlay" onClick={closeCreate}>
-          <div className="dialog" onClick={(e) => e.stopPropagation()} style={{ width: '520px', display: 'flex', flexDirection: 'column', padding: 0 }}>
+          <div className="dialog" onClick={(e) => e.stopPropagation()} style={{ width: '70vw', height: '80vh', display: 'flex', flexDirection: 'column', padding: 0 }}>
             <div style={{ padding: 'var(--space-6) var(--space-7)', borderBottom: '1px solid var(--color-border, rgb(188,198,222))', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexShrink: 0 }}>
               <h3 style={{ margin: 0 }}>Create Gift Code</h3>
               <button className="btn-outline" style={{ fontSize: 11, padding: '2px 8px' }} onClick={closeCreate}>✕</button>
             </div>
-            <div style={{ padding: 'var(--space-6) var(--space-7)', display: 'flex', flexDirection: 'column', gap: 'var(--space-3)', fontSize: 14 }}>
+            <div style={{ padding: 'var(--space-6) var(--space-7)', flex: 1, overflow: 'auto', display: 'flex', flexDirection: 'column', gap: 'var(--space-3)', fontSize: 14 }}>
               <div className="filter-group"><label>Code</label><div style={{ display: 'flex', gap: 6 }}><input value={form.code} onChange={(e) => setForm({ ...form, code: e.target.value.toUpperCase() })} placeholder="e.g. BONUS50" style={{ flex: 1 }} /><button className="btn" onClick={() => setForm({ ...form, code: randomCode() })} style={{ whiteSpace: 'nowrap', background: '#f59e0b', color: '#fff', border: 'none' }}>Random</button></div></div>
               <div className="filter-group"><label>Reward Amount (₹)</label><input type="number" value={form.rewardAmount} onChange={(e) => setForm({ ...form, rewardAmount: Number(e.target.value) })} /></div>
               <div className="filter-group"><label>Turnover Multiplier</label><input type="number" step="0.1" value={form.turnoverMultiplier} onChange={(e) => setForm({ ...form, turnoverMultiplier: Number(e.target.value) })} /></div>
