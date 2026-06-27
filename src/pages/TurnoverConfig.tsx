@@ -99,7 +99,7 @@ export default function TurnoverConfig() {
               <div className="filter-group"><label>Description</label><input value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} /></div>
               <div className="filter-group"><label>Multiplier</label><input type="number" step="0.1" value={form.multiplier} onChange={(e) => setForm({ ...form, multiplier: Number(e.target.value) })} /></div>
               <div className="filter-group"><label>Active</label>
-                <button type="button" className={`btn ${form.active ? 'btn-filled' : 'btn-outline'}`} onClick={() => setForm({ ...form, active: !form.active })} style={{ width: 100 }}>{form.active ? 'Active' : 'Inactive'}</button>
+                <button type="button" onClick={() => setForm({ ...form, active: !form.active })} style={{ width: 100, background: form.active ? '#22c55e' : '#ef4444', color: '#fff', border: 'none' }}>{form.active ? 'Active' : 'Inactive'}</button>
               </div>
             </div>
             <div style={{ padding: 'var(--space-6) var(--space-7)', borderTop: '1px solid var(--color-border, rgb(188,198,222))', display: 'flex', justifyContent: 'flex-end', gap: 'var(--space-3)', flexShrink: 0 }}>
