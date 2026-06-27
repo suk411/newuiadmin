@@ -75,7 +75,7 @@ export default function VipConfig() {
                   <td>{t.weeklyBonus.toLocaleString('en-IN')}</td>
                   <td>{t.upgradeBonus.toLocaleString('en-IN')}</td>
                   <td>{t.weeklyDepositRequirement.toLocaleString('en-IN')}</td>
-                  <td><button className="btn btn--primary btn--sm" onClick={() => openEdit(i)}>Edit</button></td>
+                  <td><div className="cell-actions"><button className="btn btn--primary btn--sm" onClick={() => openEdit(i)}>Edit</button></div></td>
                 </tr>
               ))}
             </tbody>
@@ -91,11 +91,11 @@ export default function VipConfig() {
               <button className="btn-outline" style={{ fontSize: 11, padding: '2px 8px' }} onClick={closeEdit}>✕</button>
             </div>
             <div style={{ padding: 'var(--space-6) var(--space-7)', display: 'flex', flexDirection: 'column', gap: 'var(--space-3)', fontSize: 14 }}>
-              <div><label style={{ fontWeight: 600, display: 'block', marginBottom: 4 }}>Name</label><input value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} className="input" /></div>
-              <div><label style={{ fontWeight: 600, display: 'block', marginBottom: 4 }}>Min Deposit (₹)</label><input type="number" value={form.minDeposit} onChange={(e) => setForm({ ...form, minDeposit: Number(e.target.value) })} className="input" /></div>
-              <div><label style={{ fontWeight: 600, display: 'block', marginBottom: 4 }}>Weekly Bonus (₹)</label><input type="number" value={form.weeklyBonus} onChange={(e) => setForm({ ...form, weeklyBonus: Number(e.target.value) })} className="input" /></div>
-              <div><label style={{ fontWeight: 600, display: 'block', marginBottom: 4 }}>Upgrade Bonus (₹)</label><input type="number" value={form.upgradeBonus} onChange={(e) => setForm({ ...form, upgradeBonus: Number(e.target.value) })} className="input" /></div>
-              <div><label style={{ fontWeight: 600, display: 'block', marginBottom: 4 }}>Weekly Deposit Requirement (₹)</label><input type="number" value={form.weeklyDepositRequirement} onChange={(e) => setForm({ ...form, weeklyDepositRequirement: Number(e.target.value) })} className="input" /></div>
+              <div className="filter-group"><label>Name</label><input value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} /></div>
+              <div className="filter-group"><label>Min Deposit (₹)</label><input type="number" value={form.minDeposit} onChange={(e) => setForm({ ...form, minDeposit: Number(e.target.value) })} /></div>
+              <div className="filter-group"><label>Weekly Bonus (₹)</label><input type="number" value={form.weeklyBonus} onChange={(e) => setForm({ ...form, weeklyBonus: Number(e.target.value) })} /></div>
+              <div className="filter-group"><label>Upgrade Bonus (₹)</label><input type="number" value={form.upgradeBonus} onChange={(e) => setForm({ ...form, upgradeBonus: Number(e.target.value) })} /></div>
+              <div className="filter-group"><label>Weekly Deposit Requirement (₹)</label><input type="number" value={form.weeklyDepositRequirement} onChange={(e) => setForm({ ...form, weeklyDepositRequirement: Number(e.target.value) })} /></div>
             </div>
             <div style={{ padding: 'var(--space-6) var(--space-7)', borderTop: '1px solid var(--color-border, rgb(188,198,222))', display: 'flex', justifyContent: 'flex-end', gap: 'var(--space-3)', flexShrink: 0 }}>
               <button className="btn-outline" onClick={closeEdit} disabled={saving}>Cancel</button>

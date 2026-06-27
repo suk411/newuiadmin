@@ -73,7 +73,7 @@ export default function TurnoverConfig() {
                   <td>{r.description}</td>
                   <td>{r.multiplier}</td>
                   <td><span className={`badge ${r.active ? 'badge--success' : 'badge--danger'}`}>{r.active ? 'Yes' : 'No'}</span></td>
-                  <td><button className="btn btn--primary btn--sm" onClick={() => openEdit(i)}>Edit</button></td>
+                  <td><div className="cell-actions"><button className="btn btn--primary btn--sm" onClick={() => openEdit(i)}>Edit</button></div></td>
                 </tr>
               ))}
             </tbody>
@@ -89,11 +89,11 @@ export default function TurnoverConfig() {
               <button className="btn-outline" style={{ fontSize: 11, padding: '2px 8px' }} onClick={closeEdit}>✕</button>
             </div>
             <div style={{ padding: 'var(--space-6) var(--space-7)', display: 'flex', flexDirection: 'column', gap: 'var(--space-3)', fontSize: 14 }}>
-              <div><label style={{ fontWeight: 600, display: 'block', marginBottom: 4 }}>Type</label><input value={form.type} onChange={(e) => setForm({ ...form, type: e.target.value })} className="input" /></div>
-              <div><label style={{ fontWeight: 600, display: 'block', marginBottom: 4 }}>Description</label><input value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} className="input" /></div>
-              <div><label style={{ fontWeight: 600, display: 'block', marginBottom: 4 }}>Multiplier</label><input type="number" step="0.1" value={form.multiplier} onChange={(e) => setForm({ ...form, multiplier: Number(e.target.value) })} className="input" /></div>
-              <div><label style={{ fontWeight: 600, display: 'block', marginBottom: 4 }}>Active</label>
-                <input type="checkbox" checked={form.active} onChange={(e) => setForm({ ...form, active: e.target.checked })} />
+              <div className="filter-group"><label>Type</label><input value={form.type} onChange={(e) => setForm({ ...form, type: e.target.value })} /></div>
+              <div className="filter-group"><label>Description</label><input value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} /></div>
+              <div className="filter-group"><label>Multiplier</label><input type="number" step="0.1" value={form.multiplier} onChange={(e) => setForm({ ...form, multiplier: Number(e.target.value) })} /></div>
+              <div className="filter-group"><label>Active</label>
+                <input type="checkbox" checked={form.active} onChange={(e) => setForm({ ...form, active: e.target.checked })} style={{ height: 35, width: 35 }} />
               </div>
             </div>
             <div style={{ padding: 'var(--space-6) var(--space-7)', borderTop: '1px solid var(--color-border, rgb(188,198,222))', display: 'flex', justifyContent: 'flex-end', gap: 'var(--space-3)', flexShrink: 0 }}>
