@@ -1,11 +1,11 @@
 import axiosInstance from './axiosInstance'
 
 export interface VipTier {
-  level: number
   name: string
-  depositThreshold: number
-  withdrawalLimit: number
-  benefits: string[]
+  minDeposit: number
+  weeklyBonus: number
+  upgradeBonus: number
+  weeklyDepositRequirement: number
 }
 
 export async function fetchVipConfig(): Promise<VipTier[]> {

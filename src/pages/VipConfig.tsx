@@ -55,15 +55,16 @@ export default function VipConfig() {
         
         <div className="table-wrap">
           <table className="table">
-            <thead><tr><th>Level</th><th>Name</th><th>Deposit Threshold</th><th>Withdrawal Limit</th><th>Benefits</th></tr></thead>
+            <thead><tr><th>Level</th><th>Name</th><th>Min Deposit (₹)</th><th>Weekly Bonus (₹)</th><th>Upgrade Bonus (₹)</th><th>Weekly Deposit Req. (₹)</th></tr></thead>
             <tbody>
               {tiers.map((t, i) => (
-                <tr key={t.level}>
-                  <td>{t.level}</td>
+                <tr key={i}>
+                  <td>VIP {i + 1}</td>
                   <td><input value={t.name} onChange={(e) => update(i, 'name', e.target.value)} className="input input--sm" /></td>
-                  <td><input type="number" value={t.depositThreshold} onChange={(e) => update(i, 'depositThreshold', Number(e.target.value))} className="input input--sm" /></td>
-                  <td><input type="number" value={t.withdrawalLimit} onChange={(e) => update(i, 'withdrawalLimit', Number(e.target.value))} className="input input--sm" /></td>
-                  <td><input value={(t.benefits || []).join(', ')} onChange={(e) => update(i, 'benefits', e.target.value.split(',').map((s: string) => s.trim()))} className="input input--sm" placeholder="Comma-separated" /></td>
+                  <td><input type="number" value={t.minDeposit} onChange={(e) => update(i, 'minDeposit', Number(e.target.value))} className="input input--sm" /></td>
+                  <td><input type="number" value={t.weeklyBonus} onChange={(e) => update(i, 'weeklyBonus', Number(e.target.value))} className="input input--sm" /></td>
+                  <td><input type="number" value={t.upgradeBonus} onChange={(e) => update(i, 'upgradeBonus', Number(e.target.value))} className="input input--sm" /></td>
+                  <td><input type="number" value={t.weeklyDepositRequirement} onChange={(e) => update(i, 'weeklyDepositRequirement', Number(e.target.value))} className="input input--sm" /></td>
                 </tr>
               ))}
             </tbody>
