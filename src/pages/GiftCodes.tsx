@@ -12,6 +12,13 @@ function extractError(err: unknown): string {
   return 'Something went wrong'
 }
 
+function randomCode() {
+  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
+  let result = ''
+  for (let i = 0; i < 16; i++) result += chars[Math.floor(Math.random() * chars.length)]
+  return result
+}
+
 const defaultForm = {
   code: '',
   rewardAmount: 0,
@@ -147,7 +154,7 @@ export default function GiftCodes() {
               <button className="btn-outline" style={{ fontSize: 11, padding: '2px 8px' }} onClick={closeCreate}>✕</button>
             </div>
             <div style={{ padding: 'var(--space-6) var(--space-7)', display: 'flex', flexDirection: 'column', gap: 'var(--space-3)', fontSize: 14 }}>
-              <div className="filter-group"><label>Code</label><input value={form.code} onChange={(e) => setForm({ ...form, code: e.target.value.toUpperCase() })} placeholder="e.g. BONUS50" /></div>
+              <div className="filter-group"><label>Code</label><div style={{ display: 'flex', gap: 6 }}><input value={form.code} onChange={(e) => setForm({ ...form, code: e.target.value.toUpperCase() })} placeholder="e.g. BONUS50" style={{ flex: 1 }} /><button className="btn btn--primary btn--sm" onClick={() => setForm({ ...form, code: randomCode() })} style={{ whiteSpace: 'nowrap' }}>Random</button></div></div>
               <div className="filter-group"><label>Reward Amount (₹)</label><input type="number" value={form.rewardAmount} onChange={(e) => setForm({ ...form, rewardAmount: Number(e.target.value) })} /></div>
               <div className="filter-group"><label>Turnover Multiplier</label><input type="number" step="0.1" value={form.turnoverMultiplier} onChange={(e) => setForm({ ...form, turnoverMultiplier: Number(e.target.value) })} /></div>
               <div className="filter-group"><label>Max Redemptions</label><input type="number" value={form.maxRedemptions} onChange={(e) => setForm({ ...form, maxRedemptions: Number(e.target.value) })} /></div>
