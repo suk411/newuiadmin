@@ -55,13 +55,14 @@ export default function TurnoverConfig() {
         
         <div className="table-wrap">
           <table className="table">
-            <thead><tr><th>Min Amount</th><th>Max Amount</th><th>Multiplier</th></tr></thead>
+            <thead><tr><th>Type</th><th>Description</th><th>Multiplier</th><th>Active</th></tr></thead>
             <tbody>
               {rules.map((r, i) => (
                 <tr key={i}>
-                  <td><input type="number" value={r.minAmount} onChange={(e) => update(i, 'minAmount', Number(e.target.value))} className="input input--sm" /></td>
-                  <td><input type="number" value={r.maxAmount} onChange={(e) => update(i, 'maxAmount', Number(e.target.value))} className="input input--sm" /></td>
+                  <td><input value={r.type} onChange={(e) => update(i, 'type', e.target.value)} className="input input--sm" /></td>
+                  <td><input value={r.description} onChange={(e) => update(i, 'description', e.target.value)} className="input input--sm" style={{ minWidth: 280 }} /></td>
                   <td><input type="number" step="0.1" value={r.multiplier} onChange={(e) => update(i, 'multiplier', Number(e.target.value))} className="input input--sm" /></td>
+                  <td><input type="checkbox" checked={r.active} onChange={(e) => update(i, 'active', e.target.checked)} /></td>
                 </tr>
               ))}
             </tbody>
