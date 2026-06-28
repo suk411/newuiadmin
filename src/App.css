@@ -1071,10 +1071,20 @@ html.dark .btn-logout:hover {
 
 /* ── Responsive ── */
 
-@media (max-width: 640px) {
+@media (max-width: 1024px) {
+  .filters-bar {
+    gap: var(--space-4);
+  }
+  .filter-group input,
+  .filter-group select {
+    min-width: 140px;
+  }
+}
+
+@media (max-width: 768px) {
   .filters-bar {
     flex-direction: column;
-    gap: var(--space-6);
+    gap: var(--space-4);
   }
   .filter-group input,
   .filter-group select {
