@@ -3,6 +3,8 @@ import axios from 'axios'
 import { fetchTurnoverConfig, updateTurnoverConfig } from '../api/turnoverConfig'
 import type { TurnoverRule } from '../api/turnoverConfig'
 
+import { useError } from '../contexts/ErrorContext'
+
 function extractError(err: unknown): string {
   if (axios.isAxiosError(err) && err.response?.data?.msg) return err.response.data.msg
   if (err instanceof Error) return err.message
@@ -12,8 +14,8 @@ function extractError(err: unknown): string {
 export default function TurnoverConfig() {
   const [rules, setRules] = useState<TurnoverRule[]>([])
   const [loading, setLoading] = useState(true)
+  const { error, setError } = useError()
   const [saving, setSaving] = useState(false)
-  const [error, setError] = useState('')
   const [editIndex, setEditIndex] = useState<number | null>(null)
   const [form, setForm] = useState<TurnoverRule | null>(null)
 
@@ -44,7 +46,7 @@ export default function TurnoverConfig() {
   const handleSave = async () => {
     if (form == null || editIndex == null) return
     setSaving(true)
-    setError('')
+    setError(null)
     try {
       const copy = [...rules]
       copy[editIndex] = form
@@ -60,8 +62,6 @@ export default function TurnoverConfig() {
 
   return (
     <div className="content">
-      {error && <div style={{ padding: '8px 12px', background: '#fef2f2', color: '#dc2626', borderRadius: 4, fontSize: 13, marginBottom: 8 }}>{error}</div>}
-
       {loading ? (
         <div className="table-wrap" style={{ padding: '48px 0', textAlign: 'center' }}>
           <span className="loading-spinner" />

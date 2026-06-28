@@ -8,6 +8,7 @@ import ApproveDialog from '../components/ApproveDialog'
 import Pagination from '../components/Pagination'
 import Toast, { nextId } from '../components/Toast'
 import type { ToastMsg } from '../components/Toast'
+import { useError } from '../contexts/ErrorContext'
 
 const DEFAULT_LIMIT = 20
 
@@ -23,8 +24,8 @@ export default function RechargeRecords() {
   const [records, setRecords] = useState<DepositRecord[]>([])
   const [total, setTotal] = useState(0)
   const [page, setPage] = useState(1)
+  const { error, setError } = useError()
   const [loading, setLoading] = useState(false)
-  const [error, setError] = useState<string | null>(null)
   const [currentFilters, setCurrentFilters] = useState<DepositFilters | null>(null)
   const [approving, setApproving] = useState(false)
   const [approveTarget, setApproveTarget] = useState<DepositRecord | null>(null)
@@ -57,7 +58,7 @@ export default function RechargeRecords() {
     } finally {
       setLoading(false)
     }
-  }, [addToast])
+  }, [addToast, setError])
 
   const handleSearch = (filters: DepositFilters) => {
     loadRecords(filters)
@@ -100,20 +101,6 @@ export default function RechargeRecords() {
       <RechargeFilters onSearch={handleSearch} loading={loading} />
 
       <Toast toasts={toasts} onRemove={removeToast} />
-
-      {error && (
-        <div
-          style={{
-            padding: 'var(--space-3) var(--space-4)',
-            background: '#fef2f2',
-            color: '#dc2626',
-            borderRadius: 'var(--radius-sm)',
-            fontSize: '13px',
-          }}
-        >
-          {error}
-        </div>
-      )}
 
       <RechargeTable
         records={records}

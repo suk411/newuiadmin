@@ -3,6 +3,7 @@ import axios from 'axios'
 import { fetchGiftCodes, createGiftCode, toggleGiftCode, deleteGiftCode } from '../api/giftCodes'
 import type { GiftCode } from '../api/giftCodes'
 import { formatDateTime } from '../utils/format'
+import { useError } from '../contexts/ErrorContext'
 
 const LIMIT = 20
 
@@ -34,14 +35,14 @@ export default function GiftCodes() {
   const [total, setTotal] = useState(0)
   const [page, setPage] = useState(1)
   const [loading, setLoading] = useState(true)
+  const { error, setError } = useError()
   const [saving, setSaving] = useState(false)
-  const [error, setError] = useState('')
   const [showCreate, setShowCreate] = useState(false)
   const [form, setForm] = useState(defaultForm)
 
   const load = async (p = 1) => {
     setLoading(true)
-    setError('')
+    setError(null)
     try {
       const params: Record<string, string | number> = { page: p, limit: LIMIT }
       const res = await fetchGiftCodes(params)
@@ -94,8 +95,6 @@ export default function GiftCodes() {
           </div>
         </div>
       </div>
-
-      {error && <div style={{ padding: '8px 12px', background: '#fef2f2', color: '#dc2626', borderRadius: 4, fontSize: 13, marginBottom: 8 }}>{error}</div>}
 
       {loading ? (
         <div className="table-wrap" style={{ padding: '48px 0', textAlign: 'center' }}>

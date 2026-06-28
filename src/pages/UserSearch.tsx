@@ -3,6 +3,7 @@ import axios from 'axios'
 import { searchUser, searchUserByMobile, updateUserStatus, fetchUsersByIp, viewUserPaymentMethods, updateUserPayments, addTurnover, clearTurnover, checkTurnoverStatus } from '../api/users'
 import type { UserSearchResponse, PaymentMethods, TurnoverStatusResponse } from '../api/users'
 import { formatDateTime12 } from '../utils/format'
+import { useError } from '../contexts/ErrorContext'
 
 function extractError(err: unknown): string {
   if (axios.isAxiosError(err) && err.response?.data?.msg) return err.response.data.msg
@@ -49,8 +50,8 @@ export default function UserSearch() {
   const [pmForm, setPmForm] = useState<Record<string, string>>({})
   const [pmUpdating, setPmUpdating] = useState(false)
   const [user, setUser] = useState<UserSearchResponse | null>(null)
+  const { error, setError } = useError()
   const [loading, setLoading] = useState(false)
-  const [error, setError] = useState<string | null>(null)
 
   const handleSearch = async () => {
     setError(null)
@@ -200,12 +201,6 @@ export default function UserSearch() {
           </div>
         </div>
       </form>
-
-      {error && (
-        <div style={{ padding: 'var(--space-3) var(--space-4)', background: '#fef2f2', color: '#dc2626', borderRadius: 'var(--radius-sm)', fontSize: '13px', margin: 'var(--space-3)' }}>
-          {error}
-        </div>
-      )  }
 
       {user && (<>
         <div className="stat-cards" style={{ marginTop: 'var(--space-3)' }}>

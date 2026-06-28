@@ -17,13 +17,17 @@ import Sidebar from './components/Sidebar'
 import TagsView from './components/TagsView'
 import { titleMap } from './components/TagsView'
 import type { TagItem } from './components/TagsView'
+import { ErrorProvider, useError } from './contexts/ErrorContext'
 import './App.css'
 
-function ProtectedLayout({ onLogout }: { onLogout: () => void }) {
+function ProtectedLayoutContent({ onLogout }: { onLogout: () => void }) {
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const [darkMode, setDarkMode] = useState(() => localStorage.getItem('darkMode') === 'true')
   const location = useLocation()
   const navigate = useNavigate()
+  const { error, setError } = useError()
+
+  useEffect(() => { setError(null) }, [location.pathname])
 
   useEffect(() => {
     document.documentElement.classList.toggle('dark', darkMode)
@@ -112,6 +116,7 @@ function ProtectedLayout({ onLogout }: { onLogout: () => void }) {
           </div>
         </header>
         <TagsView tags={tags} onClose={handleTagClose} />
+        {error && <div className="error-banner"><span>{error}</span><button className="error-banner__close" onClick={() => setError(null)}>✕</button></div>}
         <main className="app-content">
           <div key={location.pathname} className="route-transition">
             <Routes>
@@ -133,6 +138,14 @@ function ProtectedLayout({ onLogout }: { onLogout: () => void }) {
         </main>
       </div>
     </div>
+  )
+}
+
+function ProtectedLayout({ onLogout }: { onLogout: () => void }) {
+  return (
+    <ErrorProvider>
+      <ProtectedLayoutContent onLogout={onLogout} />
+    </ErrorProvider>
   )
 }
 

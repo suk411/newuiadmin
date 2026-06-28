@@ -3,6 +3,7 @@ import axios from 'axios'
 import { fetchProviderBets, fetchWingoBets } from '../api/bets'
 import type { ProviderBet, WingoBet } from '../api/bets'
 import { formatDateTime } from '../utils/format'
+import { useError } from '../contexts/ErrorContext'
 
 const LIMIT = 20
 
@@ -17,8 +18,8 @@ export default function BetRecords() {
   const [records, setRecords] = useState<(ProviderBet | WingoBet)[]>([])
   const [total, setTotal] = useState(0)
   const [page, setPage] = useState(1)
+  const { error, setError } = useError()
   const [loading, setLoading] = useState(false)
-  const [error, setError] = useState('')
   const [member, setMember] = useState('')
   const [orderNumber, setOrderNumber] = useState('')
 
@@ -27,7 +28,7 @@ export default function BetRecords() {
 
   const load = async (p = 1) => {
     setLoading(true)
-    setError('')
+    setError(null)
     try {
       const params: Record<string, string | number> = { page: p, limit: LIMIT }
       if (tab === 'provider') {
@@ -71,8 +72,6 @@ export default function BetRecords() {
           </div>
         </div>
       </div>
-
-      {error && <div style={{ padding: '8px 12px', background: '#fef2f2', color: '#dc2626', borderRadius: 4, fontSize: 13 }}>{error}</div>}
 
       {loading && records.length === 0 ? (
         <div className="table-wrap" style={{ padding: '48px 0', textAlign: 'center' }}>

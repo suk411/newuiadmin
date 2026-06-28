@@ -3,6 +3,7 @@ import axios from 'axios'
 import { fetchCurrentRound, fetchCurrentRoundBets, fetchSettledRounds, fetchRoundStats, fetchResultMode, setResultMode } from '../api/wingo'
 import type { CurrentRound, RoundStats, CurrentRoundBetsItem, SettledRound, RoundDetail } from '../api/wingo'
 import { formatDateTime } from '../utils/format'
+import { useError } from '../contexts/ErrorContext'
 
 const LIMIT = 25
 
@@ -35,8 +36,8 @@ export default function WingoDashboard() {
   const [resultMode, setResultModeState] = useState('')
   const [modeLoading, setModeLoading] = useState(false)
 
+  const { error, setError } = useError()
   const [saving, setSaving] = useState(false)
-  const [error, setError] = useState('')
 
   const loadRound = async (mode: string) => {
     try {
@@ -122,8 +123,6 @@ export default function WingoDashboard() {
 
   return (
     <div className="content">
-      {error && <div style={{ padding: '8px 12px', background: '#fef2f2', color: '#dc2626', borderRadius: 4, fontSize: 13, marginBottom: 8 }}>{error}</div>}
-
       <div className="filters-bar">
         <div className="filter-group" style={{ flexDirection: 'row', gap: 0 }}>
           {(['current', 'history', 'resultMode'] as const).map(t => (
