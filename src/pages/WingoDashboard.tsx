@@ -40,6 +40,8 @@ export default function WingoDashboard() {
   const [dialogError, setDialogError] = useState<string | null>(null)
   const [saving, setSaving] = useState(false)
 
+  const [timeLeft, setTimeLeft] = useState(0)
+
   const loadRound = async (mode: string) => {
     try {
       const res = await fetchCurrentRound(mode)
@@ -56,6 +58,20 @@ export default function WingoDashboard() {
       setBetsPage(p)
     } catch { /* ignore */ }
   }
+
+  useEffect(() => {
+    if (tab !== 'current') return
+    const interval = setInterval(() => loadRound(gameMode), 2000)
+    return () => clearInterval(interval)
+  }, [tab, gameMode])
+
+  useEffect(() => {
+    if (tab !== 'current' || !round) return
+    const tick = () => setTimeLeft(Math.max(0, Math.floor((round.endTime - Date.now()) / 1000)))
+    tick()
+    const interval = setInterval(tick, 1000)
+    return () => clearInterval(interval)
+  }, [tab, round?.endTime, round?.issueNumber])
 
   const loadSettled = async (mode: string, p: number) => {
     setSettledLoading(true)
@@ -136,9 +152,29 @@ export default function WingoDashboard() {
         <>
           {round && stats && (
             <section className="card" style={{ marginBottom: 16 }}>
-              <div style={{ padding: 'var(--space-5) var(--space-7)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 8 }}>
-                <div><strong>Issue:</strong> {round.issueNumber} &nbsp; <strong>Status:</strong> <span className={`badge ${round.status === 'open' ? 'badge--warning' : 'badge--success'}`}>{round.status}</span></div>
-                <div><strong>Bets:</strong> {stats.totalBets} &nbsp; <strong>Amount:</strong> ₹{stats.totalBetAmount.toLocaleString('en-IN')} &nbsp; <strong>Users:</strong> {stats.uniqueUsers}</div>
+              <div style={{ padding: 'var(--space-5) var(--space-7)', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: 12 }}>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+                  <div style={{ fontSize: 13, color: '#888' }}>Issue #{round.issueNumber}</div>
+                  <div style={{ display: 'flex', gap: 16, alignItems: 'center' }}>
+                    <span className={`badge ${round.status === 'open' ? 'badge--warning' : 'badge--success'}`} style={{ fontSize: 13, padding: '4px 12px' }}>{round.status.toUpperCase()}</span>
+                    <span style={{ fontSize: 13, color: '#666' }}>Mode: <strong>{round.gameMode}</strong></span>
+                    <span style={{ fontSize: 13, color: '#666' }}>Result Mode: <strong>{round.resultMode}</strong></span>
+                  </div>
+                  <div style={{ fontSize: 13, color: '#666' }}>
+                    Result: {round.result.number != null ? `${round.result.number} / ${round.result.color} / ${round.result.size}` : <span style={{ color: '#999' }}>— not yet</span>}
+                  </div>
+                </div>
+                <div style={{ textAlign: 'right' }}>
+                  <div style={{ fontSize: 32, fontWeight: 700, fontVariantNumeric: 'tabular-nums', color: timeLeft <= 5 ? '#ef4444' : '#333' }}>
+                    {Math.floor(timeLeft / 60)}:{String(timeLeft % 60).padStart(2, '0')}
+                  </div>
+                  <div style={{ fontSize: 11, color: '#888' }}>remaining</div>
+                </div>
+              </div>
+              <div style={{ padding: '0 var(--space-7) var(--space-5)', display: 'flex', gap: 24, flexWrap: 'wrap', fontSize: 13 }}>
+                <span><strong>Bets:</strong> {stats.totalBets}</span>
+                <span><strong>Amount:</strong> ₹{stats.totalBetAmount.toLocaleString('en-IN')}</span>
+                <span><strong>Users:</strong> {stats.uniqueUsers}</span>
               </div>
               <div style={{ padding: '0 var(--space-7) var(--space-5)', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(100px, 1fr))', gap: 8, fontSize: 12 }}>
                 {Object.entries(stats.breakdown).map(([key, val]) => (
@@ -152,6 +188,10 @@ export default function WingoDashboard() {
           )}
 
           <section className="card">
+            <div style={{ padding: 'var(--space-5) var(--space-7)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid var(--color-border, rgb(188,198,222))' }}>
+              <h3 style={{ margin: 0, fontSize: 14, fontWeight: 600 }}>Bets ({betsTotal})</h3>
+              <button className="btn-outline btn--sm" onClick={() => loadBets(gameMode, betsPage)} style={{ fontSize: 11 }}>Refresh</button>
+            </div>
             <div className="table-wrap">
               <table className="table">
                 <thead><tr><th>User</th><th>Mobile</th><th>Order No</th><th>Selection</th><th>Amount</th><th>Status</th><th>Time</th></tr></thead>
@@ -197,7 +237,7 @@ export default function WingoDashboard() {
                     {settled.map(r => (
                       <tr key={r.issueNumber} tabIndex={0}>
                         <td>{r.issueNumber}</td>
-                        <td style={{ fontWeight: 600 }}>{r.result != null ? r.result : '—'}</td>
+                        <td style={{ fontWeight: 600, color: r.result.color?.includes('red') ? '#ef4444' : r.result.color?.includes('green') ? '#22c55e' : '#a855f7' }}>{r.result.number ?? '—'}</td>
                         <td>{r.stats.totalBets}</td>
                         <td>₹{r.stats.totalBetAmount.toLocaleString('en-IN')}</td>
                         <td><span className={`badge ${r.status === 'closed' ? 'badge--success' : 'badge--warning'}`}>{r.status}</span></td>

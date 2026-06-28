@@ -1,11 +1,19 @@
 import axiosInstance from './axiosInstance'
 
+export interface RoundResult {
+  number: number | null
+  color: string | null
+  size: string | null
+}
+
 export interface CurrentRound {
   issueNumber: string
   gameMode: string
   status: string
   startTime: number
   endTime: number
+  result: RoundResult
+  resultMode: string
 }
 
 export interface RoundBreakdown {
@@ -48,7 +56,7 @@ export interface SettledRoundStats {
 
 export interface SettledRound {
   issueNumber: string
-  result: number
+  result: RoundResult
   resultMode: string
   status: string
   startTime: number
