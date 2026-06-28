@@ -18,10 +18,8 @@ export const titleMap: Record<string, string> = {
   '/transactions': 'Transactions',
   '/users': 'Users',
   '/bets': 'Bet Records',
-  '/gift-codes': 'Gift Codes',
   '/logs': 'Admin Logs',
-  '/vip-config': 'VIP Config',
-  '/turnover-config': 'Turnover Config',
+  '/settings': 'Settings',
   '/agency': 'Agency',
   '/wingo': 'Wingo',
 }

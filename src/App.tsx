@@ -8,9 +8,7 @@ import AdminLogs from './pages/AdminLogs'
 import Withdrawals from './pages/Withdrawals'
 import Transactions from './pages/Transactions'
 import BetRecords from './pages/BetRecords'
-import GiftCodes from './pages/GiftCodes'
-import VipConfig from './pages/VipConfig'
-import TurnoverConfig from './pages/TurnoverConfig'
+import Settings from './pages/Settings'
 import AgencyDashboard from './pages/AgencyDashboard'
 import WingoDashboard from './pages/WingoDashboard'
 import Sidebar from './components/Sidebar'
@@ -128,9 +126,7 @@ function ProtectedLayoutContent({ onLogout }: { onLogout: () => void }) {
               <Route path="/withdrawals" element={<Withdrawals />} />
               <Route path="/transactions" element={<Transactions />} />
               <Route path="/bets" element={<BetRecords />} />
-              <Route path="/gift-codes" element={<GiftCodes />} />
-              <Route path="/vip-config" element={<VipConfig />} />
-              <Route path="/turnover-config" element={<TurnoverConfig />} />
+              <Route path="/settings" element={<Settings />} />
               <Route path="/agency" element={<AgencyDashboard />} />
               <Route path="/wingo" element={<WingoDashboard />} />
             </Routes>
