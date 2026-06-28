@@ -22,6 +22,9 @@ export default function BetRecords() {
   const [member, setMember] = useState('')
   const [orderNumber, setOrderNumber] = useState('')
 
+  const handleMember = (v: string) => { setMember(v); if (v) setOrderNumber('') }
+  const handleOrderNo = (v: string) => { setOrderNumber(v); if (v) setMember('') }
+
   const load = async (p = 1) => {
     setLoading(true)
     setError('')
@@ -50,14 +53,14 @@ export default function BetRecords() {
     <div className="content">
       <div className="filters-bar">
         {tab === 'provider' ? (
-          <div className="filter-group"><label>Member</label><input placeholder="Member" value={member} onChange={(e) => setMember(e.target.value)} /></div>
+          <div className="filter-group"><label>Member</label><input placeholder="Member" value={member} onChange={(e) => handleMember(e.target.value)} /></div>
         ) : (
-          <div className="filter-group"><label>Order No</label><input placeholder="Order no" value={orderNumber} onChange={(e) => setOrderNumber(e.target.value)} /></div>
+          <div className="filter-group"><label>Order No</label><input placeholder="Order no" value={orderNumber} onChange={(e) => handleOrderNo(e.target.value)} /></div>
         )}
         <div className="filter-group" style={{ alignSelf: 'flex-end' }}>
           <div style={{ display: 'flex', gap: 4 }}>
-            <button className={`btn btn--sm ${tab === 'provider' ? 'btn--primary' : ''}`} onClick={() => setTab('provider')}>Provider</button>
-            <button className={`btn btn--sm ${tab === 'wingo' ? 'btn--primary' : ''}`} onClick={() => setTab('wingo')}>Wingo</button>
+            <button className={`btn btn--sm ${tab === 'provider' ? 'btn--primary' : ''}`} onClick={() => { setTab('provider'); setOrderNumber('') }}>Provider</button>
+            <button className={`btn btn--sm ${tab === 'wingo' ? 'btn--primary' : ''}`} onClick={() => { setTab('wingo'); setMember('') }}>Wingo</button>
           </div>
         </div>
         <div className="filter-group" style={{ alignSelf: 'flex-end' }}>

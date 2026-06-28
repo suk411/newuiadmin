@@ -25,6 +25,9 @@ function statusBadge(status: string): string {
 export default function UserSearch() {
   const [userId, setUserId] = useState('')
   const [mobile, setMobile] = useState('')
+
+  const handleUserId = (v: string) => { setUserId(v); if (v) setMobile('') }
+  const handleMobile = (v: string) => { setMobile(v); if (v) setUserId('') }
   const [showTurnover, setShowTurnover] = useState(false)
   const [turnoverStatus, setTurnoverStatus] = useState<TurnoverStatusResponse | null>(null)
   const [turnoverLoading, setTurnoverLoading] = useState(false)
@@ -173,7 +176,7 @@ export default function UserSearch() {
             type="text"
             placeholder="Enter User ID"
             value={userId}
-            onChange={(e) => setUserId(e.target.value)}
+            onChange={(e) => handleUserId(e.target.value)}
           />
         </div>
         <div className="filter-group">
@@ -182,7 +185,7 @@ export default function UserSearch() {
             type="text"
             placeholder="Enter Mobile Number"
             value={mobile}
-            onChange={(e) => setMobile(e.target.value)}
+            onChange={(e) => handleMobile(e.target.value)}
           />
         </div>
         <div className="filter-group" style={{ alignSelf: 'flex-end' }}>
