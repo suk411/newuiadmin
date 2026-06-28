@@ -71,8 +71,8 @@ export default function RechargeFilters({ onSearch, loading }: Props) {
         >
           <option value="">All</option>
           <option value="pending">Pending</option>
-          <option value="approved">Approved</option>
-          <option value="rejected">Rejected</option>
+          <option value="success">Success</option>
+          <option value="failed">Failed</option>
         </select>
       </div>
       <div className="filter-group">

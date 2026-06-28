@@ -95,7 +95,7 @@ export default function Withdrawals() {
           <select value={status} onChange={(e) => setStatus(e.target.value)}>
             <option value="">All</option>
             <option value="pending">Pending</option>
-            <option value="approved">Approved</option>
+            <option value="success">Success</option>
             <option value="cancelled">Cancelled</option>
           </select>
         </div>
