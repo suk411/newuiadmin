@@ -4,6 +4,7 @@ import type { DepositFilters } from '../api/deposits'
 interface Props {
   onSearch: (filters: DepositFilters) => void
   loading: boolean
+  onConfig?: () => void
 }
 
 const emptyFilters = (page = 1, limit = 20): DepositFilters => ({
@@ -17,7 +18,7 @@ const emptyFilters = (page = 1, limit = 20): DepositFilters => ({
   limit,
 })
 
-export default function RechargeFilters({ onSearch, loading }: Props) {
+export default function RechargeFilters({ onSearch, loading, onConfig }: Props) {
   const [filters, setFilters] = useState<DepositFilters>(emptyFilters())
 
   const handleChange = (field: keyof DepositFilters, value: string) => {
@@ -106,6 +107,7 @@ export default function RechargeFilters({ onSearch, loading }: Props) {
           <button type="button" className="btn-outline" onClick={handleReset}>
             Reset
           </button>
+          {onConfig && <button type="button" className="btn btn--primary btn--sm" onClick={onConfig}>Config</button>}
         </div>
       </div>
     </form>
