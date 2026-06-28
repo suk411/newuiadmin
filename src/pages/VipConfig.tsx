@@ -18,6 +18,7 @@ export default function VipConfig() {
   const [saving, setSaving] = useState(false)
   const [editIndex, setEditIndex] = useState<number | null>(null)
   const [form, setForm] = useState<VipTier | null>(null)
+  const [dialogError, setDialogError] = useState<string | null>(null)
 
   const load = async () => {
     setLoading(true)
@@ -36,6 +37,7 @@ export default function VipConfig() {
   const openEdit = (i: number) => {
     setEditIndex(i)
     setForm({ ...tiers[i] })
+    setDialogError(null)
   }
 
   const closeEdit = () => {
@@ -46,7 +48,7 @@ export default function VipConfig() {
   const handleSave = async () => {
     if (form == null || editIndex == null) return
     setSaving(true)
-    setError(null)
+    setDialogError(null)
     try {
       const copy = [...tiers]
       copy[editIndex] = form
@@ -54,7 +56,7 @@ export default function VipConfig() {
       setTiers(copy)
       closeEdit()
     } catch (err: unknown) {
-      setError(extractError(err))
+      setDialogError(extractError(err))
     } finally {
       setSaving(false)
     }
@@ -97,6 +99,7 @@ export default function VipConfig() {
               <button className="btn-outline" style={{ fontSize: 11, padding: '2px 8px' }} onClick={closeEdit}>✕</button>
             </div>
             <div style={{ padding: 'var(--space-6) var(--space-7)', flex: 1, overflow: 'auto', display: 'flex', flexDirection: 'column', gap: 'var(--space-3)', fontSize: 14 }}>
+              {dialogError && <div style={{ padding: '8px 12px', background: '#fef2f2', color: '#dc2626', borderRadius: 4, fontSize: 13 }}>{dialogError}</div>}
               <div className="filter-group"><label>Name</label><input value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} /></div>
               <div className="filter-group"><label>Min Deposit (₹)</label><input type="number" value={form.minDeposit} onChange={(e) => setForm({ ...form, minDeposit: Number(e.target.value) })} /></div>
               <div className="filter-group"><label>Weekly Bonus (₹)</label><input type="number" value={form.weeklyBonus} onChange={(e) => setForm({ ...form, weeklyBonus: Number(e.target.value) })} /></div>

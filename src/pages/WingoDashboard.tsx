@@ -37,6 +37,7 @@ export default function WingoDashboard() {
   const [modeLoading, setModeLoading] = useState(false)
 
   const { error, setError } = useError()
+  const [dialogError, setDialogError] = useState<string | null>(null)
   const [saving, setSaving] = useState(false)
 
   const loadRound = async (mode: string) => {
@@ -105,10 +106,11 @@ export default function WingoDashboard() {
   const viewDetail = async (issue: string) => {
     setDetailLoading(true)
     setRoundDetail(null)
+    setDialogError(null)
     try {
       const res = await fetchRoundStats(issue)
       setRoundDetail(res)
-    } catch (err: unknown) { setError(extractError(err)) }
+    } catch (err: unknown) { setDialogError(extractError(err)) }
     finally { setDetailLoading(false) }
   }
 
@@ -231,6 +233,7 @@ export default function WingoDashboard() {
                   <button className="btn-outline" style={{ fontSize: 11, padding: '2px 8px' }} onClick={() => setRoundDetail(null)}>✕</button>
                 </div>
                 <div style={{ padding: 'var(--space-6) var(--space-7)', flex: 1, overflow: 'auto', fontSize: 14 }}>
+                  {dialogError && <div style={{ padding: '8px 12px', background: '#fef2f2', color: '#dc2626', borderRadius: 4, fontSize: 13, marginBottom: 8 }}>{dialogError}</div>}
                   <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 12, marginBottom: 16 }}>
                     <div className="stat-card"><span className="stat-card__label">Total Bets</span><span className="stat-card__value">{roundDetail.stats.totalBets}</span></div>
                     <div className="stat-card"><span className="stat-card__label">Total Amount</span><span className="stat-card__value">₹{roundDetail.stats.totalBetAmount.toLocaleString('en-IN')}</span></div>

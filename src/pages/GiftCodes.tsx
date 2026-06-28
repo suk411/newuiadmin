@@ -39,6 +39,7 @@ export default function GiftCodes() {
   const [saving, setSaving] = useState(false)
   const [showCreate, setShowCreate] = useState(false)
   const [form, setForm] = useState(defaultForm)
+  const [dialogError, setDialogError] = useState<string | null>(null)
 
   const load = async (p = 1) => {
     setLoading(true)
@@ -61,6 +62,7 @@ export default function GiftCodes() {
   const openCreate = () => {
     setForm(defaultForm)
     setShowCreate(true)
+    setDialogError(null)
   }
 
   const closeCreate = () => {
@@ -71,13 +73,13 @@ export default function GiftCodes() {
   const handleCreate = async () => {
     if (!form.code || !form.rewardAmount) return
     setSaving(true)
-    setError('')
+    setDialogError(null)
     try {
       await createGiftCode(form)
       closeCreate()
       load()
     } catch (err: unknown) {
-      setError(extractError(err))
+      setDialogError(extractError(err))
     } finally {
       setSaving(false)
     }
@@ -153,6 +155,7 @@ export default function GiftCodes() {
               <button className="btn-outline" style={{ fontSize: 11, padding: '2px 8px' }} onClick={closeCreate}>✕</button>
             </div>
             <div style={{ padding: 'var(--space-6) var(--space-7)', flex: 1, overflow: 'auto', display: 'flex', flexDirection: 'column', gap: 'var(--space-3)', fontSize: 14 }}>
+              {dialogError && <div style={{ padding: '8px 12px', background: '#fef2f2', color: '#dc2626', borderRadius: 4, fontSize: 13 }}>{dialogError}</div>}
               <div className="filter-group"><label>Code</label><div style={{ display: 'flex', gap: 6 }}><input value={form.code} onChange={(e) => setForm({ ...form, code: e.target.value.toUpperCase() })} placeholder="e.g. BONUS50" style={{ flex: 1 }} /><button className="btn" onClick={() => setForm({ ...form, code: randomCode() })} style={{ whiteSpace: 'nowrap', background: '#f59e0b', color: '#fff', border: 'none' }}>Random</button></div></div>
               <div className="filter-group"><label>Reward Amount (₹)</label><input type="number" value={form.rewardAmount} onChange={(e) => setForm({ ...form, rewardAmount: Number(e.target.value) })} /></div>
               <div className="filter-group"><label>Turnover Multiplier</label><input type="number" step="0.1" value={form.turnoverMultiplier} onChange={(e) => setForm({ ...form, turnoverMultiplier: Number(e.target.value) })} /></div>

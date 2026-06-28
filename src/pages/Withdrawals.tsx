@@ -54,8 +54,11 @@ export default function Withdrawals() {
     }
   }
 
+  const [dialogError, setDialogError] = useState<string | null>(null)
+
   const handleApproveClick = (record: any) => {
     setApproveTarget(record)
+    setDialogError(null)
   }
 
   const handleApproveConfirm = async (chargeFrom: string) => {
@@ -66,7 +69,7 @@ export default function Withdrawals() {
       setApproveTarget(null)
       load(page)
     } catch (err: unknown) {
-      setError(extractError(err))
+      setDialogError(extractError(err))
     } finally {
       setActionLoading(null)
     }
@@ -84,7 +87,7 @@ export default function Withdrawals() {
       await cancelWithdrawal(orderId, reason)
       load(page)
     } catch (err: unknown) {
-      setError(extractError(err))
+      setDialogError(extractError(err))
     } finally {
       setActionLoading(null)
     }
@@ -180,6 +183,7 @@ export default function Withdrawals() {
       </section></>
       )}
 
+      {dialogError && <div style={{ padding: '8px 12px', background: '#fef2f2', color: '#dc2626', borderRadius: 4, fontSize: 13, marginBottom: 8 }}>{dialogError}</div>}
       {approveTarget && (
         <WithdrawApproveDialog
           orderId={approveTarget.orderId}

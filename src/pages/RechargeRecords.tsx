@@ -27,6 +27,7 @@ export default function RechargeRecords() {
   const { error, setError } = useError()
   const [loading, setLoading] = useState(false)
   const [currentFilters, setCurrentFilters] = useState<DepositFilters | null>(null)
+  const [dialogError, setDialogError] = useState<string | null>(null)
   const [approving, setApproving] = useState(false)
   const [approveTarget, setApproveTarget] = useState<DepositRecord | null>(null)
   const [toasts, setToasts] = useState<ToastMsg[]>([])
@@ -72,6 +73,7 @@ export default function RechargeRecords() {
 
   const handleApproveClick = (record: DepositRecord) => {
     setApproveTarget(record)
+    setDialogError(null)
   }
 
   const handleApproveConfirm = async () => {
@@ -85,7 +87,7 @@ export default function RechargeRecords() {
       }
     } catch (err: unknown) {
       const msg = extractError(err)
-      setError(msg)
+      setDialogError(msg)
       addToast(msg)
     } finally {
       setApproving(false)
@@ -116,6 +118,7 @@ export default function RechargeRecords() {
         />
       )}
 
+      {dialogError && <div style={{ padding: '8px 12px', background: '#fef2f2', color: '#dc2626', borderRadius: 4, fontSize: 13, marginBottom: 8 }}>{dialogError}</div>}
       {approveTarget && (
         <ApproveDialog
           record={approveTarget}
