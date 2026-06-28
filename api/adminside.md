@@ -1,9 +1,9 @@
-# Wingo Game API - Admin Side
+# Wingo Game API - Admin Side (Admin Backend)
 
 ## Base URL
 
 ```
-http://localhost:3000/api/wingo/admin
+https://admin-backend-7lwn.onrender.com/api/admin
 ```
 
 ## Authentication
@@ -20,10 +20,12 @@ Most admin endpoints support filtering by game mode via `?mode=` query parameter
 
 | Mode | Duration | Game Code | Issue Example |
 |------|----------|-----------|---------------|
-| `30s` | 30 sec | `WinGo_30S` | `202605100000001` |
-| `1m` | 1 min | `WinGo_1M` | `1M_20260510000001` |
-| `3m` | 3 min | `WinGo_3M` | `3M_20260510000001` |
-| `5m` | 5 min | `WinGo_5M` | `5M_20260510000001` |
+| `30s` | 30 sec | `WinGo_30S` | `20260628000001` |
+| `1m` | 1 min | `WinGo_1M` | `1M_20260628000001` |
+| `3m` | 3 min | `WinGo_3M` | `3M_20260628000001` |
+| `5m` | 5 min | `WinGo_5M` | `5M_20260628000001` |
+
+Issue numbers for non-30s modes are prefixed with the mode (e.g., `1M_`, `3M_`, `5M_`).
 
 ---
 
@@ -34,13 +36,12 @@ Each game mode has its own independent result mode (RANDOM, MAX_PROFIT, MAX_LOSS
 ### Get Current Mode
 
 ```
-GET /api/wingo/admin/result-mode?mode=30s
+GET /api/admin/result-mode?mode=30s
 ```
 
 **Query Params:** `mode` (optional, default: `30s`)
 
 **Response:**
-
 ```json
 {
   "success": true,
@@ -51,11 +52,10 @@ GET /api/wingo/admin/result-mode?mode=30s
 ### Set Mode
 
 ```
-POST /api/wingo/admin/result-mode
+POST /api/admin/result-mode
 ```
 
 **Body:**
-
 ```json
 {
   "mode": "MAX_PROFIT",
@@ -75,12 +75,11 @@ POST /api/wingo/admin/result-mode
 | `MAX_LOSS` | Generates result for maximum platform loss |
 
 **Response:**
-
 ```json
 {
   "success": true,
-  "currentIssue": "1M_20260510000001",
-  "applyIssue": "1M_20260510000002"
+  "currentIssue": "1M_20260628000001",
+  "applyIssue": "1M_20260628000002"
 }
 ```
 
@@ -89,7 +88,7 @@ POST /api/wingo/admin/result-mode
 ## Current Round Info
 
 ```
-GET /api/wingo/admin/current-round?mode=30s
+GET /api/admin/current-round?mode=30s
 ```
 
 Returns current round with bet type breakdown for the specified game mode.
@@ -97,12 +96,11 @@ Returns current round with bet type breakdown for the specified game mode.
 **Query Params:** `mode` (optional, default: `30s`)
 
 **Response:**
-
 ```json
 {
   "success": true,
   "round": {
-    "issueNumber": "202605100000002",
+    "issueNumber": "20260628000002",
     "gameMode": "30s",
     "status": "open",
     "startTime": 1777274790000,
@@ -130,29 +128,53 @@ Returns current round with bet type breakdown for the specified game mode.
 ## Current Round Bets
 
 ```
-GET /api/wingo/admin/current-round/bets?page=1&limit=50&mode=30s
+GET /api/admin/current-round/bets?page=1&limit=50&mode=30s
 ```
 
 Returns all bets for the current round with user mobile numbers.
 
-**Query Params:** `mode` (optional, default: `30s`)
+**Query Params:** `mode` (optional, default: `30s`), `page` (default: 1), `limit` (default: 50, max: 100)
+
+**Response:**
+```json
+{
+  "success": true,
+  "page": 1,
+  "limit": 50,
+  "total": 150,
+  "issueNumber": "20260628000002",
+  "items": [
+    {
+      "_id": "...",
+      "userId": "123456",
+      "mobile": "9876543210",
+      "orderNumber": "WGO1712345678901",
+      "betAmount": 100,
+      "fee": 0,
+      "selectType": "green",
+      "status": "pending",
+      "result": null,
+      "createdAt": "2026-03-19T10:30:00.000Z"
+    }
+  ]
+}
+```
 
 ---
 
 ## Round Stats
 
 ```
-GET /api/wingo/admin/round-stats/:issueNumber
+GET /api/admin/round-stats/:issueNumber
 ```
 
-Full stats for a specific round with profit/loss calculation. The game mode is inferred from the issue number.
+Full stats for a specific round with profit/loss calculation. The game mode is inferred from the issue number prefix (e.g., `1M_` prefix = 1m mode, no prefix = 30s).
 
 **Response:**
-
 ```json
 {
   "success": true,
-  "issue": { "issueNumber": "1M_20260510000001", "gameMode": "1m", ... },
+  "issue": { "issueNumber": "1M_20260628000001", "gameMode": "1m" },
   "stats": {
     "totalBets": 150,
     "totalBetAmount": 50000,
@@ -177,68 +199,37 @@ Full stats for a specific round with profit/loss calculation. The game mode is i
 ## Settled Rounds
 
 ```
-GET /api/wingo/admin/rounds?page=1&limit=25&mode=30s
+GET /api/admin/rounds?page=1&limit=25&mode=30s
 ```
 
 Paginated list of settled rounds with per-round stats for the specified game mode.
 
-**Query Params:** `mode` (optional, default: `30s`)
-
----
-
-## Bet Search (All Bets)
-
-```
-GET /api/wingo/all-bets?userId=123&issueNumber=...&status=...&gameMode=30s&orderNumber=...&page=1&limit=50
-```
-
-Search wingo bets. Admins can search by userId, orderNumber, issueNumber, gameMode, and status.
-
-**Query Params:**
-| Param | Type | Required | Description |
-|-------|------|---------|-------------|
-| userId | number | No | Admin only — filter by user ID |
-| orderNumber | string | No | Admin only — filter by exact order number (unique) |
-| issueNumber | string | No | Filter by issue/round number |
-| gameMode | string | No | Filter by game mode: `30s`, `1m`, `3m`, `5m` |
-| status | string | No | Filter: `pending`, `won`, `lost` |
-| page | number | No | Page number (default: 1) |
-| limit | number | No | Items per page (default: 50, max: 100) |
+**Query Params:** `mode` (optional, default: `30s`), `page` (default: 1), `limit` (default: 25, max: 50)
 
 **Response:**
-
 ```json
 {
-  "status": "success",
+  "success": true,
   "page": 1,
-  "limit": 50,
-  "total": 1,
-  "summary": {
-    "totalBet": 100,
-    "totalPayout": 0
-  },
+  "limit": 25,
+  "total": 200,
   "items": [
     {
-      "_id": "...",
-      "userId": "123",
-      "issueNumber": "202605100000001",
-      "orderNumber": "WGO1712345678901",
-      "betAmount": 100,
-      "fee": 0,
-      "selectType": "green",
-      "status": "pending",
-      "result": null,
-      "createdAt": "2026-03-19T10:30:00.000Z"
+      "issueNumber": "20260628000001",
+      "result": 5,
+      "resultMode": "RANDOM",
+      "status": "settled",
+      "startTime": 1777274790000,
+      "endTime": 1777274820000,
+      "createdAt": "2026-06-28T00:00:00.000Z",
+      "stats": {
+        "totalBets": 150,
+        "totalBetAmount": 50000,
+        "totalPayout": 30000,
+        "wonCount": 60,
+        "lostCount": 90
+      }
     }
   ]
 }
 ```
-
-| Field | Description |
-|-------|-------------|
-| totalBet | Sum of all bet amounts in current page |
-| totalPayout | Sum of all profit amounts in current page |
-| items[].orderNumber | Unique order number for this bet |
-| items[].selectType | Bet selection: red, green, violet, big, small, or 0-9 |
-| items[].status | Bet status: pending, won, lost |
-| items[].result | Result object with profitAmount, etc., or null if pending |

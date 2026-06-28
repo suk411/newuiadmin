@@ -88,12 +88,6 @@ export default function WingoDashboard() {
     }
   }, [tab, gameMode])
 
-  useEffect(() => {
-    if (tab !== 'current') return
-    const interval = setInterval(() => loadRound(gameMode), 2000)
-    return () => clearInterval(interval)
-  }, [tab, gameMode])
-
   const handleSetMode = async () => {
     setSaving(true)
     setError('')
@@ -201,11 +195,11 @@ export default function WingoDashboard() {
                   <thead><tr><th>Issue</th><th>Result</th><th>Bets</th><th>Amount</th><th>Status</th><th>Date</th><th>Actions</th></tr></thead>
                   <tbody>
                     {settled.map(r => (
-                      <tr key={r._id} tabIndex={0}>
+                      <tr key={r.issueNumber} tabIndex={0}>
                         <td>{r.issueNumber}</td>
-                        <td style={{ fontWeight: 600 }}>{r.result || '—'}</td>
-                        <td>{r.totalBets}</td>
-                        <td>₹{r.totalBetAmount.toLocaleString('en-IN')}</td>
+                        <td style={{ fontWeight: 600 }}>{r.result != null ? r.result : '—'}</td>
+                        <td>{r.stats.totalBets}</td>
+                        <td>₹{r.stats.totalBetAmount.toLocaleString('en-IN')}</td>
                         <td><span className={`badge ${r.status === 'closed' ? 'badge--success' : 'badge--warning'}`}>{r.status}</span></td>
                         <td style={{ whiteSpace: 'nowrap' }}>{formatDateTime(r.createdAt)}</td>
                         <td><div className="cell-actions"><button className="btn btn--primary btn--sm" onClick={() => viewDetail(r.issueNumber)}>View Stats</button></div></td>

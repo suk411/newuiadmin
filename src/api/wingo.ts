@@ -30,21 +30,31 @@ export interface CurrentRoundBetsItem {
   issueNumber: string
   orderNumber: string
   betAmount: number
+  fee: number
   selectType: string
   status: string
+  result: number | null
   mobile?: string
   createdAt: string
 }
 
-export interface SettledRound {
-  _id: string
-  issueNumber: string
-  gameMode: string
-  result: string
+export interface SettledRoundStats {
   totalBets: number
   totalBetAmount: number
+  totalPayout: number
+  wonCount: number
+  lostCount: number
+}
+
+export interface SettledRound {
+  issueNumber: string
+  result: number
+  resultMode: string
   status: string
+  startTime: number
+  endTime: number
   createdAt: string
+  stats: SettledRoundStats
 }
 
 export interface RoundDetailStats {
