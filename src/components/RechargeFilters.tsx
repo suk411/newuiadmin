@@ -21,7 +21,13 @@ export default function RechargeFilters({ onSearch, loading }: Props) {
   const [filters, setFilters] = useState<DepositFilters>(emptyFilters())
 
   const handleChange = (field: keyof DepositFilters, value: string) => {
-    setFilters((prev) => ({ ...prev, [field]: value }))
+    setFilters((prev) => {
+      const next = { ...prev, [field]: value }
+      if (value && field === 'userId') { next.mobile = ''; next.orderId = '' }
+      else if (value && field === 'mobile') { next.userId = ''; next.orderId = '' }
+      else if (value && field === 'orderId') { next.userId = ''; next.mobile = '' }
+      return next
+    })
   }
 
   const hasAnyFilter = filters.userId || filters.mobile || filters.orderId || filters.status || filters.dateFrom || filters.dateTo

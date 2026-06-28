@@ -25,6 +25,9 @@ export default function Withdrawals() {
   const [chargeFrom, setChargeFrom] = useState('')
   const [dateFrom, setDateFrom] = useState('')
   const [dateTo, setDateTo] = useState('')
+
+  const handleUserId = (v: string) => { setUserId(v); if (v) setOrderId('') }
+  const handleOrderId = (v: string) => { setOrderId(v); if (v) setUserId('') }
   const [actionLoading, setActionLoading] = useState<string | null>(null)
   const [approveTarget, setApproveTarget] = useState<any | null>(null)
 
@@ -89,8 +92,8 @@ export default function Withdrawals() {
   return (
     <div className="content">
       <form className="filters-bar" onSubmit={(e) => { e.preventDefault(); load() }}>
-        <div className="filter-group"><label>User ID</label><input placeholder="User ID" value={userId} onChange={(e) => setUserId(e.target.value)} /></div>
-        <div className="filter-group"><label>Order ID</label><input placeholder="Order ID" value={orderId} onChange={(e) => setOrderId(e.target.value)} /></div>
+        <div className="filter-group"><label>User ID</label><input placeholder="User ID" value={userId} onChange={(e) => handleUserId(e.target.value)} /></div>
+        <div className="filter-group"><label>Order ID</label><input placeholder="Order ID" value={orderId} onChange={(e) => handleOrderId(e.target.value)} /></div>
         <div className="filter-group"><label>Status</label>
           <select value={status} onChange={(e) => setStatus(e.target.value)}>
             <option value="">All</option>

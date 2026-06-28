@@ -25,6 +25,10 @@ export default function Transactions() {
   const [dateFrom, setDateFrom] = useState('')
   const [dateTo, setDateTo] = useState('')
 
+  const handleUserId = (v: string) => { setUserId(v); if (v) { setOrderId(''); setTransactionId('') } }
+  const handleOrderId = (v: string) => { setOrderId(v); if (v) { setUserId(''); setTransactionId('') } }
+  const handleTransactionId = (v: string) => { setTransactionId(v); if (v) { setUserId(''); setOrderId('') } }
+
   const hasAny = userId || orderId || transactionId
 
   const load = async (p = 1) => {
@@ -53,9 +57,9 @@ export default function Transactions() {
   return (
     <div className="content">
       <form className="filters-bar" onSubmit={(e) => { e.preventDefault(); load() }}>
-        <div className="filter-group"><label>User ID</label><input placeholder="User ID" value={userId} onChange={(e) => setUserId(e.target.value)} /></div>
-        <div className="filter-group"><label>Order ID</label><input placeholder="Order ID" value={orderId} onChange={(e) => setOrderId(e.target.value)} /></div>
-        <div className="filter-group"><label>Transaction ID</label><input placeholder="Transaction ID" value={transactionId} onChange={(e) => setTransactionId(e.target.value)} /></div>
+        <div className="filter-group"><label>User ID</label><input placeholder="User ID" value={userId} onChange={(e) => handleUserId(e.target.value)} /></div>
+        <div className="filter-group"><label>Order ID</label><input placeholder="Order ID" value={orderId} onChange={(e) => handleOrderId(e.target.value)} /></div>
+        <div className="filter-group"><label>Transaction ID</label><input placeholder="Transaction ID" value={transactionId} onChange={(e) => handleTransactionId(e.target.value)} /></div>
         <div className="filter-group"><label>Type</label>
           <select value={type} onChange={(e) => setType(e.target.value)}>
             <option value="">All</option>
