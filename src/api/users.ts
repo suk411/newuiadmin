@@ -99,3 +99,44 @@ export async function viewUserPaymentMethods(userId: string): Promise<PaymentMet
 export async function updatePaymentMethod(id: string, data: Record<string, unknown>): Promise<void> {
   await axiosInstance.put(`/user/payment-methods/${id}`, data)
 }
+
+export interface TurnoverAddResponse {
+  status: string
+  batchId: string
+  type: string
+  amount: number
+  multiplier: number
+  required: number
+  totalTurnover: number
+}
+
+export interface TurnoverClearResponse {
+  status: string
+  cleared: boolean
+  userId: number
+}
+
+export interface TurnoverStatusResponse {
+  status: string
+  userId: number
+  turnover_requirement: number
+  total_turnover_completed: number
+  progress: number
+  canWithdraw: boolean
+  batches: TurnoverBatch[]
+}
+
+export async function addTurnover(data: { userId: number; amount: number; type?: string; sourceRef?: string }): Promise<TurnoverAddResponse> {
+  const res = await axiosInstance.post('/admin/turnover/add', data)
+  return res.data
+}
+
+export async function clearTurnover(data: { userId: number; reason?: string }): Promise<TurnoverClearResponse> {
+  const res = await axiosInstance.post('/admin/turnover/clear', data)
+  return res.data
+}
+
+export async function checkTurnoverStatus(userId: number): Promise<TurnoverStatusResponse> {
+  const res = await axiosInstance.get('/admin/turnover-status', { params: { userId } })
+  return res.data
+}
