@@ -63,7 +63,7 @@ export default function Login({ onLogin }: Props) {
           />
         </div>
 
-        <button type="submit" className="login-btn" disabled={loading}>
+        <button type="submit" className="btn-filled" style={{ width: '100%', marginTop: 'var(--space-5)' }} disabled={loading}>
           {loading ? 'Signing in…' : 'Sign In'}
         </button>
 

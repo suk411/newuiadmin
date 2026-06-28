@@ -118,6 +118,11 @@
   border-color: #1a7ae0;
 }
 
+.btn-filled:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
 /* design.md §4 – Filled Button 2 (secondary) */
 .btn-filled-2 {
   background: #ffffff;
@@ -483,34 +488,7 @@
   box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.1);
 }
 
-.login-btn {
-  width: 100%;
-  padding: 10px 15px;
-  background: rgba(255, 255, 255, 0.12);
-  color: #ffffff;
-  border-radius: 8px;
-  font-size: 13px;
-  font-weight: 600;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  cursor: pointer;
-  transition: all var(--motion-fast);
-  margin-top: var(--space-5);
-  letter-spacing: 0.5px;
-}
 
-.login-btn:hover {
-  background: rgba(255, 255, 255, 0.2);
-  border-color: rgba(255, 255, 255, 0.35);
-}
-
-.login-btn:active {
-  background: rgba(255, 255, 255, 0.08);
-}
-
-.login-btn:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
 
 .login-error {
   color: #f87171;
