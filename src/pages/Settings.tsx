@@ -431,7 +431,7 @@ export default function Settings() {
             <h4 style={{ margin: '0 0 8px', fontSize: 13 }}>Channels</h4>
             <div className="table-wrap">
               <table className="table" style={{ marginBottom: 24 }}>
-                <thead><tr><th>Channel</th><th>Name</th><th>Min (₹)</th><th>Max (₹)</th><th>Rate</th><th>Active</th><th>Actions</th></tr></thead>
+                <thead><tr><th>Channel</th><th>Name</th><th>Min (₹)</th><th>Max (₹)</th><th>Rate</th><th>Status</th><th>Actions</th></tr></thead>
                 <tbody>
                   {depChannels.map(c => (
                     <tr key={c.channel} tabIndex={0}>
@@ -446,7 +446,7 @@ export default function Settings() {
             <h4 style={{ margin: '0 0 8px', fontSize: 13 }}>Bonus Config</h4>
             <div className="table-wrap">
               <table className="table">
-                <thead><tr><th>Deposit #</th><th>Bonus Rate</th><th>Active</th><th>Actions</th></tr></thead>
+                <thead><tr><th>Deposit #</th><th>Bonus Rate</th><th>Status</th><th>Actions</th></tr></thead>
                 <tbody>
                   {depBonus.map((b, i) => (
                     <tr key={b.depositCount} tabIndex={0}>

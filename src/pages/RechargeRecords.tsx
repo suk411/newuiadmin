@@ -187,7 +187,7 @@ export default function RechargeRecords() {
                 <div style={{ padding: '24px 0', textAlign: 'center' }}><span className="loading-spinner" /></div>
               ) : (
                 <table className="table" style={{ marginBottom: 24 }}>
-                  <thead><tr><th>Channel</th><th>Name</th><th>Min (₹)</th><th>Max (₹)</th><th>Rate</th><th>Active</th><th>Actions</th></tr></thead>
+                  <thead><tr><th>Channel</th><th>Name</th><th>Min (₹)</th><th>Max (₹)</th><th>Rate</th><th>Status</th><th>Actions</th></tr></thead>
                   <tbody>
                     {channels.map(c => (
                       <tr key={c.channel} tabIndex={0}>
@@ -206,7 +206,7 @@ export default function RechargeRecords() {
               <h4 style={{ margin: '0 0 8px', fontSize: 13 }}>Bonus Config</h4>
               {configLoading ? null : (
                 <table className="table">
-                  <thead><tr><th>Deposit #</th><th>Bonus Rate</th><th>Active</th><th>Actions</th></tr></thead>
+                  <thead><tr><th>Deposit #</th><th>Bonus Rate</th><th>Status</th><th>Actions</th></tr></thead>
                   <tbody>
                     {bonusConfigs.map((b, i) => (
                       <tr key={b.depositCount} tabIndex={0}>
