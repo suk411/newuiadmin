@@ -74,33 +74,33 @@ export interface RoundDetail {
 }
 
 export async function fetchCurrentRound(mode = '30s'): Promise<{ round: CurrentRound; stats: RoundStats }> {
-  const res = await axiosInstance.get('/wingo/admin/current-round', { params: { mode } })
+  const res = await axiosInstance.get('/current-round', { params: { mode } })
   return res.data
 }
 
 export async function fetchCurrentRoundBets(mode = '30s', page = 1, limit = 50): Promise<{ data: CurrentRoundBetsItem[]; total: number }> {
-  const res = await axiosInstance.get('/wingo/admin/current-round/bets', { params: { mode, page, limit } })
+  const res = await axiosInstance.get('/current-round/bets', { params: { mode, page, limit } })
   const body = res.data
   return { data: body.items ?? body.data ?? [], total: body.total ?? 0 }
 }
 
 export async function fetchSettledRounds(mode = '30s', page = 1, limit = 25): Promise<{ data: SettledRound[]; total: number }> {
-  const res = await axiosInstance.get('/wingo/admin/rounds', { params: { mode, page, limit } })
+  const res = await axiosInstance.get('/rounds', { params: { mode, page, limit } })
   const body = res.data
   return { data: body.items ?? body.data ?? [], total: body.total ?? 0 }
 }
 
 export async function fetchRoundStats(issueNumber: string): Promise<RoundDetail> {
-  const res = await axiosInstance.get(`/wingo/admin/round-stats/${issueNumber}`)
+  const res = await axiosInstance.get(`/round-stats/${issueNumber}`)
   return res.data
 }
 
 export async function fetchResultMode(mode = '30s'): Promise<{ mode: string }> {
-  const res = await axiosInstance.get('/wingo/admin/result-mode', { params: { mode } })
+  const res = await axiosInstance.get('/result-mode', { params: { mode } })
   return res.data
 }
 
 export async function setResultMode(mode: string, gameMode = '30s'): Promise<{ currentIssue: string; applyIssue: string }> {
-  const res = await axiosInstance.post('/wingo/admin/result-mode', { mode, gameMode })
+  const res = await axiosInstance.post('/result-mode', { mode, gameMode })
   return res.data
 }
