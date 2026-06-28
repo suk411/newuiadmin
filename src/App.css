@@ -1073,18 +1073,29 @@ html.dark .btn-logout:hover {
 
 @media (max-width: 1024px) {
   .filters-bar {
-    gap: var(--space-4);
+    gap: var(--space-3);
+    padding: 10px 12px;
+  }
+  .filter-group {
+    flex: 1;
+    min-width: 0;
   }
   .filter-group input,
   .filter-group select {
-    min-width: 140px;
+    min-width: 0;
+    width: 100%;
   }
 }
 
 @media (max-width: 768px) {
   .filters-bar {
     flex-direction: column;
-    gap: var(--space-4);
+    gap: var(--space-3);
+    padding: 10px 12px;
+  }
+  .filter-group {
+    flex: none;
+    width: 100%;
   }
   .filter-group input,
   .filter-group select {
