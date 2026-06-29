@@ -80,12 +80,14 @@ const successIcon = (
 
 function ToastItem({ toast, onRemove }: { toast: ToastMsg; onRemove: (id: number) => void }) {
   const [visible, setVisible] = useState(false)
+  const [collapsing, setCollapsing] = useState(false)
 
   useEffect(() => {
     requestAnimationFrame(() => setVisible(true))
     const timer = setTimeout(() => {
       setVisible(false)
-      setTimeout(() => onRemove(toast.id), 300)
+      setTimeout(() => setCollapsing(true), 300)
+      setTimeout(() => onRemove(toast.id), 600)
     }, 4000)
     return () => clearTimeout(timer)
   }, [toast.id, onRemove])
@@ -99,7 +101,11 @@ function ToastItem({ toast, onRemove }: { toast: ToastMsg; onRemove: (id: number
         ...(isSuccess ? style.toastSuccess : {}),
         opacity: visible ? 1 : 0,
         transform: visible ? 'translateY(0)' : 'translateY(-12px)',
-        transition: 'opacity 0.3s, transform 0.3s',
+        maxHeight: collapsing ? 0 : 120,
+        marginBottom: collapsing ? 0 : 10,
+        padding: collapsing ? '0 15px' : '15px 15px 15px 20px',
+        overflow: 'hidden',
+        transition: 'opacity 0.3s, transform 0.3s, max-height 0.3s, margin-bottom 0.3s, padding 0.3s',
       }}
     >
       {isSuccess ? successIcon : errorIcon}
