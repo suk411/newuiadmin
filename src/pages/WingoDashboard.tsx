@@ -36,6 +36,7 @@ export default function WingoDashboard() {
 
   const [resultMode, setResultModeState] = useState('')
   const [modeLoading, setModeLoading] = useState(false)
+  const [modeApplyInfo, setModeApplyInfo] = useState<{ currentIssue: string; applyIssue: string } | null>(null)
 
   const { toast } = useToast()
   const [saving, setSaving] = useState(false)
@@ -86,6 +87,7 @@ export default function WingoDashboard() {
 
   const loadResultMode = async (mode: string) => {
     setModeLoading(true)
+    setModeApplyInfo(null)
     try {
       const res = await fetchResultMode(mode)
       setResultModeState(res.mode)
@@ -106,8 +108,11 @@ export default function WingoDashboard() {
 
   const handleSetMode = async () => {
     setSaving(true)
+    setModeApplyInfo(null)
     try {
-      await setResultMode(resultMode, gameMode)
+      const res = await setResultMode(resultMode, gameMode)
+      setModeApplyInfo({ currentIssue: res.currentIssue, applyIssue: res.applyIssue })
+      toast(`Mode will apply from issue #${res.applyIssue}`)
     } catch (err: unknown) { toast(extractError(err)) }
     finally { setSaving(false) }
   }
@@ -293,7 +298,11 @@ export default function WingoDashboard() {
         <section className="card">
           <div style={{ padding: 'var(--space-6) var(--space-7)' }}>
             <div className="filter-group" style={{ marginBottom: 16 }}>
-              <label>Result Generation Mode</label>
+              <label>Current Mode</label>
+              <div style={{ fontSize: 14, fontWeight: 600, padding: '6px 0' }}>{modeLoading ? 'Loading...' : resultMode || '—'}</div>
+            </div>
+            <div className="filter-group" style={{ marginBottom: 16 }}>
+              <label>Set Result Generation Mode</label>
               <select value={resultMode} onChange={(e) => setResultModeState(e.target.value)} disabled={modeLoading}>
                 <option value="">Select mode...</option>
                 <option value="RANDOM">RANDOM — Truly random result</option>
@@ -304,6 +313,13 @@ export default function WingoDashboard() {
             <button className="btn-filled" onClick={handleSetMode} disabled={saving || !resultMode}>
               {saving ? <Spinner /> : 'Apply Mode'}
             </button>
+            {modeApplyInfo && (
+              <div style={{ marginTop: 16, padding: '12px 16px', background: '#f0f9eb', borderRadius: 4, fontSize: 13 }}>
+                Mode will apply from issue <strong>#{modeApplyInfo.applyIssue}</strong>
+                <br />
+                <span style={{ color: '#888' }}>Current issue: #{modeApplyInfo.currentIssue}</span>
+              </div>
+            )}
           </div>
         </section>
       )}
