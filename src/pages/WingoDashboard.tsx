@@ -162,7 +162,7 @@ export default function WingoDashboard() {
                     <span style={{ fontSize: 13, color: '#666' }}>Result Mode: <strong>{round.resultMode}</strong></span>
                   </div>
                   <div style={{ fontSize: 13, color: '#666' }}>
-                    Result: {round.result.number != null ? `${round.result.number} / ${round.result.color} / ${round.result.size}` : <span style={{ color: '#999' }}>— not yet</span>}
+                    Result: {round.result?.number != null ? `${round.result.number} / ${round.result?.color ?? '—'} / ${round.result?.size ?? '—'}` : <span style={{ color: '#999' }}>— not yet</span>}
                   </div>
                 </div>
                 <div style={{ textAlign: 'right' }}>
@@ -238,9 +238,9 @@ export default function WingoDashboard() {
                     {settled.map(r => (
                       <tr key={r.issueNumber} tabIndex={0}>
                         <td>{r.issueNumber}</td>
-                        <td style={{ fontWeight: 600, color: r.result.color?.includes('red') ? '#ef4444' : r.result.color?.includes('green') ? '#22c55e' : '#a855f7' }}>{r.result.number ?? '—'}</td>
-                        <td>{r.stats.totalBets}</td>
-                        <td>₹{r.stats.totalBetAmount.toLocaleString('en-IN')}</td>
+                        <td style={{ fontWeight: 600, color: r.result?.color?.includes('red') ? '#ef4444' : r.result?.color?.includes('green') ? '#22c55e' : '#a855f7' }}>{r.result?.number ?? '—'}</td>
+                        <td>{r.stats?.totalBets ?? '—'}</td>
+                        <td>₹{r.stats?.totalBetAmount?.toLocaleString('en-IN') ?? '—'}</td>
                         <td><span className={`badge ${r.status === 'closed' ? 'badge--success' : 'badge--warning'}`}>{r.status}</span></td>
                         <td style={{ whiteSpace: 'nowrap' }}>{formatDateTime(r.createdAt)}</td>
                         <td><div className="cell-actions"><button className="btn btn--primary btn--sm" onClick={() => viewDetail(r.issueNumber)}>View Stats</button></div></td>
