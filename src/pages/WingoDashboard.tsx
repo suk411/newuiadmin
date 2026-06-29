@@ -128,11 +128,17 @@ export default function WingoDashboard() {
   }
 
   const modeSelector = (
-    <div className="filter-group">
-      <label>Game Mode</label>
-      <select value={gameMode} onChange={(e) => setGameMode(e.target.value)}>
-        {modes.map(m => <option key={m} value={m}>{m}</option>)}
-      </select>
+    <div className="filter-group" style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
+      <label style={{ marginBottom: 0 }}>Game Mode</label>
+      <div style={{ display: 'flex', gap: 0 }}>
+        {modes.map((m, i) => (
+          <button key={m} className={gameMode === m ? 'btn-filled' : 'btn-outline'}
+            style={{ borderRadius: i === 0 ? '3px 0 0 3px' : i === modes.length - 1 ? '0 3px 3px 0' : '0' }}
+            onClick={() => setGameMode(m)}>
+            {m}
+          </button>
+        ))}
+      </div>
     </div>
   )
 
