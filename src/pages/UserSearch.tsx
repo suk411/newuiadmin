@@ -3,7 +3,7 @@ import axios from 'axios'
 import { searchUser, searchUserByMobile, updateUserStatus, fetchUsersByIp, viewUserPaymentMethods, updateUserPayments, addTurnover, clearTurnover, checkTurnoverStatus } from '../api/users'
 import type { UserSearchResponse, PaymentMethods, TurnoverStatusResponse } from '../api/users'
 import { formatDateTime12 } from '../utils/format'
-import { useError } from '../contexts/ErrorContext'
+import { useToast } from '../contexts/ToastContext'
 import Spinner from '../components/Spinner'
 
 function extractError(err: unknown): string {
@@ -38,7 +38,6 @@ export default function UserSearch() {
   const [addTurnoverType, setAddTurnoverType] = useState('ADMIN_BONUS')
   const [addTurnoverRef, setAddTurnoverRef] = useState('')
   const [addTurnoverSaving, setAddTurnoverSaving] = useState(false)
-  const [dialogError, setDialogError] = useState<string | null>(null)
   const [showStatusDialog, setShowStatusDialog] = useState(false)
   const [newStatus, setNewStatus] = useState<string>('active')
   const [statusRemark, setStatusRemark] = useState('')
@@ -52,15 +51,14 @@ export default function UserSearch() {
   const [pmForm, setPmForm] = useState<Record<string, string>>({})
   const [pmUpdating, setPmUpdating] = useState(false)
   const [user, setUser] = useState<UserSearchResponse | null>(null)
-  const { error, setError } = useError()
+  const { toast } = useToast()
   const [loading, setLoading] = useState(false)
 
   const handleSearch = async () => {
-    setError(null)
     setUser(null)
 
     if (!userId.trim() && !mobile.trim()) {
-      setError('Please fill in at least one field')
+      toast('Please fill in at least one field')
       return
     }
 
@@ -71,7 +69,7 @@ export default function UserSearch() {
         : await searchUserByMobile(mobile.trim())
       setUser(result)
     } catch (err: unknown) {
-      setError(extractError(err))
+      toast(extractError(err))
     } finally {
       setLoading(false)
     }
@@ -80,13 +78,13 @@ export default function UserSearch() {
   const handleLoadSameIp = async () => {
     if (!user) return
     setIpUsersLoading(true)
-    setDialogError(null)
+    /* */
     setShowIpUsers(true)
     try {
       const res = await fetchUsersByIp(user.lastIp)
       setIpUsers(res.users ?? [])
     } catch (err: unknown) {
-      setDialogError(extractError(err))
+      toast(extractError(err))
     } finally {
       setIpUsersLoading(false)
     }
@@ -94,7 +92,7 @@ export default function UserSearch() {
 
   const handleLoadPaymentMethods = async () => {
     if (!user) return
-    setDialogError(null)
+    /* */
     setShowPmDialog(true)
     try {
       const data = await viewUserPaymentMethods(String(user.user.userId))
@@ -103,21 +101,21 @@ export default function UserSearch() {
       setPmForm({})
       setPmType('BANK')
     } catch (err: unknown) {
-      setDialogError(extractError(err))
+      toast(extractError(err))
     }
   }
 
   const handleUpdatePayment = async () => {
     if (!user) return
     setPmUpdating(true)
-    setDialogError(null)
+    /* */
     try {
       const body = { userId: user.user.userId, type: pmType, ...pmForm } as any
       await updateUserPayments(body)
       setShowPmDialog(false)
       setPmForm({})
     } catch (err: unknown) {
-      setDialogError(extractError(err))
+      toast(extractError(err))
     } finally {
       setPmUpdating(false)
     }
@@ -129,7 +127,7 @@ export default function UserSearch() {
     try {
       const res = await checkTurnoverStatus(user.user.userId)
       setTurnoverStatus(res)
-    } catch (err: unknown) { setDialogError(extractError(err)) }
+    } catch (err: unknown) { toast(extractError(err)) }
     finally { setTurnoverLoading(false) }
   }
 
@@ -142,7 +140,7 @@ export default function UserSearch() {
       setAddTurnoverAmount('')
       setAddTurnoverRef('')
       setShowAddTurnover(false)
-    } catch (err: unknown) { setDialogError(extractError(err)) }
+    } catch (err: unknown) { toast(extractError(err)) }
     finally { setAddTurnoverSaving(false) }
   }
 
@@ -154,21 +152,21 @@ export default function UserSearch() {
       await clearTurnover({ userId: user.user.userId, reason: 'Admin cleared' })
       setTurnoverStatus(null)
       handleCheckTurnover()
-    } catch (err: unknown) { setDialogError(extractError(err)) }
+    } catch (err: unknown) { toast(extractError(err)) }
     finally { setTurnoverLoading(false) }
   }
 
   const handleStatusChange = async () => {
     if (!user) return
     setUpdatingStatus(true)
-    setDialogError(null)
+    /* */
     try {
       await updateUserStatus({ userId: user.user.userId, status: newStatus as 'active' | 'suspended' | 'inactive' | 'ban' | 'banned', remark: statusRemark })
       setUser({ ...user, account: { ...user.account, status: newStatus as any } })
       setShowStatusDialog(false)
       setStatusRemark('')
     } catch (err: unknown) {
-      setDialogError(extractError(err))
+      toast(extractError(err))
     } finally {
       setUpdatingStatus(false)
     }
@@ -201,7 +199,7 @@ export default function UserSearch() {
               style={{ opacity: loading || (!userId.trim() && !mobile.trim()) ? 0.6 : 1 }}>
               {loading ? <Spinner /> : 'Search'}
             </button>
-            <button type="button" className="btn-outline" onClick={() => { setUserId(''); setMobile(''); setUser(null); setError(null) }}>
+            <button type="button" className="btn-outline" onClick={() => { setUserId(''); setMobile(''); setUser(null) }}>
               Reset
             </button>
           </div>
@@ -215,7 +213,7 @@ export default function UserSearch() {
               <span className="stat-card__label">User ID</span>
               <div style={{ display: 'flex', gap: 6, alignItems: 'center' }}>
                 <span className={`badge ${statusBadge(user.account.status)}`}>{user.account.status}</span>
-                <button className="btn-filled" style={{ fontSize: 10, padding: '2px 8px' }} onClick={() => { setNewStatus(user.account.status); setShowStatusDialog(true); setDialogError(null) }}>Change Status</button>
+                <button className="btn-filled" style={{ fontSize: 10, padding: '2px 8px' }} onClick={() => { setNewStatus(user.account.status); setShowStatusDialog(true); /* */ }}>Change Status</button>
               </div>
             </div>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8, width: '100%', marginTop: 4 }}>
@@ -266,7 +264,7 @@ export default function UserSearch() {
           <div className="stat-card">
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%' }}>
               <span className="stat-card__label">Turnover</span>
-              <button className="btn-filled" style={{ fontSize: 10, padding: '2px 8px' }} onClick={() => { setShowTurnover(true); setDialogError(null) }}>View Batches</button>
+              <button className="btn-filled" style={{ fontSize: 10, padding: '2px 8px' }} onClick={() => { setShowTurnover(true); /* */ }}>View Batches</button>
             </div>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, width: '100%', marginTop: 4 }}>
               <div><div className="stat-card__label">Requirement</div><div className="stat-card__value text-orange">₹{user.account.turnover_requirement.toLocaleString('en-IN')}</div></div>
@@ -283,7 +281,7 @@ export default function UserSearch() {
                 <button className="btn-outline" style={{ fontSize: 11, padding: '2px 8px' }} onClick={() => { setShowStatusDialog(false); setStatusRemark('') }}>✕</button>
               </div>
               <div style={{ padding: 'var(--space-6) var(--space-7)', flex: 1, overflow: 'auto' }}>
-                {dialogError && <div style={{ padding: '8px 12px', background: '#fef2f2', color: '#dc2626', borderRadius: 4, fontSize: 13, marginBottom: 8 }}>{dialogError}</div>}
+                
                 <div className="filter-group" style={{ marginBottom: 12 }}><label>Status</label>
                   <select value={newStatus} onChange={(e) => setNewStatus(e.target.value)}>
                     <option value="active">Active</option>
@@ -310,7 +308,7 @@ export default function UserSearch() {
                 <button className="btn-outline" style={{ fontSize: 11, padding: '2px 8px' }} onClick={() => { setShowIpUsers(false); setIpUsers([]) }}>✕</button>
               </div>
               <div className="table-wrap" style={{ padding: 'var(--space-6) var(--space-7)', flex: 1, overflow: 'auto' }}>
-                {dialogError && <div style={{ padding: '8px 12px', background: '#fef2f2', color: '#dc2626', borderRadius: 4, fontSize: 13, marginBottom: 8 }}>{dialogError}</div>}
+                
                 {ipUsers.length === 0 ? (
                   <div className="empty-state"><div className="empty-state__icon">👥</div>No other users found</div>
                 ) : (
@@ -339,7 +337,7 @@ export default function UserSearch() {
                 <button className="btn-outline" style={{ fontSize: 11, padding: '2px 8px' }} onClick={() => setShowPmDialog(false)}>✕</button>
               </div>
               <div style={{ padding: 'var(--space-6) var(--space-7)', flex: 1, overflow: 'auto' }}>
-                {dialogError && <div style={{ padding: '8px 12px', background: '#fef2f2', color: '#dc2626', borderRadius: 4, fontSize: 13, marginBottom: 8 }}>{dialogError}</div>}
+                
                 {pmData && (
                   <div style={{ marginBottom: 'var(--space-6)', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'var(--space-3)', fontSize: 13 }}>
                     <div><strong>Holder Name:</strong> {pmData.holderName || '-'}</div>
@@ -388,7 +386,7 @@ export default function UserSearch() {
                 <span style={{ fontWeight: 700 }}>Turnover — User #{user.user.userId}</span>
                 <button className="btn-outline" style={{ fontSize: 11, padding: '2px 8px' }} onClick={() => setShowTurnover(false)}>✕</button>
               </div>
-              {dialogError && <div style={{ padding: '8px 12px', margin: '0 var(--space-7)', background: '#fef2f2', color: '#dc2626', borderRadius: 4, fontSize: 13 }}>{dialogError}</div>}
+              
               <div style={{ padding: 'var(--space-6) var(--space-7)', borderBottom: '1px solid var(--color-border, rgb(188,198,222))', display: 'flex', gap: 8, flexShrink: 0 }}>
                 <button className="btn btn--primary btn--sm" onClick={handleCheckTurnover} disabled={turnoverLoading}>Check Status</button>
                 <button className="btn btn--sm" style={{ background: '#22c55e', color: '#fff', border: 'none' }} onClick={() => { setShowAddTurnover(true); handleCheckTurnover() }}>Add Turnover</button>

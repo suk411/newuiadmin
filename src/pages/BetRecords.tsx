@@ -3,7 +3,7 @@ import axios from 'axios'
 import { fetchProviderBets, fetchWingoBets } from '../api/bets'
 import type { ProviderBet, WingoBet } from '../api/bets'
 import { formatDateTime } from '../utils/format'
-import { useError } from '../contexts/ErrorContext'
+import { useToast } from '../contexts/ToastContext'
 import Spinner from '../components/Spinner'
 
 const LIMIT = 20
@@ -19,7 +19,7 @@ export default function BetRecords() {
   const [records, setRecords] = useState<(ProviderBet | WingoBet)[]>([])
   const [total, setTotal] = useState(0)
   const [page, setPage] = useState(1)
-  const { error, setError } = useError()
+  const { toast } = useToast()
   const [loading, setLoading] = useState(false)
   const [member, setMember] = useState('')
   const [orderNumber, setOrderNumber] = useState('')
@@ -29,7 +29,6 @@ export default function BetRecords() {
 
   const load = async (p = 1) => {
     setLoading(true)
-    setError(null)
     try {
       const params: Record<string, string | number> = { page: p, limit: LIMIT }
       if (tab === 'provider') {
@@ -45,7 +44,7 @@ export default function BetRecords() {
       }
       setPage(p)
     } catch (err: unknown) {
-      setError(extractError(err))
+      toast(extractError(err))
     } finally {
       setLoading(false)
     }

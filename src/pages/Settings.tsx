@@ -10,7 +10,7 @@ import { fetchDepositConfig, updateDepositChannel, fetchDepositBonusConfig, upda
 import type { DepositChannel, DepositBonusConfig } from '../api/depositConfig'
 import { fetchWithdrawalConfig, updateWithdrawalConfig } from '../api/withdrawalConfig'
 import type { WithdrawalConfig } from '../api/withdrawalConfig'
-import { useError } from '../contexts/ErrorContext'
+import { useToast } from '../contexts/ToastContext'
 import Spinner from '../components/Spinner'
 import { formatDateTime } from '../utils/format'
 
@@ -30,7 +30,7 @@ function randomCode() {
 const GC_LIMIT = 15
 
 export default function Settings() {
-  const { setError } = useError()
+  const { toast } = useToast()
 
   // VIP Config
   const [vipTiers, setVipTiers] = useState<VipTier[]>([])
@@ -38,7 +38,6 @@ export default function Settings() {
   const [vipEditIdx, setVipEditIdx] = useState<number | null>(null)
   const [vipForm, setVipForm] = useState<VipTier | null>(null)
   const [vipSaving, setVipSaving] = useState(false)
-  const [vipErr, setVipErr] = useState('')
 
   // Turnover Config
   const [toRules, setToRules] = useState<TurnoverRule[]>([])
@@ -46,21 +45,18 @@ export default function Settings() {
   const [toEditIdx, setToEditIdx] = useState<number | null>(null)
   const [toForm, setToForm] = useState<TurnoverRule | null>(null)
   const [toSaving, setToSaving] = useState(false)
-  const [toErr, setToErr] = useState('')
 
   // Gift Codes
   const [gcRecords, setGcRecords] = useState<GiftCode[]>([])
   const [gcTotal, setGcTotal] = useState(0)
   const [gcPage, setGcPage] = useState(1)
   const [gcLoading, setGcLoading] = useState(false)
-  const [gcErr, setGcErr] = useState('')
 
   // Deposit Config
   const [depChannels, setDepChannels] = useState<DepositChannel[]>([])
   const [depBonus, setDepBonus] = useState<DepositBonusConfig[]>([])
   const [depLoading, setDepLoading] = useState(false)
   const [depSaving, setDepSaving] = useState<string | null>(null)
-  const [depErr, setDepErr] = useState('')
 
   // Withdrawal Config
   const [wdConfig, setWdConfig] = useState<WithdrawalConfig | null>(null)
@@ -72,7 +68,6 @@ export default function Settings() {
   const [wdMaxUpi, setWdMaxUpi] = useState('')
   const [wdMinUpay, setWdMinUpay] = useState('')
   const [wdMaxUpay, setWdMaxUpay] = useState('')
-  const [wdErr, setWdErr] = useState('')
 
   // dialog visibility
   const [showVip, setShowVip] = useState(false)
@@ -87,17 +82,16 @@ export default function Settings() {
     try {
       const data = await fetchVipConfig()
       setVipTiers(Array.isArray(data) ? data : [])
-    } catch (err: unknown) { setVipErr(extractError(err)) }
+    } catch (err: unknown) { toast(extractError(err)) }
     finally { setVipLoading(false) }
   }
 
   const vipOpenDialog = () => { setShowVip(true); loadVip() }
-  const vipCloseDialog = () => { setShowVip(false); setVipEditIdx(null); setVipForm(null); setVipErr('') }
+  const vipCloseDialog = () => { setShowVip(false); setVipEditIdx(null); setVipForm(null) }
 
   const vipOpenEdit = (i: number) => {
     setVipEditIdx(i)
     setVipForm({ ...vipTiers[i] })
-    setVipErr('')
   }
 
   const vipCloseEdit = () => { setVipEditIdx(null); setVipForm(null) }
@@ -105,14 +99,14 @@ export default function Settings() {
   const vipHandleSave = async () => {
     if (vipForm == null || vipEditIdx == null) return
     setVipSaving(true)
-    setVipErr('')
+    /* */
     try {
       const copy = [...vipTiers]
       copy[vipEditIdx] = vipForm
       await updateVipConfig(copy)
       setVipTiers(copy)
       vipCloseEdit()
-    } catch (err: unknown) { setVipErr(extractError(err)) }
+    } catch (err: unknown) { toast(extractError(err)) }
     finally { setVipSaving(false) }
   }
 
@@ -122,17 +116,17 @@ export default function Settings() {
     try {
       const data = await fetchTurnoverConfig()
       setToRules(Array.isArray(data) ? data : [])
-    } catch (err: unknown) { setToErr(extractError(err)) }
+    } catch (err: unknown) { toast(extractError(err)) }
     finally { setToLoading(false) }
   }
 
   const toOpenDialog = () => { setShowTo(true); loadTo() }
-  const toCloseDialog = () => { setShowTo(false); setToEditIdx(null); setToForm(null); setToErr('') }
+  const toCloseDialog = () => { setShowTo(false); setToEditIdx(null); setToForm(null); /* */ }
 
   const toOpenEdit = (i: number) => {
     setToEditIdx(i)
     setToForm({ ...toRules[i] })
-    setToErr('')
+    /* */
   }
 
   const toCloseEdit = () => { setToEditIdx(null); setToForm(null) }
@@ -140,38 +134,38 @@ export default function Settings() {
   const toHandleSave = async () => {
     if (toForm == null || toEditIdx == null) return
     setToSaving(true)
-    setToErr('')
+    /* */
     try {
       const copy = [...toRules]
       copy[toEditIdx] = toForm
       await updateTurnoverConfig(copy)
       setToRules(copy)
       toCloseEdit()
-    } catch (err: unknown) { setToErr(extractError(err)) }
+    } catch (err: unknown) { toast(extractError(err)) }
     finally { setToSaving(false) }
   }
 
   // ---- Gift Codes ----
   const loadGc = async (p = 1) => {
     setGcLoading(true)
-    setGcErr('')
+    /* */
     try {
       const res = await fetchGiftCodes({ page: p, limit: GC_LIMIT })
       setGcRecords(res.data)
       setGcTotal(res.total)
       setGcPage(res.page)
-    } catch (err: unknown) { setGcErr(extractError(err)) }
+    } catch (err: unknown) { toast(extractError(err)) }
     finally { setGcLoading(false) }
   }
 
   const gcOpenDialog = () => { setShowGc(true); loadGc() }
-  const gcCloseDialog = () => { setShowGc(false); setGcRecords([]); setGcShowCreate(false); setGcErr('') }
+  const gcCloseDialog = () => { setShowGc(false); setGcRecords([]); setGcShowCreate(false); /* */ }
 
   const gcHandleToggle = async (code: string) => {
     try {
       await toggleGiftCode(code)
       loadGc(gcPage)
-    } catch (err: unknown) { setGcErr(extractError(err)) }
+    } catch (err: unknown) { toast(extractError(err)) }
   }
 
   const gcHandleDelete = async (code: string) => {
@@ -179,25 +173,24 @@ export default function Settings() {
     try {
       await deleteGiftCode(code)
       loadGc(gcPage)
-    } catch (err: unknown) { setGcErr(extractError(err)) }
+    } catch (err: unknown) { toast(extractError(err)) }
   }
 
   const [gcShowCreate, setGcShowCreate] = useState(false)
   const [gcForm, setGcForm] = useState({ code: '', rewardAmount: 0, turnoverMultiplier: 1, maxRedemptions: 100, expiryDate: '', minDepositToday: 0, description: '' })
   const [gcSaving, setGcSaving] = useState(false)
-  const [gcCreateErr, setGcCreateErr] = useState('')
 
-  const gcOpenCreate = () => { setGcForm({ code: '', rewardAmount: 0, turnoverMultiplier: 1, maxRedemptions: 100, expiryDate: '', minDepositToday: 0, description: '' }); setGcShowCreate(true); setGcCreateErr('') }
+  const gcOpenCreate = () => { setGcForm({ code: '', rewardAmount: 0, turnoverMultiplier: 1, maxRedemptions: 100, expiryDate: '', minDepositToday: 0, description: '' }); setGcShowCreate(true); /* */ }
 
   const gcHandleCreate = async () => {
     if (!gcForm.code || !gcForm.rewardAmount) return
     setGcSaving(true)
-    setGcCreateErr('')
+    /* */
     try {
       await createGiftCode(gcForm)
       setGcShowCreate(false)
       loadGc(1)
-    } catch (err: unknown) { setGcCreateErr(extractError(err)) }
+    } catch (err: unknown) { toast(extractError(err)) }
     finally { setGcSaving(false) }
   }
 
@@ -208,12 +201,12 @@ export default function Settings() {
       const [c, b] = await Promise.all([fetchDepositConfig(), fetchDepositBonusConfig()])
       setDepChannels(c)
       setDepBonus(b)
-    } catch (err: unknown) { setDepErr(extractError(err)) }
+    } catch (err: unknown) { toast(extractError(err)) }
     finally { setDepLoading(false) }
   }
 
   const depOpenDialog = () => { setShowDep(true); loadDep() }
-  const depCloseDialog = () => { setShowDep(false); setEditChan(null); setDepErr('') }
+  const depCloseDialog = () => { setShowDep(false); setEditChan(null); /* */ }
 
   const depAddBonus = async () => {
     const c = prompt('Deposit number (e.g. 4):')
@@ -224,7 +217,7 @@ export default function Settings() {
     try {
       await updateDepositBonusConfig({ depositCount: Number(c), bonusRate: Number(r) })
       await loadDep()
-    } catch (err: unknown) { setDepErr(extractError(err)) }
+    } catch (err: unknown) { toast(extractError(err)) }
     finally { setDepSaving(null) }
   }
 
@@ -260,7 +253,7 @@ export default function Settings() {
       const updated = await updateDepositChannel(editChan.channel, body)
       setDepChannels(prev => prev.map(c => c.channel === editChan.channel ? { ...c, ...updated } : c))
       setEditChan(null)
-    } catch (err: unknown) { setDepErr(extractError(err)) }
+    } catch (err: unknown) { toast(extractError(err)) }
     finally { setDepSaving(null) }
   }
 
@@ -284,7 +277,7 @@ export default function Settings() {
       const updated = await updateDepositBonusConfig({ depositCount: Number(editBonusCount), bonusRate: Number(editBonusRate), active: editBonusActive })
       setDepBonus(prev => prev.map((b, i) => i === editBonusIdx ? { ...b, ...updated } : b))
       setEditBonusIdx(null)
-    } catch (err: unknown) { setDepErr(extractError(err)) }
+    } catch (err: unknown) { toast(extractError(err)) }
     finally { setDepSaving(null) }
   }
 
@@ -301,23 +294,23 @@ export default function Settings() {
       setWdMaxUpi(String(cfg.limits.UPI.max))
       setWdMinUpay(String(cfg.limits.UPAY.min))
       setWdMaxUpay(String(cfg.limits.UPAY.max))
-    } catch (err: unknown) { setWdErr(extractError(err)) }
+    } catch (err: unknown) { toast(extractError(err)) }
     finally { setWdLoading(false) }
   }
 
   const wdOpenDialog = () => { setShowWd(true); loadWd() }
-  const wdCloseDialog = () => { setShowWd(false); setWdErr('') }
+  const wdCloseDialog = () => { setShowWd(false); /* */ }
 
   const wdHandleSave = async () => {
     setWdLoading(true)
-    setWdErr('')
+    /* */
     try {
       const updated = await updateWithdrawalConfig({
         perDayLimit: Number(wdPerDay),
         limits: { BANK: { min: Number(wdMinBank), max: Number(wdMaxBank) }, UPI: { min: Number(wdMinUpi), max: Number(wdMaxUpi) }, UPAY: { min: Number(wdMinUpay), max: Number(wdMaxUpay) } },
       })
       setWdConfig(updated)
-    } catch (err: unknown) { setWdErr(extractError(err)) }
+    } catch (err: unknown) { toast(extractError(err)) }
     finally { setWdLoading(false) }
   }
 
@@ -370,7 +363,6 @@ export default function Settings() {
                       </tbody>
                     </table>
                   </div>
-                  {vipErr && <div style={{ padding: '8px 12px', background: '#fef2f2', color: '#dc2626', borderRadius: 4, fontSize: 13, marginTop: 8 }}>{vipErr}</div>}
                 </>
               )}
             </div>
@@ -423,7 +415,6 @@ export default function Settings() {
                       </tbody>
                     </table>
                   </div>
-                  {toErr && <div style={{ padding: '8px 12px', background: '#fef2f2', color: '#dc2626', borderRadius: 4, fontSize: 13, marginTop: 8 }}>{toErr}</div>}
                 </>
               )}
             </div>
@@ -464,7 +455,6 @@ export default function Settings() {
                 <button className="btn-filled" style={{ background: '#22c55e', borderColor: '#22c55e' }} onClick={gcOpenCreate}>+ New</button>
                 <button className="btn-outline" onClick={() => loadGc(1)}>Refresh</button>
               </div>
-              {gcErr && <div style={{ padding: '8px 12px', background: '#fef2f2', color: '#dc2626', borderRadius: 4, fontSize: 13, marginBottom: 8 }}>{gcErr}</div>}
               {gcLoading ? <div style={{ padding: '24px 0', textAlign: 'center' }}><Spinner /></div> : gcRecords.length === 0 ? <div className="empty-state"><div className="empty-state__icon">📋</div>No gift codes</div> : (
                 <>
                   <div className="table-wrap">
@@ -512,7 +502,6 @@ export default function Settings() {
               <button className="btn-outline" style={{ fontSize: 11, padding: '2px 8px' }} onClick={() => setGcShowCreate(false)}>✕</button>
             </div>
             <div style={{ padding: 'var(--space-6) var(--space-7)', flex: 1, overflow: 'auto', display: 'flex', flexDirection: 'column', gap: 'var(--space-3)', fontSize: 14 }}>
-              {gcCreateErr && <div style={{ padding: '8px 12px', background: '#fef2f2', color: '#dc2626', borderRadius: 4, fontSize: 13 }}>{gcCreateErr}</div>}
               <div className="filter-group"><label>Code</label><div style={{ display: 'flex', gap: 6 }}><input value={gcForm.code} onChange={(e) => setGcForm({ ...gcForm, code: e.target.value.toUpperCase() })} placeholder="e.g. BONUS50" style={{ flex: 1 }} /><button className="btn" onClick={() => setGcForm({ ...gcForm, code: randomCode() })} style={{ whiteSpace: 'nowrap', background: '#f59e0b', color: '#fff', border: 'none' }}>Random</button></div></div>
               <div className="filter-group"><label>Reward Amount (₹)</label><input type="number" value={gcForm.rewardAmount} onChange={(e) => setGcForm({ ...gcForm, rewardAmount: Number(e.target.value) })} /></div>
               <div className="filter-group"><label>Turnover Multiplier</label><input type="number" step="0.1" value={gcForm.turnoverMultiplier} onChange={(e) => setGcForm({ ...gcForm, turnoverMultiplier: Number(e.target.value) })} /></div>
@@ -574,7 +563,6 @@ export default function Settings() {
                   </div>
                 </>
               )}
-              {depErr && <div style={{ padding: '8px 12px', background: '#fef2f2', color: '#dc2626', borderRadius: 4, fontSize: 13, marginTop: 8 }}>{depErr}</div>}
             </div>
           </div>
         </div>
@@ -661,7 +649,6 @@ export default function Settings() {
                   </div>
                 </>
               )}
-              {wdErr && <div style={{ padding: '8px 12px', background: '#fef2f2', color: '#dc2626', borderRadius: 4, fontSize: 13, marginTop: 8 }}>{wdErr}</div>}
             </div>
           </div>
         </div>

@@ -6,9 +6,7 @@ import RechargeFilters from '../components/RechargeFilters'
 import RechargeTable from '../components/RechargeTable'
 import ApproveDialog from '../components/ApproveDialog'
 import Pagination from '../components/Pagination'
-import Toast, { nextId } from '../components/Toast'
-import type { ToastMsg } from '../components/Toast'
-import { useError } from '../contexts/ErrorContext'
+import { useToast } from '../contexts/ToastContext'
 
 const DEFAULT_LIMIT = 20
 
@@ -24,26 +22,14 @@ export default function RechargeRecords() {
   const [records, setRecords] = useState<DepositRecord[]>([])
   const [total, setTotal] = useState(0)
   const [page, setPage] = useState(1)
-  const { error, setError } = useError()
+  const { toast } = useToast()
   const [loading, setLoading] = useState(false)
   const [currentFilters, setCurrentFilters] = useState<DepositFilters | null>(null)
-  const [dialogError, setDialogError] = useState<string | null>(null)
   const [approving, setApproving] = useState(false)
   const [approveTarget, setApproveTarget] = useState<DepositRecord | null>(null)
-  const [toasts, setToasts] = useState<ToastMsg[]>([])
-
-  const addToast = useCallback((text: string) => {
-    const id = nextId()
-    setToasts((prev) => [...prev, { id, text }])
-  }, [])
-
-  const removeToast = useCallback((id: number) => {
-    setToasts((prev) => prev.filter((t) => t.id !== id))
-  }, [])
 
   const loadRecords = useCallback(async (filters: DepositFilters) => {
     setLoading(true)
-    setError(null)
     try {
       const res = await fetchDeposits(filters)
       setRecords(res.data ?? [])
@@ -52,14 +38,13 @@ export default function RechargeRecords() {
       setCurrentFilters(filters)
     } catch (err: unknown) {
       const msg = extractError(err)
-      setError(msg)
-      addToast(msg)
+      toast(msg)
       setRecords([])
       setTotal(0)
     } finally {
       setLoading(false)
     }
-  }, [addToast, setError])
+  }, [toast])
 
   const handleSearch = (filters: DepositFilters) => {
     loadRecords(filters)
@@ -73,7 +58,6 @@ export default function RechargeRecords() {
 
   const handleApproveClick = (record: DepositRecord) => {
     setApproveTarget(record)
-    setDialogError(null)
   }
 
   const handleApproveConfirm = async () => {
@@ -86,9 +70,7 @@ export default function RechargeRecords() {
         loadRecords({ ...currentFilters, page, limit: DEFAULT_LIMIT })
       }
     } catch (err: unknown) {
-      const msg = extractError(err)
-      setDialogError(msg)
-      addToast(msg)
+      toast(extractError(err))
     } finally {
       setApproving(false)
     }
@@ -101,9 +83,6 @@ export default function RechargeRecords() {
   return (
     <div className="content">
       <RechargeFilters onSearch={handleSearch} loading={loading} />
-
-      <Toast toasts={toasts} onRemove={removeToast} />
-
       <RechargeTable
         records={records}
         loading={loading}
@@ -118,7 +97,6 @@ export default function RechargeRecords() {
         />
       )}
 
-      {dialogError && <div style={{ padding: '8px 12px', background: '#fef2f2', color: '#dc2626', borderRadius: 4, fontSize: 13, marginBottom: 8 }}>{dialogError}</div>}
       {approveTarget && (
         <ApproveDialog
           record={approveTarget}

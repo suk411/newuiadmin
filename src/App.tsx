@@ -15,7 +15,7 @@ import Sidebar from './components/Sidebar'
 import TagsView from './components/TagsView'
 import { titleMap } from './components/TagsView'
 import type { TagItem } from './components/TagsView'
-import { ErrorProvider, useError } from './contexts/ErrorContext'
+import { ToastProvider, useToast } from './contexts/ToastContext'
 import './App.css'
 
 function ProtectedLayoutContent({ onLogout }: { onLogout: () => void }) {
@@ -23,9 +23,7 @@ function ProtectedLayoutContent({ onLogout }: { onLogout: () => void }) {
   const [darkMode, setDarkMode] = useState(() => localStorage.getItem('darkMode') === 'true')
   const location = useLocation()
   const navigate = useNavigate()
-  const { error, setError } = useError()
-
-  useEffect(() => { setError(null) }, [location.pathname])
+  const { toast } = useToast()
 
   useEffect(() => {
     document.documentElement.classList.toggle('dark', darkMode)
@@ -114,7 +112,6 @@ function ProtectedLayoutContent({ onLogout }: { onLogout: () => void }) {
           </div>
         </header>
         <TagsView tags={tags} onClose={handleTagClose} />
-        {error && <div className="error-banner"><span>{error}</span><button className="error-banner__close" onClick={() => setError(null)}>✕</button></div>}
         <main className="app-content">
           <div key={location.pathname} className="route-transition">
             <Routes>
@@ -139,9 +136,9 @@ function ProtectedLayoutContent({ onLogout }: { onLogout: () => void }) {
 
 function ProtectedLayout({ onLogout }: { onLogout: () => void }) {
   return (
-    <ErrorProvider>
+    <ToastProvider>
       <ProtectedLayoutContent onLogout={onLogout} />
-    </ErrorProvider>
+    </ToastProvider>
   )
 }
 

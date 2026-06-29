@@ -4,7 +4,7 @@ import { fetchWithdrawals, approveWithdrawal, cancelWithdrawal } from '../api/wi
 import type { WithdrawalRecord } from '../api/withdrawals'
 import { formatDateTime12 } from '../utils/format'
 import WithdrawApproveDialog from '../components/WithdrawApproveDialog'
-import { useError } from '../contexts/ErrorContext'
+import { useToast } from '../contexts/ToastContext'
 import Spinner from '../components/Spinner'
 
 const LIMIT = 20
@@ -19,7 +19,7 @@ export default function Withdrawals() {
   const [records, setRecords] = useState<WithdrawalRecord[]>([])
   const [total, setTotal] = useState(0)
   const [page, setPage] = useState(1)
-  const { error, setError } = useError()
+  const { toast } = useToast()
   const [loading, setLoading] = useState(false)
   const [userId, setUserId] = useState('')
   const [orderId, setOrderId] = useState('')
@@ -35,7 +35,6 @@ export default function Withdrawals() {
 
   const load = async (p = 1) => {
     setLoading(true)
-    setError(null)
     try {
       const params: Record<string, string | number> = { page: p, limit: LIMIT }
       if (userId) params.userId = userId
@@ -49,17 +48,14 @@ export default function Withdrawals() {
       setTotal(res.total)
       setPage(res.page)
     } catch (err: unknown) {
-      setError(extractError(err))
+      toast(extractError(err))
     } finally {
       setLoading(false)
     }
   }
 
-  const [dialogError, setDialogError] = useState<string | null>(null)
-
   const handleApproveClick = (record: any) => {
     setApproveTarget(record)
-    setDialogError(null)
   }
 
   const handleApproveConfirm = async (chargeFrom: string) => {
@@ -70,7 +66,7 @@ export default function Withdrawals() {
       setApproveTarget(null)
       load(page)
     } catch (err: unknown) {
-      setDialogError(extractError(err))
+      toast(extractError(err))
     } finally {
       setActionLoading(null)
     }
@@ -88,7 +84,7 @@ export default function Withdrawals() {
       await cancelWithdrawal(orderId, reason)
       load(page)
     } catch (err: unknown) {
-      setDialogError(extractError(err))
+      toast(extractError(err))
     } finally {
       setActionLoading(null)
     }
@@ -184,7 +180,6 @@ export default function Withdrawals() {
       </section></>
       )}
 
-      {dialogError && <div style={{ padding: '8px 12px', background: '#fef2f2', color: '#dc2626', borderRadius: 4, fontSize: 13, marginBottom: 8 }}>{dialogError}</div>}
       {approveTarget && (
         <WithdrawApproveDialog
           orderId={approveTarget.orderId}

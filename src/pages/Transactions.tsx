@@ -3,7 +3,7 @@ import axios from 'axios'
 import { fetchTransactions } from '../api/transactions'
 import type { TransactionRecord } from '../api/transactions'
 import { formatDateTime12 } from '../utils/format'
-import { useError } from '../contexts/ErrorContext'
+import { useToast } from '../contexts/ToastContext'
 import Spinner from '../components/Spinner'
 
 const LIMIT = 20
@@ -18,7 +18,7 @@ export default function Transactions() {
   const [records, setRecords] = useState<TransactionRecord[]>([])
   const [total, setTotal] = useState(0)
   const [page, setPage] = useState(1)
-  const { error, setError } = useError()
+  const { toast } = useToast()
   const [loading, setLoading] = useState(false)
   const [userId, setUserId] = useState('')
   const [orderId, setOrderId] = useState('')
@@ -36,7 +36,6 @@ export default function Transactions() {
   const load = async (p = 1) => {
     if (!hasAny) return
     setLoading(true)
-    setError(null)
     try {
       const params: Record<string, string | number> = { page: p, limit: LIMIT }
       if (userId) params.userId = userId
@@ -50,7 +49,7 @@ export default function Transactions() {
       setTotal(res.total)
       setPage(res.page)
     } catch (err: unknown) {
-      setError(extractError(err))
+      toast(extractError(err))
     } finally {
       setLoading(false)
     }

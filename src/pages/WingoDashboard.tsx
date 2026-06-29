@@ -3,7 +3,7 @@ import axios from 'axios'
 import { fetchCurrentRound, fetchCurrentRoundBets, fetchSettledRounds, fetchRoundStats, fetchResultMode, setResultMode } from '../api/wingo'
 import type { CurrentRound, RoundStats, CurrentRoundBetsItem, SettledRound, RoundDetail } from '../api/wingo'
 import { formatDateTime } from '../utils/format'
-import { useError } from '../contexts/ErrorContext'
+import { useToast } from '../contexts/ToastContext'
 import Spinner from '../components/Spinner'
 
 const LIMIT = 25
@@ -37,8 +37,7 @@ export default function WingoDashboard() {
   const [resultMode, setResultModeState] = useState('')
   const [modeLoading, setModeLoading] = useState(false)
 
-  const { error, setError } = useError()
-  const [dialogError, setDialogError] = useState<string | null>(null)
+  const { toast } = useToast()
   const [saving, setSaving] = useState(false)
 
   const [timeLeft, setTimeLeft] = useState(0)
@@ -81,7 +80,7 @@ export default function WingoDashboard() {
       setSettled(res.data)
       setSettledTotal(res.total)
       setSettledPage(p)
-    } catch (err: unknown) { setError(extractError(err)) }
+    } catch (err: unknown) { toast(extractError(err)) }
     finally { setSettledLoading(false) }
   }
 
@@ -107,21 +106,19 @@ export default function WingoDashboard() {
 
   const handleSetMode = async () => {
     setSaving(true)
-    setError('')
     try {
       await setResultMode(resultMode, gameMode)
-    } catch (err: unknown) { setError(extractError(err)) }
+    } catch (err: unknown) { toast(extractError(err)) }
     finally { setSaving(false) }
   }
 
   const viewDetail = async (issue: string) => {
     setDetailLoading(true)
     setRoundDetail(null)
-    setDialogError(null)
     try {
       const res = await fetchRoundStats(issue)
       setRoundDetail(res)
-    } catch (err: unknown) { setDialogError(extractError(err)) }
+    } catch (err: unknown) { toast(extractError(err)) }
     finally { setDetailLoading(false) }
   }
 
@@ -268,7 +265,6 @@ export default function WingoDashboard() {
                   <button className="btn-outline" style={{ fontSize: 11, padding: '2px 8px' }} onClick={() => setRoundDetail(null)}>✕</button>
                 </div>
                 <div style={{ padding: 'var(--space-6) var(--space-7)', flex: 1, overflow: 'auto', fontSize: 14 }}>
-                  {dialogError && <div style={{ padding: '8px 12px', background: '#fef2f2', color: '#dc2626', borderRadius: 4, fontSize: 13, marginBottom: 8 }}>{dialogError}</div>}
                   <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 12, marginBottom: 16 }}>
                     <div className="stat-card"><span className="stat-card__label">Total Bets</span><span className="stat-card__value">{roundDetail.stats.totalBets}</span></div>
                     <div className="stat-card"><span className="stat-card__label">Total Amount</span><span className="stat-card__value">₹{roundDetail.stats.totalBetAmount.toLocaleString('en-IN')}</span></div>

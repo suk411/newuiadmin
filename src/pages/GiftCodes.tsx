@@ -3,7 +3,7 @@ import axios from 'axios'
 import { fetchGiftCodes, createGiftCode, toggleGiftCode, deleteGiftCode } from '../api/giftCodes'
 import type { GiftCode } from '../api/giftCodes'
 import { formatDateTime } from '../utils/format'
-import { useError } from '../contexts/ErrorContext'
+import { useToast } from '../contexts/ToastContext'
 import Spinner from '../components/Spinner'
 
 const LIMIT = 20
@@ -36,15 +36,14 @@ export default function GiftCodes() {
   const [total, setTotal] = useState(0)
   const [page, setPage] = useState(1)
   const [loading, setLoading] = useState(true)
-  const { error, setError } = useError()
+  const { toast } = useToast()
   const [saving, setSaving] = useState(false)
   const [showCreate, setShowCreate] = useState(false)
   const [form, setForm] = useState(defaultForm)
-  const [dialogError, setDialogError] = useState<string | null>(null)
+  /**/
 
   const load = async (p = 1) => {
     setLoading(true)
-    setError(null)
     try {
       const params: Record<string, string | number> = { page: p, limit: LIMIT }
       const res = await fetchGiftCodes(params)
@@ -52,7 +51,7 @@ export default function GiftCodes() {
       setTotal(res.total)
       setPage(res.page)
     } catch (err: unknown) {
-      setError(extractError(err))
+      toast(extractError(err))
     } finally {
       setLoading(false)
     }
@@ -63,7 +62,7 @@ export default function GiftCodes() {
   const openCreate = () => {
     setForm(defaultForm)
     setShowCreate(true)
-    setDialogError(null)
+    /* */
   }
 
   const closeCreate = () => {
@@ -74,13 +73,13 @@ export default function GiftCodes() {
   const handleCreate = async () => {
     if (!form.code || !form.rewardAmount) return
     setSaving(true)
-    setDialogError(null)
+    /* */
     try {
       await createGiftCode(form)
       closeCreate()
       load()
     } catch (err: unknown) {
-      setDialogError(extractError(err))
+      toast(extractError(err))
     } finally {
       setSaving(false)
     }
@@ -156,7 +155,7 @@ export default function GiftCodes() {
               <button className="btn-outline" style={{ fontSize: 11, padding: '2px 8px' }} onClick={closeCreate}>✕</button>
             </div>
             <div style={{ padding: 'var(--space-6) var(--space-7)', flex: 1, overflow: 'auto', display: 'flex', flexDirection: 'column', gap: 'var(--space-3)', fontSize: 14 }}>
-              {dialogError && <div style={{ padding: '8px 12px', background: '#fef2f2', color: '#dc2626', borderRadius: 4, fontSize: 13 }}>{dialogError}</div>}
+              
               <div className="filter-group"><label>Code</label><div style={{ display: 'flex', gap: 6 }}><input value={form.code} onChange={(e) => setForm({ ...form, code: e.target.value.toUpperCase() })} placeholder="e.g. BONUS50" style={{ flex: 1 }} /><button className="btn" onClick={() => setForm({ ...form, code: randomCode() })} style={{ whiteSpace: 'nowrap', background: '#f59e0b', color: '#fff', border: 'none' }}>Random</button></div></div>
               <div className="filter-group"><label>Reward Amount (₹)</label><input type="number" value={form.rewardAmount} onChange={(e) => setForm({ ...form, rewardAmount: Number(e.target.value) })} /></div>
               <div className="filter-group"><label>Turnover Multiplier</label><input type="number" step="0.1" value={form.turnoverMultiplier} onChange={(e) => setForm({ ...form, turnoverMultiplier: Number(e.target.value) })} /></div>
