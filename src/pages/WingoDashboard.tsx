@@ -62,7 +62,7 @@ export default function WingoDashboard() {
 
   useEffect(() => {
     if (tab !== 'current') return
-    const interval = setInterval(() => loadRound(gameMode), 2000)
+    const interval = setInterval(() => loadRound(gameMode), 5000)
     return () => clearInterval(interval)
   }, [tab, gameMode])
 
