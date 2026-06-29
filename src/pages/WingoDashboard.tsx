@@ -172,6 +172,10 @@ export default function WingoDashboard() {
                   <div style={{ fontSize: 13, color: '#666' }}>
                     Result: {round.result?.number != null ? `${round.result.number} / ${round.result?.color ?? '—'} / ${round.result?.size ?? '—'}` : <span style={{ color: '#999' }}>— not yet</span>}
                   </div>
+                  <div style={{ fontSize: 12, color: '#999', display: 'flex', gap: 16 }}>
+                    <span>Start: {new Date(round.startTime).toISOString().slice(0, 19).replace('T', ' ')}</span>
+                    <span>End: {new Date(round.endTime).toISOString().slice(0, 19).replace('T', ' ')}</span>
+                  </div>
                 </div>
                 <div style={{ textAlign: 'right' }}>
                   <div style={{ fontSize: 32, fontWeight: 700, fontVariantNumeric: 'tabular-nums', color: timeLeft <= 5 ? '#ef4444' : '#333' }}>
