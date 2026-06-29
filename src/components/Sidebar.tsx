@@ -35,6 +35,7 @@ export default function Sidebar({ open, onClose, onNavigate }: Props) {
       {open && <div className="sidebar-overlay" onClick={onClose} />}
       <aside
         className={`sidebar ${open ? 'sidebar--open' : 'sidebar--collapsed'}`}
+        style={open ? { boxShadow: '4px 0 12px rgba(0,0,0,0.15)' } : undefined}
         role="navigation"
         aria-label="Main navigation"
       >

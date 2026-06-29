@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { loginAdmin } from '../api/auth'
+import Spinner from '../components/Spinner'
 import bgLogo from '../assets/bgLogo.png'
 
 interface Props {
@@ -64,7 +65,7 @@ export default function Login({ onLogin }: Props) {
         </div>
 
         <button type="submit" className="btn-filled" style={{ width: '100%', marginTop: 'var(--space-5)' }} disabled={loading}>
-          {loading ? 'Signing in…' : 'Sign In'}
+          {loading ? <Spinner /> : 'Sign In'}
         </button>
 
         {error && <div className="login-error">{error}</div>}

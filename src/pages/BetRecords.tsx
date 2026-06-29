@@ -4,6 +4,7 @@ import { fetchProviderBets, fetchWingoBets } from '../api/bets'
 import type { ProviderBet, WingoBet } from '../api/bets'
 import { formatDateTime } from '../utils/format'
 import { useError } from '../contexts/ErrorContext'
+import Spinner from '../components/Spinner'
 
 const LIMIT = 20
 
@@ -75,7 +76,7 @@ export default function BetRecords() {
 
       {loading && records.length === 0 ? (
         <div className="table-wrap" style={{ padding: '48px 0', textAlign: 'center' }}>
-          <span className="loading-spinner" />
+          <Spinner />
         </div>
       ) : records.length === 0 && !loading ? (
         <div className="empty-state"><div className="empty-state__icon">📋</div>No bet records found</div>

@@ -4,6 +4,7 @@ import { fetchTransactions } from '../api/transactions'
 import type { TransactionRecord } from '../api/transactions'
 import { formatDateTime12 } from '../utils/format'
 import { useError } from '../contexts/ErrorContext'
+import Spinner from '../components/Spinner'
 
 const LIMIT = 20
 
@@ -82,7 +83,7 @@ export default function Transactions() {
 
       {loading && records.length === 0 ? (
         <div className="table-wrap" style={{ padding: '48px 0', textAlign: 'center' }}>
-          <span className="loading-spinner" />
+          <Spinner />
         </div>
       ) : records.length === 0 ? (
         <div className="empty-state"><div className="empty-state__icon">📋</div>No transactions found</div>

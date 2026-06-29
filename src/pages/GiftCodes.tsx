@@ -4,6 +4,7 @@ import { fetchGiftCodes, createGiftCode, toggleGiftCode, deleteGiftCode } from '
 import type { GiftCode } from '../api/giftCodes'
 import { formatDateTime } from '../utils/format'
 import { useError } from '../contexts/ErrorContext'
+import Spinner from '../components/Spinner'
 
 const LIMIT = 20
 
@@ -100,7 +101,7 @@ export default function GiftCodes() {
 
       {loading ? (
         <div className="table-wrap" style={{ padding: '48px 0', textAlign: 'center' }}>
-          <span className="loading-spinner" />
+          <Spinner />
         </div>
       ) : records.length === 0 ? (
         <div className="empty-state"><div className="empty-state__icon">📋</div>No gift codes found</div>
@@ -167,7 +168,7 @@ export default function GiftCodes() {
             <div style={{ padding: 'var(--space-6) var(--space-7)', borderTop: '1px solid var(--color-border, rgb(188,198,222))', display: 'flex', justifyContent: 'flex-end', gap: 'var(--space-3)', flexShrink: 0 }}>
               <button className="btn-outline" onClick={closeCreate} disabled={saving}>Cancel</button>
               <button className="btn-filled" onClick={handleCreate} disabled={saving}>
-                {saving ? <span className="spinner" /> : null}
+                {saving ? <Spinner /> : null}
                 Create
               </button>
             </div>

@@ -3,6 +3,7 @@ import axios from 'axios'
 import { fetchAgencyDashboard, fetchAgencyMembers } from '../api/agency'
 import type { AgencyStats, AgencyMember } from '../api/agency'
 import { formatDateTime } from '../utils/format'
+import Spinner from '../components/Spinner'
 
 const LIMIT = 20
 
@@ -59,7 +60,7 @@ export default function AgencyDashboard() {
 
       {loading && members.length === 0 ? (
         <div className="table-wrap" style={{ padding: '48px 0', textAlign: 'center' }}>
-          <span className="loading-spinner" />
+          <Spinner />
         </div>
       ) : members.length === 0 ? (
         <div className="empty-state"><div className="empty-state__icon">📋</div>No members found</div>

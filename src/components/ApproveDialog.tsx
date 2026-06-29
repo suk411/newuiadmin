@@ -1,4 +1,5 @@
 import type { DepositRecord } from '../api/deposits'
+import Spinner from './Spinner'
 
 interface Props {
   record: DepositRecord
@@ -24,7 +25,7 @@ export default function ApproveDialog({ record, loading, onConfirm, onCancel }: 
         <div style={{ padding: 'var(--space-6) var(--space-7)', borderTop: '1px solid var(--color-border, rgb(188,198,222))', display: 'flex', justifyContent: 'flex-end', gap: 'var(--space-3)', flexShrink: 0 }}>
           <button className="btn-outline" onClick={onCancel} disabled={loading}>Cancel</button>
           <button className="btn-filled" onClick={onConfirm} disabled={loading}>
-            {loading ? <span className="spinner" /> : null}
+            {loading ? <Spinner /> : null}
             Confirm Approve
           </button>
         </div>

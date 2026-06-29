@@ -4,6 +4,7 @@ import { fetchVipConfig, updateVipConfig } from '../api/vipConfig'
 import type { VipTier } from '../api/vipConfig'
 
 import { useError } from '../contexts/ErrorContext'
+import Spinner from '../components/Spinner'
 
 function extractError(err: unknown): string {
   if (axios.isAxiosError(err) && err.response?.data?.msg) return err.response.data.msg
@@ -66,7 +67,7 @@ export default function VipConfig() {
     <div className="content">
       {loading ? (
         <div className="table-wrap" style={{ padding: '48px 0', textAlign: 'center' }}>
-          <span className="loading-spinner" />
+          <Spinner />
         </div>
       ) : (
         <section className="card">
@@ -109,7 +110,7 @@ export default function VipConfig() {
             <div style={{ padding: 'var(--space-6) var(--space-7)', borderTop: '1px solid var(--color-border, rgb(188,198,222))', display: 'flex', justifyContent: 'flex-end', gap: 'var(--space-3)', flexShrink: 0 }}>
               <button className="btn-outline" onClick={closeEdit} disabled={saving}>Cancel</button>
               <button className="btn-filled" onClick={handleSave} disabled={saving}>
-                {saving ? <span className="spinner" /> : null}
+                {saving ? <Spinner /> : null}
                 Save
               </button>
             </div>

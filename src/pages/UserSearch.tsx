@@ -4,6 +4,7 @@ import { searchUser, searchUserByMobile, updateUserStatus, fetchUsersByIp, viewU
 import type { UserSearchResponse, PaymentMethods, TurnoverStatusResponse } from '../api/users'
 import { formatDateTime12 } from '../utils/format'
 import { useError } from '../contexts/ErrorContext'
+import Spinner from '../components/Spinner'
 
 function extractError(err: unknown): string {
   if (axios.isAxiosError(err) && err.response?.data?.msg) return err.response.data.msg
@@ -198,7 +199,7 @@ export default function UserSearch() {
           <div style={{ display: 'flex', gap: 'var(--space-3)' }}>
             <button type="submit" className="btn-filled" disabled={loading || (!userId.trim() && !mobile.trim())}
               style={{ opacity: loading || (!userId.trim() && !mobile.trim()) ? 0.6 : 1 }}>
-              {loading ? 'Searching...' : 'Search'}
+              {loading ? <Spinner /> : 'Search'}
             </button>
             <button type="button" className="btn-outline" onClick={() => { setUserId(''); setMobile(''); setUser(null); setError(null) }}>
               Reset
@@ -248,7 +249,7 @@ export default function UserSearch() {
           <div className="stat-card">
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%' }}>
               <span className="stat-card__label">Location & IP</span>
-              <button className="btn-filled" style={{ fontSize: 10, padding: '2px 8px' }} onClick={handleLoadSameIp} disabled={ipUsersLoading}>{ipUsersLoading ? 'Loading...' : 'Same IP Users'}</button>
+              <button className="btn-filled" style={{ fontSize: 10, padding: '2px 8px' }} onClick={handleLoadSameIp} disabled={ipUsersLoading}>{ipUsersLoading ? <Spinner /> : 'Same IP Users'}</button>
             </div>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8, width: '100%', marginTop: 4 }}>
               <div>
@@ -296,7 +297,7 @@ export default function UserSearch() {
               </div>
               <div style={{ padding: 'var(--space-6) var(--space-7)', borderTop: '1px solid var(--color-border, rgb(188,198,222))', display: 'flex', justifyContent: 'flex-end', gap: 'var(--space-3)', flexShrink: 0 }}>
                 <button className="btn-outline" onClick={() => { setShowStatusDialog(false); setStatusRemark('') }} disabled={updatingStatus}>Cancel</button>
-                <button className="btn-filled" onClick={handleStatusChange} disabled={updatingStatus || !statusRemark.trim()}>{updatingStatus ? 'Updating...' : 'Update'}</button>
+                <button className="btn-filled" onClick={handleStatusChange} disabled={updatingStatus || !statusRemark.trim()}>{updatingStatus ? <Spinner /> : 'Update'}</button>
               </div>
             </div>
           </div>
@@ -375,7 +376,7 @@ export default function UserSearch() {
               </div>
               <div style={{ padding: 'var(--space-6) var(--space-7)', borderTop: '1px solid var(--color-border, rgb(188,198,222))', display: 'flex', justifyContent: 'flex-end', gap: 'var(--space-3)' }}>
                 <button className="btn-outline" onClick={() => setShowPmDialog(false)} disabled={pmUpdating}>Cancel</button>
-                <button className="btn-filled" onClick={handleUpdatePayment} disabled={pmUpdating || Object.keys(pmForm).length === 0}>{pmUpdating ? 'Saving...' : 'Save Payment'}</button>
+                <button className="btn-filled" onClick={handleUpdatePayment} disabled={pmUpdating || Object.keys(pmForm).length === 0}>{pmUpdating ? <Spinner /> : 'Save Payment'}</button>
               </div>
             </div>
           </div>
@@ -419,7 +420,7 @@ export default function UserSearch() {
                     </select>
                   </div>
                   <div className="filter-group"><label>Source Ref</label><input value={addTurnoverRef} onChange={(e) => setAddTurnoverRef(e.target.value)} placeholder="Optional" style={{ width: 120 }} /></div>
-                  <button className="btn btn--sm" style={{ background: '#22c55e', color: '#fff', border: 'none', height: 35 }} onClick={handleAddTurnover} disabled={addTurnoverSaving || !addTurnoverAmount}>{addTurnoverSaving ? 'Adding...' : 'Add'}</button>
+                  <button className="btn btn--sm" style={{ background: '#22c55e', color: '#fff', border: 'none', height: 35 }} onClick={handleAddTurnover} disabled={addTurnoverSaving || !addTurnoverAmount}>{addTurnoverSaving ? <Spinner /> : 'Add'}</button>
                 </div>
               )}
               <div className="table-wrap" style={{ padding: 'var(--space-6) var(--space-7)', flex: 1, overflow: 'auto' }}>

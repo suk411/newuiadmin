@@ -1,4 +1,5 @@
 import type { DepositRecord } from '../api/deposits'
+import Spinner from './Spinner'
 
 interface Props {
   records: DepositRecord[]
@@ -26,7 +27,7 @@ export default function RechargeTable({ records, loading, onApprove }: Props) {
   if (loading) {
     return (
       <div className="table-wrap" style={{ padding: '48px 0', textAlign: 'center' }}>
-        <span className="loading-spinner" />
+        <Spinner />
       </div>
     )
   }

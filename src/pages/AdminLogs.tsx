@@ -3,6 +3,7 @@ import axios from 'axios'
 import { fetchLogs } from '../api/logs'
 import type { LogEntry } from '../api/logs'
 import { formatDateTime } from '../utils/format'
+import Spinner from '../components/Spinner'
 
 function extractError(err: unknown): string {
   if (axios.isAxiosError(err) && err.response?.data?.msg) return err.response.data.msg
@@ -56,7 +57,7 @@ export default function AdminLogs() {
 
       {loading && logs.length === 0 ? (
         <div className="table-wrap" style={{ padding: '48px 0', textAlign: 'center' }}>
-          <span className="loading-spinner" />
+          <Spinner />
         </div>
       ) : logs.length === 0 ? (
         <div className="empty-state"><div className="empty-state__icon">📋</div>No logs found</div>

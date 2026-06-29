@@ -11,6 +11,7 @@ import type { DepositChannel, DepositBonusConfig } from '../api/depositConfig'
 import { fetchWithdrawalConfig, updateWithdrawalConfig } from '../api/withdrawalConfig'
 import type { WithdrawalConfig } from '../api/withdrawalConfig'
 import { useError } from '../contexts/ErrorContext'
+import Spinner from '../components/Spinner'
 import { formatDateTime } from '../utils/format'
 
 function extractError(err: unknown): string {
@@ -354,7 +355,7 @@ export default function Settings() {
               <button className="btn-outline" style={{ fontSize: 11, padding: '2px 8px' }} onClick={vipCloseDialog}>✕</button>
             </div>
             <div style={{ padding: 'var(--space-6) var(--space-7)', flex: 1, overflow: 'auto', fontSize: 14 }}>
-              {vipLoading ? <div style={{ padding: '24px 0', textAlign: 'center' }}><span className="loading-spinner" /></div> : (
+              {vipLoading ? <div style={{ padding: '24px 0', textAlign: 'center' }}><Spinner /></div> : (
                 <>
                   <div className="table-wrap">
                     <table className="table">
@@ -392,7 +393,7 @@ export default function Settings() {
             </div>
             <div style={{ padding: 'var(--space-6) var(--space-7)', borderTop: '1px solid var(--color-border, rgb(188,198,222))', display: 'flex', justifyContent: 'flex-end', gap: 'var(--space-3)', flexShrink: 0 }}>
               <button className="btn-outline" onClick={vipCloseEdit} disabled={vipSaving}>Cancel</button>
-              <button className="btn-filled" onClick={vipHandleSave} disabled={vipSaving}>{vipSaving ? 'Saving...' : 'Save'}</button>
+              <button className="btn-filled" onClick={vipHandleSave} disabled={vipSaving}>{vipSaving ? <Spinner /> : 'Save'}</button>
             </div>
           </div>
         </div>
@@ -407,7 +408,7 @@ export default function Settings() {
               <button className="btn-outline" style={{ fontSize: 11, padding: '2px 8px' }} onClick={toCloseDialog}>✕</button>
             </div>
             <div style={{ padding: 'var(--space-6) var(--space-7)', flex: 1, overflow: 'auto', fontSize: 14 }}>
-              {toLoading ? <div style={{ padding: '24px 0', textAlign: 'center' }}><span className="loading-spinner" /></div> : (
+              {toLoading ? <div style={{ padding: '24px 0', textAlign: 'center' }}><Spinner /></div> : (
                 <>
                   <div className="table-wrap">
                     <table className="table">
@@ -444,7 +445,7 @@ export default function Settings() {
             </div>
             <div style={{ padding: 'var(--space-6) var(--space-7)', borderTop: '1px solid var(--color-border, rgb(188,198,222))', display: 'flex', justifyContent: 'flex-end', gap: 'var(--space-3)', flexShrink: 0 }}>
               <button className="btn-outline" onClick={toCloseEdit} disabled={toSaving}>Cancel</button>
-              <button className="btn-filled" onClick={toHandleSave} disabled={toSaving}>{toSaving ? 'Saving...' : 'Save'}</button>
+              <button className="btn-filled" onClick={toHandleSave} disabled={toSaving}>{toSaving ? <Spinner /> : 'Save'}</button>
             </div>
           </div>
         </div>
@@ -464,7 +465,7 @@ export default function Settings() {
                 <button className="btn-outline" onClick={() => loadGc(1)}>Refresh</button>
               </div>
               {gcErr && <div style={{ padding: '8px 12px', background: '#fef2f2', color: '#dc2626', borderRadius: 4, fontSize: 13, marginBottom: 8 }}>{gcErr}</div>}
-              {gcLoading ? <div style={{ padding: '24px 0', textAlign: 'center' }}><span className="loading-spinner" /></div> : gcRecords.length === 0 ? <div className="empty-state"><div className="empty-state__icon">📋</div>No gift codes</div> : (
+              {gcLoading ? <div style={{ padding: '24px 0', textAlign: 'center' }}><Spinner /></div> : gcRecords.length === 0 ? <div className="empty-state"><div className="empty-state__icon">📋</div>No gift codes</div> : (
                 <>
                   <div className="table-wrap">
                     <table className="table">
@@ -522,7 +523,7 @@ export default function Settings() {
             </div>
             <div style={{ padding: 'var(--space-6) var(--space-7)', borderTop: '1px solid var(--color-border, rgb(188,198,222))', display: 'flex', justifyContent: 'flex-end', gap: 'var(--space-3)', flexShrink: 0 }}>
               <button className="btn-outline" onClick={() => setGcShowCreate(false)} disabled={gcSaving}>Cancel</button>
-              <button className="btn-filled" onClick={gcHandleCreate} disabled={gcSaving}>{gcSaving ? 'Creating...' : 'Create'}</button>
+              <button className="btn-filled" onClick={gcHandleCreate} disabled={gcSaving}>{gcSaving ? <Spinner /> : 'Create'}</button>
             </div>
           </div>
         </div>
@@ -537,7 +538,7 @@ export default function Settings() {
               <button className="btn-outline" style={{ fontSize: 11, padding: '2px 8px' }} onClick={depCloseDialog}>✕</button>
             </div>
             <div style={{ padding: 'var(--space-6) var(--space-7)', flex: 1, overflow: 'auto', fontSize: 14 }}>
-              {depLoading ? <div style={{ padding: '24px 0', textAlign: 'center' }}><span className="loading-spinner" /></div> : (
+              {depLoading ? <div style={{ padding: '24px 0', textAlign: 'center' }}><Spinner /></div> : (
                 <>
                   <h4 style={{ margin: '0 0 8px', fontSize: 13 }}>Channels</h4>
                   <div className="table-wrap">
@@ -556,7 +557,7 @@ export default function Settings() {
                   </div>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 8 }}>
                     <h4 style={{ margin: 0, fontSize: 13 }}>Bonus Config</h4>
-                    <button className="btn btn--sm" style={{ background: '#22c55e', color: '#fff', border: 'none' }} onClick={depAddBonus} disabled={depSaving === 'new-bonus'}>{depSaving === 'new-bonus' ? '...' : '+ New'}</button>
+                    <button className="btn btn--sm" style={{ background: '#22c55e', color: '#fff', border: 'none' }} onClick={depAddBonus} disabled={depSaving === 'new-bonus'}>{depSaving === 'new-bonus' ? <Spinner /> : '+ New'}</button>
                   </div>
                   <div className="table-wrap">
                     <table className="table">
@@ -565,7 +566,7 @@ export default function Settings() {
                         {depBonus.map((b, i) => (
                           <tr key={b.depositCount} tabIndex={0}>
                             <td>{b.depositCount}</td><td>{b.bonusRate}x</td><td><span className={`badge ${b.active ? 'badge--success' : 'badge--danger'}`}>{b.active ? 'Active' : 'Inactive'}</span></td>
-                            <td><div className="cell-actions"><button className="btn btn--primary btn--sm" onClick={() => depOpenBonusEdit(i)} disabled={depSaving === `bonus-${i}`}>{depSaving === `bonus-${i}` ? '...' : 'Edit'}</button></div></td>
+                            <td><div className="cell-actions"><button className="btn btn--primary btn--sm" onClick={() => depOpenBonusEdit(i)} disabled={depSaving === `bonus-${i}`}>{depSaving === `bonus-${i}` ? <Spinner /> : 'Edit'}</button></div></td>
                           </tr>
                         ))}
                       </tbody>
@@ -599,7 +600,7 @@ export default function Settings() {
             </div>
             <div style={{ padding: 'var(--space-6) var(--space-7)', borderTop: '1px solid var(--color-border, rgb(188,198,222))', display: 'flex', justifyContent: 'flex-end', gap: 'var(--space-3)', flexShrink: 0 }}>
               <button className="btn-outline" onClick={() => setEditChan(null)}>Cancel</button>
-              <button className="btn-filled" onClick={depSaveChan} disabled={depSaving === editChan.channel}>{depSaving === editChan.channel ? 'Saving...' : 'Save'}</button>
+              <button className="btn-filled" onClick={depSaveChan} disabled={depSaving === editChan.channel}>{depSaving === editChan.channel ? <Spinner /> : 'Save'}</button>
             </div>
           </div>
         </div>
@@ -622,7 +623,7 @@ export default function Settings() {
             </div>
             <div style={{ padding: 'var(--space-6) var(--space-7)', borderTop: '1px solid var(--color-border, rgb(188,198,222))', display: 'flex', justifyContent: 'flex-end', gap: 'var(--space-3)', flexShrink: 0 }}>
               <button className="btn-outline" onClick={() => setEditBonusIdx(null)}>Cancel</button>
-              <button className="btn-filled" onClick={depSaveBonusEdit} disabled={depSaving === `bonus-${editBonusIdx}`}>{depSaving === `bonus-${editBonusIdx}` ? 'Saving...' : 'Save'}</button>
+              <button className="btn-filled" onClick={depSaveBonusEdit} disabled={depSaving === `bonus-${editBonusIdx}`}>{depSaving === `bonus-${editBonusIdx}` ? <Spinner /> : 'Save'}</button>
             </div>
           </div>
         </div>
@@ -637,7 +638,7 @@ export default function Settings() {
               <button className="btn-outline" style={{ fontSize: 11, padding: '2px 8px' }} onClick={wdCloseDialog}>✕</button>
             </div>
             <div style={{ padding: 'var(--space-6) var(--space-7)', flex: 1, overflow: 'auto', fontSize: 14 }}>
-              {wdLoading && !wdConfig ? <div style={{ padding: '24px 0', textAlign: 'center' }}><span className="loading-spinner" /></div> : (
+              {wdLoading && !wdConfig ? <div style={{ padding: '24px 0', textAlign: 'center' }}><Spinner /></div> : (
                 <>
                   <div className="filter-group"><label>Per Day Limit</label><input type="number" value={wdPerDay} onChange={(e) => setWdPerDay(e.target.value)} /></div>
                   <h4 style={{ margin: '16px 0 8px', fontSize: 13 }}>BANK Limits</h4>
@@ -656,7 +657,7 @@ export default function Settings() {
                     <div className="filter-group"><label>Max (₹)</label><input type="number" value={wdMaxUpay} onChange={(e) => setWdMaxUpay(e.target.value)} /></div>
                   </div>
                   <div style={{ marginTop: 16 }}>
-                    <button className="btn-filled" onClick={wdHandleSave} disabled={wdLoading}>{wdLoading ? 'Saving...' : 'Save'}</button>
+                    <button className="btn-filled" onClick={wdHandleSave} disabled={wdLoading}>{wdLoading ? <Spinner /> : 'Save'}</button>
                   </div>
                 </>
               )}

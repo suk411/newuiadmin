@@ -4,6 +4,7 @@ import { fetchCurrentRound, fetchCurrentRoundBets, fetchSettledRounds, fetchRoun
 import type { CurrentRound, RoundStats, CurrentRoundBetsItem, SettledRound, RoundDetail } from '../api/wingo'
 import { formatDateTime } from '../utils/format'
 import { useError } from '../contexts/ErrorContext'
+import Spinner from '../components/Spinner'
 
 const LIMIT = 25
 
@@ -156,7 +157,7 @@ export default function WingoDashboard() {
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
                   <div style={{ fontSize: 13, color: '#888' }}>Issue #{round.issueNumber}</div>
                   <div style={{ display: 'flex', gap: 16, alignItems: 'center' }}>
-                    <span className={`badge ${round.status === 'open' ? 'badge--warning' : 'badge--success'}`} style={{ fontSize: 13, padding: '4px 12px' }}>{round.status.toUpperCase()}</span>
+                    <span className={`badge ${round.status === 'open' ? 'badge--warning' : 'badge--success'}`} style={{ fontSize: 13, padding: '4px 12px' }}>{(round.status || '').toUpperCase()}</span>
                     <span style={{ fontSize: 13, color: '#666' }}>Mode: <strong>{round.gameMode}</strong></span>
                     <span style={{ fontSize: 13, color: '#666' }}>Result Mode: <strong>{round.resultMode}</strong></span>
                   </div>
@@ -226,7 +227,7 @@ export default function WingoDashboard() {
         <>
           <section className="card">
             {settledLoading && settled.length === 0 ? (
-              <div className="table-wrap" style={{ padding: '48px 0', textAlign: 'center' }}><span className="loading-spinner" /></div>
+              <div className="table-wrap" style={{ padding: '48px 0', textAlign: 'center' }}><Spinner /></div>
             ) : settled.length === 0 ? (
               <div className="empty-state"><div className="empty-state__icon">📋</div>No rounds found</div>
             ) : (
@@ -305,7 +306,7 @@ export default function WingoDashboard() {
               </select>
             </div>
             <button className="btn-filled" onClick={handleSetMode} disabled={saving || !resultMode}>
-              {saving ? 'Saving...' : 'Apply Mode'}
+              {saving ? <Spinner /> : 'Apply Mode'}
             </button>
           </div>
         </section>
