@@ -254,7 +254,7 @@ export default function WingoDashboard() {
                         <td>{r.stats?.totalBets ?? '—'}</td>
                         <td>₹{r.stats?.totalBetAmount?.toLocaleString('en-IN') ?? '—'}</td>
                         <td><span className={`badge ${r.status === 'closed' ? 'badge--success' : 'badge--warning'}`}>{r.status}</span></td>
-                        <td style={{ whiteSpace: 'nowrap' }}>{formatDateTime(r.createdAt)}</td>
+                        <td style={{ whiteSpace: 'nowrap' }}>{new Date(r.createdAt).toISOString().slice(0, 19).replace('T', ' ')}</td>
                         <td><div className="cell-actions"><button className="btn btn--primary btn--sm" onClick={() => viewDetail(r.issueNumber)}>View Stats</button></div></td>
                       </tr>
                     ))}
