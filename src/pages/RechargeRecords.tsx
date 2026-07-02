@@ -89,12 +89,14 @@ export default function RechargeRecords() {
         onApprove={handleApproveClick}
       />
       {total > 0 && (
-        <Pagination
-          page={page}
-          total={total}
-          limit={DEFAULT_LIMIT}
-          onChange={handlePageChange}
-        />
+        <div style={{ position: 'sticky', bottom: 0, background: 'var(--color-bg)', borderTop: '1px solid var(--color-border)', padding: 'var(--space-4) var(--space-6)', marginTop: '-1px' }}>
+          <Pagination
+            page={page}
+            total={total}
+            limit={DEFAULT_LIMIT}
+            onChange={handlePageChange}
+          />
+        </div>
       )}
 
       {approveTarget && (

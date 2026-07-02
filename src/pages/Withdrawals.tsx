@@ -170,7 +170,7 @@ export default function Withdrawals() {
           </table>
         </div>
         {total > 0 && (
-          <div className="pagination">
+          <div className="pagination" style={{ position: 'sticky', bottom: 0, background: 'var(--color-bg)', borderTop: '1px solid var(--color-border)', padding: 'var(--space-4) var(--space-6)', marginTop: '-1px' }}>
             <span>Page {page} of {Math.ceil(total / LIMIT)}</span>
             <button className="pagination__btn" disabled={page <= 1} onClick={() => load(page - 1)}>‹</button>
             <button className="pagination__btn active">{page}</button>

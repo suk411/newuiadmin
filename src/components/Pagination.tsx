@@ -18,12 +18,9 @@ export default function Pagination({ page, total, limit, onChange }: Props) {
   if (end < totalPages - 1) pages.push('...')
   if (end < totalPages) pages.push(totalPages)
 
-  const from = (page - 1) * limit + 1
-  const to = Math.min(page * limit, total)
-
   return (
     <div className="pagination">
-      <span>Showing {from}–{to} of {total}</span>
+      <span>Page {page} of {totalPages}</span>
       <button className="pagination__btn" disabled={page <= 1} onClick={() => onChange(page - 1)}>
         ‹
       </button>
