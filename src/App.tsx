@@ -100,7 +100,6 @@ function ProtectedLayoutContent({ onLogout }: { onLogout: () => void }) {
             <div className="avatar-container">
               <span className="user-icon">👤</span>
               <span className="user-name">GM12</span>
-              <span className="caret-icon">▼</span>
             </div>
             <button className="btn-logout-header" onClick={onLogout} title="Logout">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
