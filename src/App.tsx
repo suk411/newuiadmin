@@ -66,73 +66,77 @@ function ProtectedLayoutContent({ onLogout }: { onLogout: () => void }) {
 
   return (
     <div className="app-layout">
-      <Sidebar open={sidebarVisible} onClose={() => { setSidebarOpen(false); setSidebarHover(false) }} onNavigate={() => { setSidebarOpen(false); setSidebarHover(false) }} />
-      <div className="main-area">
-        <header className="app-header">
-          <div className="header-left">
-            <button
-              className="sidebar-toggle"
-              onClick={() => setSidebarOpen(!sidebarOpen)}
-              onMouseEnter={() => setSidebarHover(true)}
-              onMouseLeave={() => setSidebarHover(false)}
-              aria-label={sidebarOpen ? 'Collapse sidebar' : 'Expand sidebar'}
-              aria-expanded={sidebarVisible}
-            >
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                {sidebarVisible
-                  ? <path d="M15 18l-6-6 6-6" />
-                  : <path d="M9 18l6-6-6-6" />
-                }
-              </svg>
-            </button>
-            <span className="header-title">CS System</span>
-          </div>
-          <div className="header-right">
-            <button className="btn-ghost-icon" aria-label="Refresh data" title="Refresh" onClick={() => window.location.reload()}>
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M1 4v6h6"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>
-            </button>
-            <button
-              className="btn-ghost-icon"
-              onClick={() => setDarkMode((p) => !p)}
-              aria-label="Toggle dark mode"
-              title="Toggle dark mode"
-            >
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                {darkMode
-                  ? <path d="M12 3a9 9 0 109 9c0-.46-.04-.92-.1-1.36a5.389 5.389 0 01-4.4 2.26 5.403 5.403 0 01-3.14-9.8c-.44-.06-.9-.1-1.36-.1z" />
-                  : <path d="M12 3a9 9 0 109 9c0-.46-.04-.92-.1-1.36a5.389 5.389 0 01-4.4 2.26 5.403 5.403 0 01-3.14-9.8c-.44-.06-.9-.1-1.36-.1z" />
-                }
-              </svg>
-            </button>
-            <span className="header-admin-label">Admin</span>
-            <button className="btn-logout" onClick={onLogout} title="Logout">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ marginRight: 4 }}>
-                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
-                <polyline points="16 17 21 12 16 7" />
-                <line x1="21" y1="12" x2="9" y2="12" />
-              </svg>
-              Logout
-            </button>
-          </div>
-        </header>
-        <TagsView tags={tags} onClose={handleTagClose} />
-        <main className="app-content">
-          <div key={location.pathname} className="route-transition">
-            <Routes>
-              <Route path="/" element={<Navigate to="/dashboard" replace />} />
-              <Route path="/dashboard" element={<Dashboard />} />
-              <Route path="/recharge" element={<RechargeRecords />} />
-              <Route path="/users" element={<UserSearch />} />
-              <Route path="/logs" element={<AdminLogs />} />
-              <Route path="/withdrawals" element={<Withdrawals />} />
-              <Route path="/transactions" element={<Transactions />} />
-              <Route path="/bets" element={<BetRecords />} />
-              <Route path="/settings" element={<Settings />} />
-              <Route path="/agency" element={<AgencyDashboard />} />
-              <Route path="/wingo" element={<WingoDashboard />} />
-            </Routes>
-          </div>
-        </main>
+      <div
+        className="sidebar-hover-area"
+        onMouseEnter={() => setSidebarHover(true)}
+        onMouseLeave={() => setSidebarHover(false)}
+      >
+        <Sidebar open={sidebarVisible} onClose={() => { setSidebarOpen(false); setSidebarHover(false) }} onNavigate={() => { setSidebarOpen(false); setSidebarHover(false) }} />
+        <div className="main-area">
+          <header className="app-header">
+            <div className="header-left">
+              <button
+                className="sidebar-toggle"
+                onClick={() => setSidebarOpen(!sidebarOpen)}
+                aria-label={sidebarOpen ? 'Collapse sidebar' : 'Expand sidebar'}
+                aria-expanded={sidebarVisible}
+              >
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  {sidebarVisible
+                    ? <path d="M15 18l-6-6 6-6" />
+                    : <path d="M9 18l6-6-6-6" />
+                  }
+                </svg>
+              </button>
+              <span className="header-title">CS System</span>
+            </div>
+            <div className="header-right">
+              <button className="btn-ghost-icon" aria-label="Refresh data" title="Refresh" onClick={() => window.location.reload()}>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M1 4v6h6"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>
+              </button>
+              <button
+                className="btn-ghost-icon"
+                onClick={() => setDarkMode((p) => !p)}
+                aria-label="Toggle dark mode"
+                title="Toggle dark mode"
+              >
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  {darkMode
+                    ? <path d="M12 3a9 9 0 109 9c0-.46-.04-.92-.1-1.36a5.389 5.389 0 01-4.4 2.26 5.403 5.403 0 01-3.14-9.8c-.44-.06-.9-.1-1.36-.1z" />
+                    : <path d="M12 3a9 9 0 109 9c0-.46-.04-.92-.1-1.36a5.389 5.389 0 01-4.4 2.26 5.403 5.403 0 01-3.14-9.8c-.44-.06-.9-.1-1.36-.1z" />
+                  }
+                </svg>
+              </button>
+              <span className="header-admin-label">Admin</span>
+              <button className="btn-logout" onClick={onLogout} title="Logout">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ marginRight: 4 }}>
+                  <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                  <polyline points="16 17 21 12 16 7" />
+                  <line x1="21" y1="12" x2="9" y2="12" />
+                </svg>
+                Logout
+              </button>
+            </div>
+          </header>
+          <TagsView tags={tags} onClose={handleTagClose} />
+          <main className="app-content">
+            <div key={location.pathname} className="route-transition">
+              <Routes>
+                <Route path="/" element={<Navigate to="/dashboard" replace />} />
+                <Route path="/dashboard" element={<Dashboard />} />
+                <Route path="/recharge" element={<RechargeRecords />} />
+                <Route path="/users" element={<UserSearch />} />
+                <Route path="/logs" element={<AdminLogs />} />
+                <Route path="/withdrawals" element={<Withdrawals />} />
+                <Route path="/transactions" element={<Transactions />} />
+                <Route path="/bets" element={<BetRecords />} />
+                <Route path="/settings" element={<Settings />} />
+                <Route path="/agency" element={<AgencyDashboard />} />
+                <Route path="/wingo" element={<WingoDashboard />} />
+              </Routes>
+            </div>
+          </main>
+        </div>
       </div>
     </div>
   )

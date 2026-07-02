@@ -31,31 +31,27 @@ export default function Sidebar({ open, onClose, onNavigate }: Props) {
   }, [open])
 
   return (
-    <>
-      {open && <div className="sidebar-overlay" onClick={onClose} />}
-      <aside
-        className={`sidebar ${open ? 'sidebar--open' : 'sidebar--collapsed'}`}
-        style={open ? { boxShadow: '4px 0 12px rgba(0,0,0,0.15)' } : undefined}
-        role="navigation"
-        aria-label="Main navigation"
-      >
-        <div className="sidebar-brand">CS System</div>
-        <nav className="sidebar-nav">
-          {navItems.map((item) => (
-            <NavLink
-              key={item.label}
-              to={item.to}
-              className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}
-              tabIndex={0}
-              onClick={onNavigate}
-            >
-              <svg className="nav-icon" viewBox="0 0 24 24"><path d={item.icon} /></svg>
-              {item.label}
-            </NavLink>
-          ))}
-        </nav>
-        <div className="sidebar-footer">v2.4.1 · CS System</div>
-      </aside>
-    </>
+    <aside
+      className={`sidebar ${open ? 'sidebar--open' : 'sidebar--collapsed'}`}
+      role="navigation"
+      aria-label="Main navigation"
+    >
+      <div className="sidebar-brand">CS System</div>
+      <nav className="sidebar-nav">
+        {navItems.map((item) => (
+          <NavLink
+            key={item.label}
+            to={item.to}
+            className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}
+            tabIndex={0}
+            onClick={onNavigate}
+          >
+            <svg className="nav-icon" viewBox="0 0 24 24"><path d={item.icon} /></svg>
+            {item.label}
+          </NavLink>
+        ))}
+      </nav>
+      <div className="sidebar-footer">v2.4.1 · CS System</div>
+    </aside>
   )
 }

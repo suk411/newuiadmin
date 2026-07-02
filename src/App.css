@@ -506,6 +506,12 @@
   overflow: hidden;
 }
 
+.sidebar-hover-area {
+  display: flex;
+  width: 100%;
+  height: 100%;
+}
+
 .main-area {
   flex: 1;
   display: flex;
@@ -513,6 +519,35 @@
   overflow: hidden;
   min-width: 0;
 }
+
+/* ── Sidebar ── */
+
+.sidebar {
+  width: 220px;
+  flex-shrink: 0;
+  background: #000000;
+  color: #ffffff;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  transition: width 250ms ease, padding 250ms ease, border 250ms ease;
+}
+
+.sidebar-hover-area:hover .sidebar,
+.sidebar.sidebar--open {
+  width: 220px;
+  padding: 0;
+  border: none;
+}
+
+.sidebar.sidebar--collapsed {
+  width: 0;
+  padding: 0;
+  border: none;
+  overflow: hidden;
+}
+
+/* ── Sidebar Toggle ── */
 
 /* ── Header ── */
 
@@ -736,11 +771,9 @@
 .sidebar-toggle:hover { background: #eaeaea; }
 .sidebar-toggle:focus-visible { outline: 2px solid #a0c5fc; outline-offset: 2px; }
 
-.sidebar-overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.4);
-  z-index: 900;
+.sidebar-hover-area {
+  display: flex;
+  flex: 1;
 }
 
 /* ── Content / page content area ── */
@@ -1114,6 +1147,7 @@ html.dark .btn-logout:hover {
 
 @media (max-width: 768px) {
   .sidebar-toggle { display: inline-flex; }
+  .sidebar-hover-area { display: block; }
   .sidebar {
     position: fixed;
     top: 0;
@@ -1127,18 +1161,26 @@ html.dark .btn-logout:hover {
   .sidebar.sidebar--open {
     transform: translateX(0);
   }
+  .sidebar.sidebar--collapsed {
+    transform: translateX(-100%);
+  }
   .header-search { max-width: 160px; }
   .header-btn { display: none; }
   .header-link { display: none; }
 }
 
 @media (min-width: 769px) {
-  .sidebar-toggle { display: inline-flex; }
-  .sidebar-overlay { display: none !important; }
+  .sidebar-toggle { display: none !important; }
   .sidebar {
-    width: 220px;
-    transition: width 250ms ease, padding 250ms ease;
+    width: 0;
+    transition: width 250ms ease, padding 250ms ease, border 250ms ease;
     overflow: hidden;
+  }
+  .sidebar-hover-area:hover .sidebar,
+  .sidebar.sidebar--open {
+    width: 220px;
+    padding: 0;
+    border: none;
   }
   .sidebar.sidebar--collapsed {
     width: 0;
