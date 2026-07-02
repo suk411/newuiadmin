@@ -690,9 +690,9 @@ export default function Settings() {
                           <td>{l.minMembers.toLocaleString('en-IN')}</td>
                           <td>{l.minBets.toLocaleString('en-IN')}</td>
                           <td>{l.minDeposit.toLocaleString('en-IN')}</td>
-                          <td>{(l.l1Rate * 100).toFixed(0)}%</td>
-                          <td>{(l.l2Rate * 100).toFixed(0)}%</td>
-                          <td>{(l.l3Rate * 100).toFixed(0)}%</td>
+                          <td>{l.l1Rate}</td>
+                          <td>{l.l2Rate}</td>
+                          <td>{l.l3Rate}</td>
                           <td><div className="cell-actions"><button className="btn btn--primary btn--sm" onClick={() => alOpenEdit(i)}>Edit</button></div></td>
                         </tr>
                       ))}
