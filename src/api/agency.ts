@@ -52,3 +52,17 @@ export async function updateAgencyLevel(level: number, data: Partial<AgencyLevel
   const res = await axiosInstance.put(`/agency-levels/${level}`, data)
   return res.data.config
 }
+
+/* ── Team Stats ── */
+
+export interface TeamStats {
+  team: { l1: number; l2: number; l3: number; total: number }
+  firstDeposit: { count: number; totalAmount: number }
+  deposits: { totalAmount: number; totalCount: number } & Record<string, { amount: number; count: number }>
+  withdrawals: { totalAmount: number; totalCount: number } & Record<string, { amount: number; count: number }>
+}
+
+export async function fetchTeamStats(params: { userId: string; tier?: string; dateFrom?: string; dateTo?: string }): Promise<TeamStats> {
+  const res = await axiosInstance.get('/agent/team-stats', { params })
+  return res.data
+}
