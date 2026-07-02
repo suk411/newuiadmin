@@ -111,6 +111,14 @@ export default function AgencyDashboard() {
 
   return (
     <div className="content content--table">
+      <div className="filters-bar" style={{ borderBottom: 'none', paddingBottom: 0 }}>
+        <div style={{ display: 'flex', gap: 4 }}>
+          <button type="button" className={`btn btn--sm ${tab === 'stats' ? 'btn--primary' : ''}`}
+            onClick={() => setTab('stats')}>Stats</button>
+          <button type="button" className={`btn btn--sm ${tab === 'members' ? 'btn--primary' : ''}`}
+            onClick={() => setTab('members')}>Members</button>
+        </div>
+      </div>
       <form className="filters-bar" onSubmit={tab === 'stats' ? handleSearchStats : handleSearchMembers}>
         <div className="filter-group">
           <label>User ID</label>
@@ -146,14 +154,6 @@ export default function AgencyDashboard() {
               {(tab === 'stats' ? statsLoading : membersLoading) ? <Spinner /> : 'Search'}
             </button>
             <button type="button" className="btn-outline" onClick={reset}>Reset</button>
-          </div>
-        </div>
-        <div className="filter-group" style={{ alignSelf: 'flex-end' }}>
-          <div style={{ display: 'flex', gap: 4 }}>
-            <button type="button" className={`btn btn--sm ${tab === 'stats' ? 'btn--primary' : ''}`}
-              onClick={() => setTab('stats')}>Stats</button>
-            <button type="button" className={`btn btn--sm ${tab === 'members' ? 'btn--primary' : ''}`}
-              onClick={() => setTab('members')}>Members</button>
           </div>
         </div>
       </form>
