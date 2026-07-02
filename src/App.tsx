@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react'
-import { Routes, Route, Navigate, useNavigate, useLocation } from 'react-router-dom'
+import { Routes, Route, Navigate, useNavigate, useLocation, Link } from 'react-router-dom'
 import Login from './pages/Login'
 import RechargeRecords from './pages/RechargeRecords'
 import Dashboard from './pages/Dashboard'
@@ -80,7 +80,7 @@ function ProtectedLayoutContent({ onLogout }: { onLogout: () => void }) {
             </button>
             <div className="breadcrumb" aria-label="Breadcrumb" role="navigation">
               <span className="breadcrumb__item">
-                <a href="/dashboard" className="breadcrumb__link">Homepage</a>
+                <Link to="/dashboard" className="breadcrumb__link">Homepage</Link>
                 <span className="breadcrumb__separator">/</span>
               </span>
               <span className="breadcrumb__item breadcrumb__item--active">
