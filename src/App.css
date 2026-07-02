@@ -208,6 +208,22 @@
   background: #f0f0f0;
 }
 
+.export-option {
+  display: block;
+  width: 100%;
+  padding: 8px 16px;
+  border: none;
+  background: none;
+  text-align: left;
+  font-size: 13px;
+  cursor: pointer;
+  color: #000;
+}
+.export-option:hover {
+  background: #f0f4ff;
+  color: var(--color-primary, #208fff);
+}
+
 /* ── Card ── */
 
 .card {

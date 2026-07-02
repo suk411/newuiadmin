@@ -6,8 +6,25 @@ import { formatDateTime12 } from '../utils/format'
 import WithdrawApproveDialog from '../components/WithdrawApproveDialog'
 import { useToast } from '../contexts/ToastContext'
 import Spinner from '../components/Spinner'
+import ExportButton from '../components/ExportButton'
+import type { ExportColumn } from '../utils/export'
 
 const LIMIT = 20
+
+const WITHDRAWAL_COLUMNS: ExportColumn[] = [
+  { key: 'userId', label: 'User ID' },
+  { key: 'orderId', label: 'Order ID' },
+  { key: 'amount', label: 'Amount' },
+  { key: 'charge', label: 'Charge' },
+  { key: 'currency', label: 'Currency' },
+  { key: 'status', label: 'Status' },
+  { key: 'method', label: 'Method' },
+  { key: 'channelName', label: 'Channel' },
+  { key: 'chargeFrom', label: 'Charge From' },
+  { key: 'note', label: 'Note' },
+  { key: 'createdAt', label: 'Created' },
+  { key: 'updatedAt', label: 'Updated' },
+]
 
 function extractError(err: unknown): string {
   if (axios.isAxiosError(err) && err.response?.data?.msg) return err.response.data.msg
@@ -122,6 +139,9 @@ export default function Withdrawals() {
       </form>
 
       <section className="card">
+        <div style={{ display: 'flex', justifyContent: 'flex-end', padding: '8px 16px' }}>
+          <ExportButton columns={WITHDRAWAL_COLUMNS} data={records as unknown as Record<string, unknown>[]} filename="withdrawals" />
+        </div>
         <div className="table-wrap">
           {loading && records.length === 0 ? (
             <div style={{ padding: '48px 0', textAlign: 'center' }}>

@@ -6,9 +6,26 @@ import RechargeFilters from '../components/RechargeFilters'
 import RechargeTable from '../components/RechargeTable'
 import ApproveDialog from '../components/ApproveDialog'
 import Pagination from '../components/Pagination'
+import ExportButton from '../components/ExportButton'
+import type { ExportColumn } from '../utils/export'
 import { useToast } from '../contexts/ToastContext'
 
 const DEFAULT_LIMIT = 20
+
+const RECHARGE_COLUMNS: ExportColumn[] = [
+  { key: 'orderId', label: 'Order ID' },
+  { key: 'userId', label: 'User ID' },
+  { key: 'amount', label: 'Amount' },
+  { key: 'receivedAmount', label: 'Received Amount' },
+  { key: 'currency', label: 'Currency' },
+  { key: 'status', label: 'Status' },
+  { key: 'channelName', label: 'Channel' },
+  { key: 'gatewayOrderNo', label: 'Gateway Order' },
+  { key: 'bonusOptIn', label: 'Bonus Opt-In' },
+  { key: 'bonusAmount', label: 'Bonus Amount' },
+  { key: 'createdAt', label: 'Created' },
+  { key: 'updatedAt', label: 'Updated' },
+]
 
 function extractError(err: unknown): string {
   if (axios.isAxiosError(err) && err.response?.data?.msg) {
@@ -84,6 +101,9 @@ export default function RechargeRecords() {
     <div className="content content--table">
       <RechargeFilters onSearch={handleSearch} loading={loading} />
       <section className="card">
+        <div style={{ display: 'flex', justifyContent: 'flex-end', padding: '8px 16px' }}>
+          <ExportButton columns={RECHARGE_COLUMNS} data={records as unknown as Record<string, unknown>[]} filename="recharge-records" />
+        </div>
         <RechargeTable
           records={records}
           loading={loading}

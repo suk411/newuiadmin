@@ -5,8 +5,19 @@ import type { ProviderBet, WingoBet } from '../api/bets'
 import { formatDateTime } from '../utils/format'
 import { useToast } from '../contexts/ToastContext'
 import Spinner from '../components/Spinner'
+import ExportButton from '../components/ExportButton'
+import type { ExportColumn } from '../utils/export'
 
 const LIMIT = 20
+
+const BET_COLUMNS: ExportColumn[] = [
+  { key: 'id', label: 'ID' },
+  { key: 'member', label: 'Member' },
+  { key: 'site', label: 'Site' },
+  { key: 'amount', label: 'Amount' },
+  { key: 'status', label: 'Status' },
+  { key: 'createdAt', label: 'Date' },
+]
 
 function extractError(err: unknown): string {
   if (axios.isAxiosError(err) && err.response?.data?.msg) return err.response.data.msg
@@ -74,6 +85,9 @@ export default function BetRecords() {
       </div>
 
       <section className="card">
+        <div style={{ display: 'flex', justifyContent: 'flex-end', padding: '8px 16px' }}>
+          <ExportButton columns={BET_COLUMNS} data={records as unknown as Record<string, unknown>[]} filename="bet-records" />
+        </div>
         <div className="table-wrap">
           {loading && records.length === 0 ? (
             <div style={{ padding: '48px 0', textAlign: 'center' }}>

@@ -5,8 +5,23 @@ import type { TransactionRecord } from '../api/transactions'
 import { formatDateTime12 } from '../utils/format'
 import { useToast } from '../contexts/ToastContext'
 import Spinner from '../components/Spinner'
+import ExportButton from '../components/ExportButton'
+import type { ExportColumn } from '../utils/export'
 
 const LIMIT = 20
+
+const TRANSACTION_COLUMNS: ExportColumn[] = [
+  { key: 'userId', label: 'User ID' },
+  { key: 'orderId', label: 'Order ID' },
+  { key: 'type', label: 'Type' },
+  { key: 'amount', label: 'Amount' },
+  { key: 'charge', label: 'Charge' },
+  { key: 'balanceAfter', label: 'Balance After' },
+  { key: 'status', label: 'Status' },
+  { key: 'remark', label: 'Remark' },
+  { key: 'createdAt', label: 'Created' },
+  { key: 'updatedAt', label: 'Updated' },
+]
 
 function extractError(err: unknown): string {
   if (axios.isAxiosError(err) && err.response?.data?.msg) return err.response.data.msg
@@ -81,6 +96,9 @@ export default function Transactions() {
       </form>
 
       <section className="card">
+        <div style={{ display: 'flex', justifyContent: 'flex-end', padding: '8px 16px' }}>
+          <ExportButton columns={TRANSACTION_COLUMNS} data={records as unknown as Record<string, unknown>[]} filename="transactions" />
+        </div>
         <div className="table-wrap">
           {loading && records.length === 0 ? (
             <div style={{ padding: '48px 0', textAlign: 'center' }}>

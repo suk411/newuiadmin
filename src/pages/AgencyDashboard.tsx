@@ -4,8 +4,21 @@ import { fetchTeamStats, fetchTeamMembers } from '../api/agency'
 import type { TeamStats, TeamMember, TierAmount } from '../api/agency'
 import { useToast } from '../contexts/ToastContext'
 import Spinner from '../components/Spinner'
+import ExportButton from '../components/ExportButton'
+import type { ExportColumn } from '../utils/export'
 
 const MEMBER_LIMIT = 20
+
+const MEMBER_COLUMNS: ExportColumn[] = [
+  { key: 'userId', label: 'User ID' },
+  { key: 'level', label: 'Level' },
+  { key: 'registeredAt', label: 'Registered' },
+  { key: 'totalDeposit', label: 'Total Deposit' },
+  { key: 'totalWithdrawal', label: 'Total Withdrawal' },
+  { key: 'balance', label: 'Balance' },
+  { key: 'bindBank', label: 'Bank Bound' },
+  { key: 'multipleIp', label: 'Multi IP' },
+]
 
 function extractError(err: unknown): string {
   if (axios.isAxiosError(err) && err.response?.data?.msg) return err.response.data.msg
@@ -37,11 +50,9 @@ export default function AgencyDashboard() {
   const [search, setSearch] = useState('')
   const { toast } = useToast()
 
-  // Stats
   const [statsLoading, setStatsLoading] = useState(false)
   const [statsData, setStatsData] = useState<TeamStats | null>(null)
 
-  // Members
   const [membersLoading, setMembersLoading] = useState(false)
   const [members, setMembers] = useState<TeamMember[]>([])
   const [membersTotal, setMembersTotal] = useState(0)
@@ -221,6 +232,9 @@ export default function AgencyDashboard() {
             <div className="empty-state"><div className="empty-state__icon">📋</div>No team members found</div>
           ) : (
             <>
+              <div style={{ display: 'flex', justifyContent: 'flex-end', padding: '8px 16px' }}>
+                <ExportButton columns={MEMBER_COLUMNS} data={members as unknown as Record<string, unknown>[]} filename="team-members" />
+              </div>
               <div className="table-wrap">
                 <table className="table">
                   <thead><tr>
