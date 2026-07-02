@@ -481,7 +481,7 @@ export default function Settings() {
                     </table>
                   </div>
                   {gcTotal > 0 && (
-                    <div className="pagination" style={{ position: 'sticky', bottom: 0, background: 'var(--color-bg)', borderTop: '1px solid var(--color-border)', padding: 'var(--space-4) var(--space-6)', marginTop: '-1px' }}>
+                    <div className="pagination">
                       <span>Page {gcPage} of {Math.ceil(gcTotal / GC_LIMIT)}</span>
                       <button className="pagination__btn" disabled={gcPage <= 1} onClick={() => loadGc(gcPage - 1)}>‹</button>
                       <button className="pagination__btn active">{gcPage}</button>

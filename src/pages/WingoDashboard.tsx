@@ -200,12 +200,12 @@ export default function WingoDashboard() {
             </section>
           )}
 
-          <section className="card" style={{ display: 'flex', flexDirection: 'column', maxHeight: 'calc(100vh - 180px)' }}>
+          <section className="card">
             <div style={{ padding: 'var(--space-5) var(--space-7)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid var(--color-border, rgb(188,198,222))' }}>
               <h3 style={{ margin: 0, fontSize: 14, fontWeight: 600 }}>Bets ({betsTotal})</h3>
               <button className="btn-outline btn--sm" onClick={() => loadBets(gameMode, betsPage)} style={{ fontSize: 11 }}>Refresh</button>
             </div>
-            <div className="table-wrap" style={{ flex: 1, overflow: 'auto' }}>
+            <div className="table-wrap">
               <table className="table">
                 <thead><tr><th>User</th><th>Mobile</th><th>Order No</th><th>Selection</th><th>Amount</th><th>Status</th><th>Time</th></tr></thead>
                 <tbody>
@@ -224,7 +224,7 @@ export default function WingoDashboard() {
 </table>
             </div>
             {betsTotal > 50 && (
-              <div className="pagination" style={{ position: 'sticky', bottom: 0, background: 'var(--color-bg)', borderTop: '1px solid var(--color-border)', padding: 'var(--space-4) var(--space-6)', marginTop: '-1px' }}>
+              <div className="pagination">
                 <span>Page {betsPage} of {Math.ceil(betsTotal / 50)}</span>
                 <button className="pagination__btn" disabled={betsPage <= 1} onClick={() => loadBets(gameMode, betsPage - 1)}>‹</button>
                 <button className="pagination__btn active">{betsPage}</button>
@@ -237,13 +237,13 @@ export default function WingoDashboard() {
 
       {tab === 'history' && (
         <>
-          <section className="card" style={{ display: 'flex', flexDirection: 'column', maxHeight: 'calc(100vh - 180px)' }}>
+          <section className="card">
             {settledLoading && settled.length === 0 ? (
               <div className="table-wrap" style={{ padding: '48px 0', textAlign: 'center' }}><Spinner /></div>
             ) : settled.length === 0 ? (
               <div className="empty-state"><div className="empty-state__icon">📋</div>No rounds found</div>
             ) : (
-              <div className="table-wrap" style={{ flex: 1, overflow: 'auto' }}>
+              <div className="table-wrap">
                 <table className="table">
                   <thead><tr><th>Issue</th><th>Result</th><th>Bets</th><th>Amount</th><th>Status</th><th>Date</th><th>Actions</th></tr></thead>
                   <tbody>
@@ -263,7 +263,7 @@ export default function WingoDashboard() {
                 </div>
               )}
               {settledTotal > 0 && (
-                <div className="pagination" style={{ position: 'sticky', bottom: 0, background: 'var(--color-bg)', borderTop: '1px solid var(--color-border)', padding: 'var(--space-4) var(--space-6)', marginTop: '-1px' }}>
+                <div className="pagination">
                   <span>Page {settledPage} of {Math.ceil(settledTotal / LIMIT)}</span>
                   <button className="pagination__btn" disabled={settledPage <= 1} onClick={() => loadSettled(gameMode, settledPage - 1)}>‹</button>
                   <button className="pagination__btn active">{settledPage}</button>
