@@ -140,12 +140,12 @@ export default function Withdrawals() {
                 <tr key={r.orderId} tabIndex={0}>
                   <td>{r.userId}</td>
                   <td style={{ fontFamily: 'monospace', fontSize: 12 }}>{r.orderId}</td>
-                  <td style={{ fontSize: 12, maxWidth: 160, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }} title={payInfo}>{payInfo}</td>
+                  <td style={{ whiteSpace: 'nowrap' }} title={payInfo}>{payInfo}</td>
                   <td>{r.channelName || '—'}</td>
                   <td>₹{Number(r.amount).toLocaleString('en-IN')}</td>
                   <td>{r.charge != null ? `₹${Number(r.charge).toLocaleString('en-IN')}` : '—'}</td>
                   <td style={{ fontSize: 12 }}>{r.chargeFrom || '—'}</td>
-                  <td style={{ fontSize: 12, maxWidth: 120, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }} title={r.note || ''}>{r.note || '—'}</td>
+                  <td style={{ whiteSpace: 'nowrap' }} title={r.note || ''}>{r.note || '—'}</td>
                   <td style={{ whiteSpace: 'nowrap', fontSize: 12 }}>{formatDateTime12(r.createdAt)}</td>
                   <td style={{ whiteSpace: 'nowrap', fontSize: 12 }}>{r.updatedAt ? formatDateTime12(r.updatedAt) : '—'}</td>
                   <td><span className={`badge ${['SUCCESS', 'approved'].includes(r.status) ? 'badge--success' : ['FAILED', 'cancelled'].includes(r.status) ? 'badge--danger' : 'badge--warning'}`}>{r.status}</span></td>
