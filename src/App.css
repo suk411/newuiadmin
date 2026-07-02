@@ -516,8 +516,8 @@
 .sidebar {
   width: 220px;
   flex-shrink: 0;
-  background: rgb(32, 143, 255);
-  color: #fff;
+  background: #fff;
+  color: #000;
   display: flex;
   flex-direction: column;
   overflow-y: auto;
@@ -538,13 +538,16 @@
 }
 
 .sidebar-brand {
-  padding: 15px 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 50px;
   font-family: var(--font-heading);
   font-size: 18px;
   font-weight: 700;
   letter-spacing: 0.3px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
-  color: #fff;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+  color: #000;
 }
 
 .sidebar-nav {
@@ -558,7 +561,7 @@
   gap: 10px;
   padding: 10px 15px;
   font-size: 16px;
-  color: #fff;
+  color: #000;
   text-decoration: none;
   cursor: pointer;
   transition: background 200ms, color 200ms;
@@ -566,18 +569,17 @@
   font-family: var(--font-body);
 }
 
-.nav-item:hover { background: rgba(255, 255, 255, 0.1); color: #fff; }
+.nav-item:hover { background: rgba(32, 143, 255, 0.08); color: rgb(32, 143, 255); }
 
 .nav-item:focus-visible {
   outline: 2px solid #a0c5fc;
   outline-offset: -2px;
-  color: #fff;
 }
 
 .nav-item.active {
-  color: #fff;
-  background: rgba(255, 255, 255, 0.12);
-  border-left-color: #a0c5fc;
+  color: rgb(32, 143, 255);
+  background: rgba(32, 143, 255, 0.1);
+  border-left-color: rgb(32, 143, 255);
 }
 
 .nav-icon { width: 16px; height: 16px; flex-shrink: 0; opacity: 0.8; }
@@ -586,9 +588,9 @@
 
 .sidebar-footer {
   padding: 12px 15px;
-  border-top: 1px solid rgba(255, 255, 255, 0.12);
+  border-top: 1px solid rgba(0, 0, 0, 0.08);
   font-size: 13px;
-  color: rgba(255, 255, 255, 0.5);
+  color: rgba(0, 0, 0, 0.4);
 }
 
 /* ── Header / Navbar ── */
@@ -615,7 +617,7 @@
 .header-right {
   display: flex;
   align-items: center;
-  gap: 2px;
+  gap: 12px;
   height: 100%;
   position: absolute;
   right: 35px;
@@ -1033,6 +1035,32 @@ html.dark .btn-logout-header:hover {
 
 html.dark .sidebar {
   background: #000;
+  color: #fff;
+}
+
+html.dark .sidebar-brand {
+  color: #fff;
+  border-bottom-color: rgba(255,255,255,0.1);
+}
+
+html.dark .nav-item {
+  color: #fff;
+}
+
+html.dark .nav-item:hover {
+  background: rgba(255,255,255,0.1);
+  color: #fff;
+}
+
+html.dark .nav-item.active {
+  color: #60a5fa;
+  background: rgba(96,165,250,0.1);
+  border-left-color: #60a5fa;
+}
+
+html.dark .sidebar-footer {
+  color: rgba(255,255,255,0.4);
+  border-top-color: rgba(255,255,255,0.1);
 }
 
 html.dark .filters-bar { border-bottom-color: #333; }
