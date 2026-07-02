@@ -10,6 +10,8 @@ import { fetchDepositConfig, updateDepositChannel, fetchDepositBonusConfig, upda
 import type { DepositChannel, DepositBonusConfig } from '../api/depositConfig'
 import { fetchWithdrawalConfig, updateWithdrawalConfig } from '../api/withdrawalConfig'
 import type { WithdrawalConfig } from '../api/withdrawalConfig'
+import { fetchAgencyLevels, updateAgencyLevel } from '../api/agency'
+import type { AgencyLevelConfig } from '../api/agency'
 import { useToast } from '../contexts/ToastContext'
 import Spinner from '../components/Spinner'
 import { formatDateTime } from '../utils/format'
@@ -69,12 +71,20 @@ export default function Settings() {
   const [wdMinUpay, setWdMinUpay] = useState('')
   const [wdMaxUpay, setWdMaxUpay] = useState('')
 
+  // Agency Level Configs
+  const [alLevels, setAlLevels] = useState<AgencyLevelConfig[]>([])
+  const [alLoading, setAlLoading] = useState(false)
+  const [alEditIdx, setAlEditIdx] = useState<number | null>(null)
+  const [alForm, setAlForm] = useState<AgencyLevelConfig | null>(null)
+  const [alSaving, setAlSaving] = useState(false)
+
   // dialog visibility
   const [showVip, setShowVip] = useState(false)
   const [showTo, setShowTo] = useState(false)
   const [showGc, setShowGc] = useState(false)
   const [showDep, setShowDep] = useState(false)
   const [showWd, setShowWd] = useState(false)
+  const [showAl, setShowAl] = useState(false)
 
   // ---- VIP Config ----
   const loadVip = async () => {
@@ -314,6 +324,46 @@ export default function Settings() {
     finally { setWdLoading(false) }
   }
 
+  // ---- Agency Level Configs ----
+  const loadAl = async () => {
+    setAlLoading(true)
+    try {
+      const data = await fetchAgencyLevels()
+      setAlLevels(Array.isArray(data) ? data : [])
+    } catch (err: unknown) { toast(extractError(err)) }
+    finally { setAlLoading(false) }
+  }
+
+  const alOpenDialog = () => { setShowAl(true); loadAl() }
+  const alCloseDialog = () => { setShowAl(false); setAlEditIdx(null); setAlForm(null) }
+
+  const alOpenEdit = (i: number) => {
+    setAlEditIdx(i)
+    setAlForm({ ...alLevels[i] })
+  }
+
+  const alCloseEdit = () => { setAlEditIdx(null); setAlForm(null) }
+
+  const alHandleSave = async () => {
+    if (alForm == null || alEditIdx == null) return
+    setAlSaving(true)
+    try {
+      const updated = await updateAgencyLevel(alForm.level, {
+        minMembers: alForm.minMembers,
+        minBets: alForm.minBets,
+        minDeposit: alForm.minDeposit,
+        l1Rate: alForm.l1Rate,
+        l2Rate: alForm.l2Rate,
+        l3Rate: alForm.l3Rate,
+      })
+      const copy = [...alLevels]
+      copy[alEditIdx] = updated
+      setAlLevels(copy)
+      alCloseEdit()
+    } catch (err: unknown) { toast(extractError(err)) }
+    finally { setAlSaving(false) }
+  }
+
   function SettingsCard({ title, desc, onClick }: { title: string; desc: string; onClick: () => void }) {
     return (
       <section className="card" style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
@@ -337,6 +387,7 @@ export default function Settings() {
         <SettingsCard title="Gift Codes" desc="Create and manage gift codes with rewards and limits" onClick={gcOpenDialog} />
         <SettingsCard title="Deposit Config" desc="Manage deposit channels, min/max amounts, and bonus config" onClick={depOpenDialog} />
         <SettingsCard title="Withdrawal Config" desc="Per-day limits and per-channel withdrawal restrictions" onClick={wdOpenDialog} />
+        <SettingsCard title="Agency Level Configs" desc="Manage agency levels, commission rates, and promotion thresholds" onClick={alOpenDialog} />
       </div>
 
       {/* VIP Dialog */}
@@ -612,6 +663,65 @@ export default function Settings() {
             <div style={{ padding: 'var(--space-6) var(--space-7)', borderTop: '1px solid var(--color-border, rgb(188,198,222))', display: 'flex', justifyContent: 'flex-end', gap: 'var(--space-3)', flexShrink: 0 }}>
               <button className="btn-outline" onClick={() => setEditBonusIdx(null)}>Cancel</button>
               <button className="btn-filled" onClick={depSaveBonusEdit} disabled={depSaving === `bonus-${editBonusIdx}`}>{depSaving === `bonus-${editBonusIdx}` ? <Spinner /> : 'Save'}</button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Agency Level Configs Dialog */}
+      {showAl && (
+        <div className="dialog-overlay" onClick={alCloseDialog}>
+          <div className="dialog" onClick={(e) => e.stopPropagation()} style={{ width: '70vw', height: '80vh', display: 'flex', flexDirection: 'column', padding: 0 }}>
+            <div style={{ padding: 'var(--space-6) var(--space-7)', borderBottom: '1px solid var(--color-border, rgb(188,198,222))', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexShrink: 0 }}>
+              <h3 style={{ margin: 0, fontSize: 14 }}>Agency Level Configs</h3>
+              <button className="btn-outline" style={{ fontSize: 11, padding: '2px 8px' }} onClick={alCloseDialog}>✕</button>
+            </div>
+            <div style={{ padding: 'var(--space-6) var(--space-7)', flex: 1, overflow: 'auto', fontSize: 14 }}>
+              {alLoading ? <div style={{ padding: '24px 0', textAlign: 'center' }}><Spinner /></div> : alLevels.length === 0 ? (
+                <div className="empty-state"><div className="empty-state__icon">📋</div>No level configs found</div>
+              ) : (
+                <div className="table-wrap">
+                  <table className="table">
+                    <thead><tr><th>Level</th><th>Min Members</th><th>Min Bets (₹)</th><th>Min Deposit (₹)</th><th>L1 Rate</th><th>L2 Rate</th><th>L3 Rate</th><th>Actions</th></tr></thead>
+                    <tbody>
+                      {alLevels.map((l, i) => (
+                        <tr key={l._id}>
+                          <td>{l.level}</td>
+                          <td>{l.minMembers.toLocaleString('en-IN')}</td>
+                          <td>{l.minBets.toLocaleString('en-IN')}</td>
+                          <td>{l.minDeposit.toLocaleString('en-IN')}</td>
+                          <td>{(l.l1Rate * 100).toFixed(0)}%</td>
+                          <td>{(l.l2Rate * 100).toFixed(0)}%</td>
+                          <td>{(l.l3Rate * 100).toFixed(0)}%</td>
+                          <td><div className="cell-actions"><button className="btn btn--primary btn--sm" onClick={() => alOpenEdit(i)}>Edit</button></div></td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+      {alEditIdx != null && alForm && (
+        <div className="dialog-overlay" onClick={alCloseEdit}>
+          <div className="dialog" onClick={(e) => e.stopPropagation()} style={{ width: '70vw', height: '80vh', display: 'flex', flexDirection: 'column', padding: 0 }}>
+            <div style={{ padding: 'var(--space-6) var(--space-7)', borderBottom: '1px solid var(--color-border, rgb(188,198,222))', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexShrink: 0 }}>
+              <h3 style={{ margin: 0, fontSize: 14 }}>Edit Level {alForm.level}</h3>
+              <button className="btn-outline" style={{ fontSize: 11, padding: '2px 8px' }} onClick={alCloseEdit}>✕</button>
+            </div>
+            <div style={{ padding: 'var(--space-6) var(--space-7)', flex: 1, overflow: 'auto', display: 'flex', flexDirection: 'column', gap: 'var(--space-3)', fontSize: 14 }}>
+              <div className="filter-group"><label>Min Members</label><input type="number" value={alForm.minMembers} onChange={(e) => setAlForm({ ...alForm, minMembers: Number(e.target.value) })} /></div>
+              <div className="filter-group"><label>Min Bets (₹)</label><input type="number" value={alForm.minBets} onChange={(e) => setAlForm({ ...alForm, minBets: Number(e.target.value) })} /></div>
+              <div className="filter-group"><label>Min Deposit (₹)</label><input type="number" value={alForm.minDeposit} onChange={(e) => setAlForm({ ...alForm, minDeposit: Number(e.target.value) })} /></div>
+              <div className="filter-group"><label>L1 Rate (decimal, e.g. 0.15 = 15%)</label><input type="number" step="0.01" value={alForm.l1Rate} onChange={(e) => setAlForm({ ...alForm, l1Rate: Number(e.target.value) })} /></div>
+              <div className="filter-group"><label>L2 Rate (decimal)</label><input type="number" step="0.01" value={alForm.l2Rate} onChange={(e) => setAlForm({ ...alForm, l2Rate: Number(e.target.value) })} /></div>
+              <div className="filter-group"><label>L3 Rate (decimal)</label><input type="number" step="0.01" value={alForm.l3Rate} onChange={(e) => setAlForm({ ...alForm, l3Rate: Number(e.target.value) })} /></div>
+            </div>
+            <div style={{ padding: 'var(--space-6) var(--space-7)', borderTop: '1px solid var(--color-border, rgb(188,198,222))', display: 'flex', justifyContent: 'flex-end', gap: 'var(--space-3)', flexShrink: 0 }}>
+              <button className="btn-outline" onClick={alCloseEdit} disabled={alSaving}>Cancel</button>
+              <button className="btn-filled" onClick={alHandleSave} disabled={alSaving}>{alSaving ? <Spinner /> : 'Save'}</button>
             </div>
           </div>
         </div>
