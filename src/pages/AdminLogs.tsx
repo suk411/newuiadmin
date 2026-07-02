@@ -32,7 +32,7 @@ export default function AdminLogs() {
   useEffect(() => { load() }, [])
 
   return (
-    <div className="content">
+    <div className="content content--table">
       <div className="filters-bar">
         <div className="filter-group">
           <label>Level</label>
@@ -55,15 +55,14 @@ export default function AdminLogs() {
         </div>
       </div>
 
-      {loading && logs.length === 0 ? (
-        <div className="table-wrap" style={{ padding: '48px 0', textAlign: 'center' }}>
-          <Spinner />
-        </div>
-      ) : logs.length === 0 ? (
-        <div className="empty-state"><div className="empty-state__icon">📋</div>No logs found</div>
-      ) : (
       <section className="card">
-        
+        {loading && logs.length === 0 ? (
+          <div className="table-wrap" style={{ padding: '48px 0', textAlign: 'center' }}>
+            <Spinner />
+          </div>
+        ) : logs.length === 0 ? (
+          <div className="table-wrap"><div className="empty-state"><div className="empty-state__icon">📋</div>No logs found</div></div>
+        ) : (
         <div className="table-wrap">
           <table className="table">
             <thead>
@@ -84,8 +83,8 @@ export default function AdminLogs() {
             </tbody>
           </table>
         </div>
+        )}
       </section>
-      )}
     </div>
   )
 }

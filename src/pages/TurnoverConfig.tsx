@@ -64,13 +64,13 @@ export default function TurnoverConfig() {
   }
 
   return (
-    <div className="content">
-      {loading ? (
-        <div className="table-wrap" style={{ padding: '48px 0', textAlign: 'center' }}>
-          <Spinner />
-        </div>
-      ) : (
-        <section className="card">
+    <div className="content content--table">
+      <section className="card">
+        {loading ? (
+          <div className="table-wrap" style={{ padding: '48px 0', textAlign: 'center' }}>
+            <Spinner />
+          </div>
+        ) : (
           <div className="table-wrap">
             <table className="table">
               <thead><tr><th>Type</th><th>Description</th><th>Multiplier</th><th>Active</th><th>Actions</th></tr></thead>
@@ -87,8 +87,8 @@ export default function TurnoverConfig() {
               </tbody>
             </table>
           </div>
-        </section>
-      )}
+        )}
+      </section>
 
       {editIndex != null && form && (
         <div className="dialog-overlay" onClick={closeEdit}>
