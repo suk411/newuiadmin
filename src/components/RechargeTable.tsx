@@ -12,9 +12,11 @@ function formatDateTime(dateStr: string) {
   const y = d.getFullYear()
   const mo = String(d.getMonth() + 1).padStart(2, '0')
   const dd = String(d.getDate()).padStart(2, '0')
-  const hh = String(d.getHours()).padStart(2, '0')
+  let hh = d.getHours()
+  const ampm = hh >= 12 ? 'PM' : 'AM'
+  hh = hh % 12 || 12
   const mm = String(d.getMinutes()).padStart(2, '0')
-  return `${y}-${mo}-${dd} ${hh}:${mm}`
+  return `${y}-${mo}-${dd} ${String(hh).padStart(2, '0')}:${mm} ${ampm}`
 }
 
 const statusMap: Record<string, { label: string; className: string }> = {
