@@ -6,6 +6,7 @@ import { useToast } from '../contexts/ToastContext'
 import Spinner from '../components/Spinner'
 import ExportButton from '../components/ExportButton'
 import type { ExportColumn } from '../utils/export'
+import { formatDateTime12 } from '../utils/format'
 
 const MEMBER_LIMIT = 20
 
@@ -252,7 +253,7 @@ export default function AgencyDashboard() {
                       <tr key={m.userId} tabIndex={0}>
                         <td style={{ fontFamily: 'monospace', fontSize: 12 }}>{m.userId}</td>
                         <td>{m.level}</td>
-                        <td style={{ whiteSpace: 'nowrap' }}>{new Date(m.registeredAt).toLocaleDateString('en-IN')}</td>
+                        <td style={{ whiteSpace: 'nowrap' }}>{formatDateTime12(m.registeredAt)}</td>
                         <td>₹{m.totalDeposit.toLocaleString('en-IN')}</td>
                         <td>₹{m.totalWithdrawal.toLocaleString('en-IN')}</td>
                         <td>₹{m.balance.toLocaleString('en-IN')}</td>
