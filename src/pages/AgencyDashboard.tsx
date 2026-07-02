@@ -31,11 +31,11 @@ function TierStatCards({ label, data }: { label: string; data: TierAmount }) {
     <div className="stat-cards" style={{ marginTop: 8 }}>
       <div className="stat-card">
         <span className="stat-card__label">{label} Count</span>
-        <span className="stat-card__value">{data.totalCount.toLocaleString('en-IN')}</span>
+        <span className="stat-card__value">{(data?.totalCount ?? 0).toLocaleString('en-IN')}</span>
       </div>
       <div className="stat-card">
         <span className="stat-card__label">{label} Amount</span>
-        <span className="stat-card__value text-green">₹{data.totalAmount.toLocaleString('en-IN')}</span>
+        <span className="stat-card__value text-green">₹{(data?.totalAmount ?? 0).toLocaleString('en-IN')}</span>
       </div>
     </div>
   )
@@ -191,19 +191,19 @@ export default function AgencyDashboard() {
                 <div className="stat-cards" style={{ marginTop: 12 }}>
                   <div className="stat-card">
                     <span className="stat-card__label">L1 Members</span>
-                    <span className="stat-card__value">{statsData.team.l1.toLocaleString('en-IN')}</span>
+                    <span className="stat-card__value">{(statsData.team.l1 ?? 0).toLocaleString('en-IN')}</span>
                   </div>
                   <div className="stat-card">
                     <span className="stat-card__label">L2 Members</span>
-                    <span className="stat-card__value">{statsData.team.l2.toLocaleString('en-IN')}</span>
+                    <span className="stat-card__value">{(statsData.team.l2 ?? 0).toLocaleString('en-IN')}</span>
                   </div>
                   <div className="stat-card">
                     <span className="stat-card__label">L3 Members</span>
-                    <span className="stat-card__value">{statsData.team.l3.toLocaleString('en-IN')}</span>
+                    <span className="stat-card__value">{(statsData.team.l3 ?? 0).toLocaleString('en-IN')}</span>
                   </div>
                   <div className="stat-card">
                     <span className="stat-card__label">Total Team</span>
-                    <span className="stat-card__value">{statsData.team.total.toLocaleString('en-IN')}</span>
+                    <span className="stat-card__value">{(statsData.team.total ?? 0).toLocaleString('en-IN')}</span>
                   </div>
                 </div>
               </section>
