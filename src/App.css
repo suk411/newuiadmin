@@ -237,9 +237,10 @@
 }
 
 .table {
-  width: 100%;
+  min-width: 100%;
   border-collapse: collapse;
   font-size: 14px;
+  table-layout: auto;
 }
 
 .table th {
@@ -261,6 +262,7 @@
   border-bottom: 1px solid #e0e0e0;
   color: #000;
   background: #fff;
+  white-space: nowrap;
 }
 
 .table tbody tr:nth-child(even) td { background: #f0f7ff; }
