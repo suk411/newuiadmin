@@ -20,8 +20,6 @@ import './App.css'
 
 function ProtectedLayoutContent({ onLogout }: { onLogout: () => void }) {
   const [sidebarOpen, setSidebarOpen] = useState(false)
-  const [sidebarHover, setSidebarHover] = useState(false)
-  const sidebarVisible = sidebarOpen || sidebarHover
   const [darkMode, setDarkMode] = useState(() => localStorage.getItem('darkMode') === 'true')
   const location = useLocation()
   const navigate = useNavigate()
@@ -66,28 +64,23 @@ function ProtectedLayoutContent({ onLogout }: { onLogout: () => void }) {
 
   return (
     <div className="app-layout">
-      <div
-        className="sidebar-hover-area"
-        onMouseEnter={() => setSidebarHover(true)}
-        onMouseLeave={() => setSidebarHover(false)}
-      >
-        <Sidebar open={sidebarVisible} onClose={() => { setSidebarOpen(false); setSidebarHover(false) }} onNavigate={() => { setSidebarOpen(false); setSidebarHover(false) }} />
-        <div className="main-area">
-          <header className="app-header">
-            <div className="header-left">
-              <button
-                className="sidebar-toggle"
-                onClick={() => setSidebarOpen(!sidebarOpen)}
-                aria-label={sidebarOpen ? 'Collapse sidebar' : 'Expand sidebar'}
-                aria-expanded={sidebarVisible}
-              >
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  {sidebarVisible
-                    ? <path d="M15 18l-6-6 6-6" />
-                    : <path d="M9 18l6-6-6-6" />
-                  }
-                </svg>
-              </button>
+      <Sidebar open={sidebarOpen} onClose={() => setSidebarOpen(false)} onNavigate={() => setSidebarOpen(false)} />
+      <div className="main-area">
+        <header className="app-header">
+          <div className="header-left">
+            <button
+              className="sidebar-toggle"
+              onClick={() => setSidebarOpen(!sidebarOpen)}
+              aria-label={sidebarOpen ? 'Collapse sidebar' : 'Expand sidebar'}
+              aria-expanded={sidebarOpen}
+            >
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                {sidebarOpen
+                  ? <path d="M15 18l-6-6 6-6" />
+                  : <path d="M9 18l6-6-6-6" />
+                }
+              </svg>
+            </button>
               <span className="header-title">CS System</span>
             </div>
             <div className="header-right">
@@ -137,7 +130,6 @@ function ProtectedLayoutContent({ onLogout }: { onLogout: () => void }) {
             </div>
           </main>
         </div>
-      </div>
     </div>
   )
 }

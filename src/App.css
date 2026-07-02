@@ -503,12 +503,6 @@
   overflow: hidden;
 }
 
-.sidebar-hover-area {
-  display: flex;
-  width: 100%;
-  height: 100%;
-}
-
 .main-area {
   flex: 1;
   display: flex;
@@ -530,7 +524,6 @@
   transition: width 250ms ease, padding 250ms ease, border 250ms ease;
 }
 
-.sidebar-hover-area:hover .sidebar,
 .sidebar.sidebar--open {
   width: 220px;
   padding: 0;
@@ -1181,7 +1174,6 @@ html.dark .spinner {
 
 @media (max-width: 768px) {
   .sidebar-toggle { display: inline-flex; }
-  .sidebar-hover-area { display: block; }
   .sidebar {
     position: fixed;
     top: 0;
@@ -1204,21 +1196,24 @@ html.dark .spinner {
 }
 
 @media (min-width: 769px) {
-  .sidebar-toggle { display: none !important; }
+  .sidebar-toggle { display: inline-flex; }
   .sidebar {
     width: 0;
-    transition: width 250ms ease, padding 250ms ease, border 250ms ease;
+    padding: 0;
+    border: none;
     overflow: hidden;
+    transition: width 250ms ease, padding 250ms ease, border 250ms ease;
   }
-  .sidebar-hover-area:hover .sidebar,
   .sidebar.sidebar--open {
     width: 220px;
     padding: 0;
     border: none;
+    overflow: visible;
   }
   .sidebar.sidebar--collapsed {
     width: 0;
     padding: 0;
     border: none;
+    overflow: hidden;
   }
 }
