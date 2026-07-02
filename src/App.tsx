@@ -74,43 +74,44 @@ function ProtectedLayoutContent({ onLogout }: { onLogout: () => void }) {
               aria-label={sidebarOpen ? 'Collapse sidebar' : 'Expand sidebar'}
               aria-expanded={sidebarOpen}
             >
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                {sidebarOpen
-                  ? <path d="M15 18l-6-6 6-6" />
-                  : <path d="M9 18l6-6-6-6" />
+              <svg viewBox="0 0 1024 1024" className="hamburger">
+                <path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM142.4 642.1L298.7 519a8.84 8.84 0 0 0 0-13.9L142.4 381.9c-5.8-4.6-14.4-.5-14.4 6.9v246.3a8.9 8.9 0 0 0 14.4 7z"></path>
+              </svg>
+            </button>
+            <div className="breadcrumb" aria-label="Breadcrumb" role="navigation">
+              <span className="breadcrumb__item">
+                <a href="/dashboard" className="breadcrumb__link">Homepage</a>
+                <span className="breadcrumb__separator">/</span>
+              </span>
+              <span className="breadcrumb__item breadcrumb__item--active">
+                <span className="breadcrumb__text">{titleMap[location.pathname] || 'Dashboard'}</span>
+              </span>
+            </div>
+          </div>
+          <div className="header-right">
+            <button className="header-btn-icon" onClick={() => setDarkMode((p) => !p)} aria-label="Toggle dark mode" title="Toggle dark mode">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                {darkMode
+                  ? <path d="M12 3a9 9 0 109 9c0-.46-.04-.92-.1-1.36a5.389 5.389 0 01-4.4 2.26 5.403 5.403 0 01-3.14-9.8c-.44-.06-.9-.1-1.36-.1z" />
+                  : <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z" />
                 }
               </svg>
             </button>
-              <span className="header-title">CS System</span>
+            <div className="avatar-container">
+              <span className="user-icon">👤</span>
+              <span className="user-name">GM12</span>
+              <span className="caret-icon">▼</span>
             </div>
-            <div className="header-right">
-              <button className="btn-ghost-icon" aria-label="Refresh data" title="Refresh" onClick={() => window.location.reload()}>
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M1 4v6h6"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>
-              </button>
-              <button
-                className="btn-ghost-icon"
-                onClick={() => setDarkMode((p) => !p)}
-                aria-label="Toggle dark mode"
-                title="Toggle dark mode"
-              >
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  {darkMode
-                    ? <path d="M12 3a9 9 0 109 9c0-.46-.04-.92-.1-1.36a5.389 5.389 0 01-4.4 2.26 5.403 5.403 0 01-3.14-9.8c-.44-.06-.9-.1-1.36-.1z" />
-                    : <path d="M12 3a9 9 0 109 9c0-.46-.04-.92-.1-1.36a5.389 5.389 0 01-4.4 2.26 5.403 5.403 0 01-3.14-9.8c-.44-.06-.9-.1-1.36-.1z" />
-                  }
-                </svg>
-              </button>
-              <span className="header-admin-label">Admin</span>
-              <button className="btn-logout" onClick={onLogout} title="Logout">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ marginRight: 4 }}>
-                  <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
-                  <polyline points="16 17 21 12 16 7" />
-                  <line x1="21" y1="12" x2="9" y2="12" />
-                </svg>
-                Logout
-              </button>
-            </div>
-          </header>
+            <button className="btn-logout-header" onClick={onLogout} title="Logout">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                <polyline points="16 17 21 12 16 7" />
+                <line x1="21" y1="12" x2="9" y2="12" />
+              </svg>
+              Logout
+            </button>
+          </div>
+        </header>
           <TagsView tags={tags} onClose={handleTagClose} />
           <main className="app-content">
             <div key={location.pathname} className="route-transition">

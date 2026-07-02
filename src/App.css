@@ -591,86 +591,130 @@
   color: rgba(255, 255, 255, 0.5);
 }
 
-/* ── Header ── */
+/* ── Header / Navbar ── */
 
 .app-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 6px 15px;
-  background: #fff;
-  border-bottom: 1px solid #d0d0d0;
-  gap: 12px;
-  min-height: 44px;
+  height: 50px;
+  background: rgba(32, 143, 255, 0.9);
+  box-shadow: 0 1px 4px rgba(0,21,41,.08);
+  color: #fff;
   flex-shrink: 0;
+  position: relative;
+  overflow: hidden;
 }
 
 .header-left {
   display: flex;
   align-items: center;
-  gap: 12px;
-  flex: 1;
+  height: 100%;
 }
 
 .header-right {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 2px;
+  height: 100%;
+  position: absolute;
+  right: 35px;
+  top: 0;
 }
 
-.header-title {
-  font-family: var(--font-heading);
-  font-size: 13px;
-  font-weight: 700;
-  color: #000;
-  white-space: nowrap;
-}
+/* ── Hamburger Toggle ── */
 
-.header-search {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  padding: 0 10px;
-  height: 35px;
-  font-size: 13px;
-  font-family: var(--font-body);
-  color: #000;
-  background: #fff;
-  border: 1px solid #d0d0d0;
-  border-radius: 3px;
-  outline: none;
-  width: 100%;
-  transition: border-color 200ms;
-}
-
-.header-search::placeholder { color: #999; }
-.header-search:hover { border-color: #999; }
-.header-search:focus,
-.header-search:focus-visible { border-color: #a0c5fc; }
-
-.header-btn {
-  height: 32px;
+.sidebar-toggle {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-}
-
-.header-link {
-  color: #000;
-  text-decoration: none;
+  height: 100%;
+  padding: 0 10px;
   cursor: pointer;
-  font-size: 12px;
-  transition: color 200ms;
+  background: transparent;
+  border: none;
+  color: #fff;
+  transition: background 0.3s;
+  -webkit-tap-highlight-color: transparent;
 }
 
-.header-link:hover { color: #409eff; text-decoration: underline; }
+.sidebar-toggle:hover {
+  background: rgba(0, 0, 0, 0.05);
+}
 
-.header-admin-label {
-  color: #000;
+.sidebar-toggle:focus-visible {
+  outline: 2px solid rgba(255,255,255,0.5);
+  outline-offset: -2px;
+}
+
+.hamburger {
+  display: inline-block;
+  vertical-align: middle;
+  width: 20px;
+  height: 20px;
+  fill: #fff;
+}
+
+/* ── Breadcrumb ── */
+
+.breadcrumb {
+  display: inline-flex;
+  align-items: center;
+  font-size: 13px;
+  line-height: 50px;
+  margin-left: 10px;
+  gap: 0;
+}
+
+.breadcrumb__item {
+  display: inline-flex;
+  align-items: center;
+}
+
+.breadcrumb__link {
+  font-weight: 400;
+  color: #d7d7d7;
+  text-decoration: none;
+}
+
+.breadcrumb__link:hover {
+  color: #fff;
+}
+
+.breadcrumb__text {
+  color: #fff;
+  cursor: text;
+}
+
+.breadcrumb__separator {
+  margin: 0 9px;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+/* ── Avatar ── */
+
+.avatar-container {
+  display: flex;
+  align-items: center;
+  height: 100%;
+  cursor: pointer;
+  gap: 5px;
+  color: #fff;
+  font-size: 14px;
+}
+
+.user-icon {
+  font-size: 16px;
+}
+
+.caret-icon {
   font-size: 12px;
 }
 
-.btn-ghost-icon {
+/* ── Header Buttons ── */
+
+.header-btn-icon {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -680,52 +724,42 @@
   border: none;
   border-radius: 3px;
   cursor: pointer;
-  color: #000;
+  color: #fff;
   transition: background 200ms;
 }
 
-.btn-ghost-icon:hover { background: #eaeaea; }
-.btn-ghost-icon:focus-visible { outline: 2px solid #a0c5fc; outline-offset: 2px; }
+.header-btn-icon:hover {
+  background: rgba(0, 0, 0, 0.1);
+}
 
-.btn-logout {
+.header-btn-icon:focus-visible {
+  outline: 2px solid rgba(255,255,255,0.5);
+  outline-offset: 2px;
+}
+
+.btn-logout-header {
   display: inline-flex;
   align-items: center;
+  gap: 4px;
   height: 32px;
-  padding: 0 12px;
+  padding: 0 10px;
   background: transparent;
-  color: #ef4444;
-  border: 1px solid #ef4444;
+  color: #fff;
+  border: 1px solid rgba(255,255,255,0.4);
   border-radius: 3px;
   font-size: 12px;
   cursor: pointer;
   transition: all 200ms;
 }
 
-.btn-logout:hover {
-  background: #ef4444;
-  color: #fff;
+.btn-logout-header:hover {
+  background: rgba(255,255,255,0.15);
+  border-color: rgba(255,255,255,0.7);
 }
 
-.btn-logout:active { background: #dc2626; border-color: #dc2626; }
-
-/* ── Sidebar Toggle ── */
-
-.sidebar-toggle {
-  display: none;
-  align-items: center;
-  justify-content: center;
-  width: 32px;
-  height: 32px;
-  background: transparent;
-  border: none;
-  border-radius: 3px;
-  cursor: pointer;
-  color: #000;
-  transition: background 200ms;
+.btn-logout-header:active {
+  background: rgba(255,255,255,0.25);
 }
-
-.sidebar-toggle:hover { background: #eaeaea; }
-.sidebar-toggle:focus-visible { outline: 2px solid #a0c5fc; outline-offset: 2px; }
 
 /* ── Content / page content area ── */
 
@@ -973,25 +1007,7 @@ html.dark body {
 
 html.dark .app-header {
   background: #000;
-  border-bottom-color: #333;
 }
-
-html.dark .header-title,
-html.dark .header-link,
-html.dark .header-admin-label,
-html.dark .btn-ghost-icon {
-  color: #fff;
-}
-
-html.dark .header-search {
-  background: #111;
-  border-color: #333;
-  color: #fff;
-}
-html.dark .header-search::placeholder { color: #666; }
-
-html.dark .sidebar-toggle { color: #fff; }
-html.dark .sidebar-toggle:hover { background: #222; }
 
 html.dark .filters-bar { border-bottom-color: #333; }
 
@@ -1080,14 +1096,13 @@ html.dark .dialog {
 
 html.dark .dialog h3 { color: #fff; }
 
-html.dark .btn-logout {
-  color: #f87171;
-  border-color: #f87171;
+html.dark .btn-logout-header {
+  border-color: rgba(255,255,255,0.3);
 }
 
-html.dark .btn-logout:hover {
-  background: #ef4444;
-  color: #fff;
+html.dark .btn-logout-header:hover {
+  background: rgba(255,255,255,0.1);
+  border-color: rgba(255,255,255,0.6);
 }
 
 html.dark .badge--info { background: #333; color: #fff; }
@@ -1164,10 +1179,6 @@ html.dark .spinner {
     box-shadow: none;
     padding: var(--space-6);
   }
-}
-
-@media (max-width: 768px) {
-  .sidebar-toggle { display: inline-flex; }
   .sidebar {
     position: fixed;
     top: 0;
@@ -1184,13 +1195,12 @@ html.dark .spinner {
   .sidebar.sidebar--collapsed {
     transform: translateX(-100%);
   }
-  .header-search { max-width: 160px; }
-  .header-btn { display: none; }
-  .header-link { display: none; }
+  .header-right {
+    right: 10px;
+  }
 }
 
 @media (min-width: 769px) {
-  .sidebar-toggle { display: inline-flex; }
   .sidebar {
     width: 0;
     padding: 0;
