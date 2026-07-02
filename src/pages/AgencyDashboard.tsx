@@ -1,9 +1,11 @@
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import axios from 'axios'
-import { fetchTeamStats } from '../api/agency'
-import type { TeamStats } from '../api/agency'
+import { fetchTeamStats, fetchTeamMembers } from '../api/agency'
+import type { TeamStats, TeamMember } from '../api/agency'
 import { useToast } from '../contexts/ToastContext'
 import Spinner from '../components/Spinner'
+
+const MEMBER_LIMIT = 20
 
 function extractError(err: unknown): string {
   if (axios.isAxiosError(err) && err.response?.data?.msg) return err.response.data.msg
@@ -12,41 +14,68 @@ function extractError(err: unknown): string {
 }
 
 const STATUS_LABELS: Record<string, string> = {
-  SUCCESS: 'Success',
-  PENDING: 'Pending',
-  FAILED: 'Failed',
-  EXPIRED: 'Expired',
-  REFUNDED: 'Refunded',
-  AUDITING: 'Auditing',
-  CANCELLED: 'Cancelled',
+  SUCCESS: 'Success', PENDING: 'Pending', FAILED: 'Failed',
+  EXPIRED: 'Expired', REFUNDED: 'Refunded', AUDITING: 'Auditing', CANCELLED: 'Cancelled',
 }
 
 export default function AgencyDashboard() {
+  const [tab, setTab] = useState<'stats' | 'members'>('stats')
   const [userId, setUserId] = useState('')
   const [tier, setTier] = useState('')
   const [dateFrom, setDateFrom] = useState('')
   const [dateTo, setDateTo] = useState('')
-  const [loading, setLoading] = useState(false)
-  const [data, setData] = useState<TeamStats | null>(null)
+  const [search, setSearch] = useState('')
   const { toast } = useToast()
 
-  const handleSearch = async (e: React.FormEvent) => {
+  // Stats
+  const [statsLoading, setStatsLoading] = useState(false)
+  const [statsData, setStatsData] = useState<TeamStats | null>(null)
+
+  // Members
+  const [membersLoading, setMembersLoading] = useState(false)
+  const [members, setMembers] = useState<TeamMember[]>([])
+  const [membersTotal, setMembersTotal] = useState(0)
+  const [membersPage, setMembersPage] = useState(1)
+  const membersFetched = useRef(false)
+
+  const buildParams = (extra: Record<string, string | number> = {}) => {
+    const p: Record<string, string | number> = { userId: userId.trim(), ...extra }
+    if (tier) p.tier = tier
+    if (dateFrom) p.dateFrom = dateFrom
+    if (dateTo) p.dateTo = dateTo
+    return p
+  }
+
+  const handleSearchStats = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!userId.trim()) return
-    setLoading(true)
-    setData(null)
+    setStatsLoading(true)
+    setStatsData(null)
     try {
-      const params: Record<string, string> = { userId: userId.trim() }
-      if (tier) params.tier = tier
-      if (dateFrom) params.dateFrom = dateFrom
-      if (dateTo) params.dateTo = dateTo
-      const res = await fetchTeamStats(params)
-      setData(res)
-    } catch (err: unknown) {
-      toast(extractError(err))
-    } finally {
-      setLoading(false)
-    }
+      const res = await fetchTeamStats(buildParams() as Record<string, string>)
+      setStatsData(res)
+    } catch (err: unknown) { toast(extractError(err)) }
+    finally { setStatsLoading(false) }
+  }
+
+  const loadMembers = async (page = 1) => {
+    if (!userId.trim()) return
+    setMembersLoading(true)
+    try {
+      const params: Record<string, string | number> = { ...buildParams(), page, limit: MEMBER_LIMIT }
+      if (search.trim()) params.search = search.trim()
+      const res = await fetchTeamMembers(params)
+      setMembers(res.items ?? [])
+      setMembersTotal(res.total)
+      setMembersPage(res.page)
+      membersFetched.current = true
+    } catch (err: unknown) { toast(extractError(err)) }
+    finally { setMembersLoading(false) }
+  }
+
+  const handleSearchMembers = (e: React.FormEvent) => {
+    e.preventDefault()
+    loadMembers(1)
   }
 
   const reset = () => {
@@ -54,7 +83,11 @@ export default function AgencyDashboard() {
     setTier('')
     setDateFrom('')
     setDateTo('')
-    setData(null)
+    setSearch('')
+    setStatsData(null)
+    setMembers([])
+    setMembersTotal(0)
+    membersFetched.current = false
   }
 
   const renderStatusTable = (
@@ -75,11 +108,11 @@ export default function AgencyDashboard() {
                 <td>{totals.totalCount.toLocaleString('en-IN')}</td>
                 <td>₹{totals.totalAmount.toLocaleString('en-IN')}</td>
               </tr>
-              {entries.map(([status, val]) => (
-                <tr key={status}>
-                  <td>{STATUS_LABELS[status] ?? status}</td>
-                  <td>{val.count.toLocaleString('en-IN')}</td>
-                  <td>₹{val.amount.toLocaleString('en-IN')}</td>
+              {entries.map(([s, v]) => (
+                <tr key={s}>
+                  <td>{STATUS_LABELS[s] ?? s}</td>
+                  <td>{v.count.toLocaleString('en-IN')}</td>
+                  <td>₹{v.amount.toLocaleString('en-IN')}</td>
                 </tr>
               ))}
             </tbody>
@@ -91,7 +124,7 @@ export default function AgencyDashboard() {
 
   return (
     <div className="content content--table">
-      <form className="filters-bar" onSubmit={handleSearch}>
+      <form className="filters-bar" onSubmit={tab === 'stats' ? handleSearchStats : handleSearchMembers}>
         <div className="filter-group">
           <label>User ID</label>
           <input placeholder="Enter User ID" value={userId} onChange={(e) => setUserId(e.target.value)} />
@@ -113,62 +146,128 @@ export default function AgencyDashboard() {
           <label>To</label>
           <input type="date" value={dateTo} onChange={(e) => setDateTo(e.target.value)} />
         </div>
+        {tab === 'members' && (
+          <div className="filter-group">
+            <label>Search UserId</label>
+            <input placeholder="Search member ID" value={search} onChange={(e) => setSearch(e.target.value)} />
+          </div>
+        )}
         <div className="filter-group" style={{ alignSelf: 'flex-end' }}>
           <div style={{ display: 'flex', gap: 'var(--space-3)' }}>
-            <button type="submit" className="btn-filled" disabled={loading || !userId.trim()}
-              style={{ opacity: loading || !userId.trim() ? 0.6 : 1 }}>
-              {loading ? <Spinner /> : 'Search'}
+            <button type="submit" className="btn-filled" disabled={!userId.trim() || (tab === 'stats' ? statsLoading : membersLoading)}
+              style={{ opacity: !userId.trim() || (tab === 'stats' ? statsLoading : membersLoading) ? 0.6 : 1 }}>
+              {(tab === 'stats' ? statsLoading : membersLoading) ? <Spinner /> : 'Search'}
             </button>
             <button type="button" className="btn-outline" onClick={reset}>Reset</button>
           </div>
         </div>
+        <div className="filter-group" style={{ alignSelf: 'flex-end' }}>
+          <div style={{ display: 'flex', gap: 4 }}>
+            <button type="button" className={`btn btn--sm ${tab === 'stats' ? 'btn--primary' : ''}`}
+              onClick={() => setTab('stats')}>Stats</button>
+            <button type="button" className={`btn btn--sm ${tab === 'members' ? 'btn--primary' : ''}`}
+              onClick={() => setTab('members')}>Members</button>
+          </div>
+        </div>
       </form>
 
-      {loading && (
-        <div style={{ padding: '48px 0', textAlign: 'center' }}><Spinner /></div>
+      {tab === 'stats' && (
+        <>
+          {statsLoading && <div style={{ padding: '48px 0', textAlign: 'center' }}><Spinner /></div>}
+          {statsData && (
+            <div style={{ overflow: 'auto', flex: 1, padding: '0 0 16px' }}>
+              <section aria-label="Team breakdown">
+                <h2 className="section-title">Team</h2>
+                <div className="stat-cards" style={{ marginTop: 12 }}>
+                  <div className="stat-card">
+                    <span className="stat-card__label">L1 Members</span>
+                    <span className="stat-card__value">{statsData.team.l1.toLocaleString('en-IN')}</span>
+                  </div>
+                  <div className="stat-card">
+                    <span className="stat-card__label">L2 Members</span>
+                    <span className="stat-card__value">{statsData.team.l2.toLocaleString('en-IN')}</span>
+                  </div>
+                  <div className="stat-card">
+                    <span className="stat-card__label">L3 Members</span>
+                    <span className="stat-card__value">{statsData.team.l3.toLocaleString('en-IN')}</span>
+                  </div>
+                  <div className="stat-card">
+                    <span className="stat-card__label">Total Team</span>
+                    <span className="stat-card__value">{statsData.team.total.toLocaleString('en-IN')}</span>
+                  </div>
+                </div>
+              </section>
+
+              <section aria-label="First deposit">
+                <h2 className="section-title" style={{ marginTop: 24 }}>First Deposit</h2>
+                <div className="stat-cards" style={{ marginTop: 12 }}>
+                  <div className="stat-card">
+                    <span className="stat-card__label">First Depositors</span>
+                    <span className="stat-card__value">{statsData.firstDeposit.count.toLocaleString('en-IN')}</span>
+                  </div>
+                  <div className="stat-card">
+                    <span className="stat-card__label">Total Amount</span>
+                    <span className="stat-card__value text-green">₹{statsData.firstDeposit.totalAmount.toLocaleString('en-IN')}</span>
+                  </div>
+                </div>
+              </section>
+
+              {renderStatusTable('Deposits', { totalAmount: statsData.deposits.totalAmount, totalCount: statsData.deposits.totalCount }, statsData.deposits)}
+              {renderStatusTable('Withdrawals', { totalAmount: statsData.withdrawals.totalAmount, totalCount: statsData.withdrawals.totalCount }, statsData.withdrawals)}
+            </div>
+          )}
+        </>
       )}
 
-      {data && (
-        <div style={{ overflow: 'auto', flex: 1, padding: '0 0 16px' }}>
-          <section aria-label="Team breakdown">
-            <h2 className="section-title">Team</h2>
-            <div className="stat-cards" style={{ marginTop: 12 }}>
-              <div className="stat-card">
-                <span className="stat-card__label">L1 Members</span>
-                <span className="stat-card__value">{data.team.l1.toLocaleString('en-IN')}</span>
+      {tab === 'members' && (
+        <section className="card" style={{ flex: 1, overflow: 'auto' }}>
+          {membersLoading ? (
+            <div style={{ padding: '48px 0', textAlign: 'center' }}><Spinner /></div>
+          ) : !membersFetched.current ? (
+            <div className="empty-state"><div className="empty-state__icon">📋</div>Search a user to view team members</div>
+          ) : members.length === 0 ? (
+            <div className="empty-state"><div className="empty-state__icon">📋</div>No team members found</div>
+          ) : (
+            <>
+              <div className="table-wrap">
+                <table className="table">
+                  <thead><tr>
+                    <th>User ID</th>
+                    <th>Level</th>
+                    <th>Registered</th>
+                    <th>Total Deposit</th>
+                    <th>Total Withdrawal</th>
+                    <th>Balance</th>
+                    <th>Bank Bound</th>
+                    <th>Multi IP</th>
+                  </tr></thead>
+                  <tbody>
+                    {members.map((m) => (
+                      <tr key={m.userId} tabIndex={0}>
+                        <td style={{ fontFamily: 'monospace', fontSize: 12 }}>{m.userId}</td>
+                        <td>{m.level}</td>
+                        <td style={{ whiteSpace: 'nowrap' }}>{new Date(m.registeredAt).toLocaleDateString('en-IN')}</td>
+                        <td>₹{m.totalDeposit.toLocaleString('en-IN')}</td>
+                        <td>₹{m.totalWithdrawal.toLocaleString('en-IN')}</td>
+                        <td>₹{m.balance.toLocaleString('en-IN')}</td>
+                        <td><span className={`badge ${m.bindBank ? 'badge--success' : 'badge--danger'}`}>{m.bindBank ? 'Yes' : 'No'}</span></td>
+                        <td><span className={`badge ${m.multipleIp ? 'badge--danger' : 'badge--success'}`}>{m.multipleIp ? 'Yes' : 'No'}</span></td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
               </div>
-              <div className="stat-card">
-                <span className="stat-card__label">L2 Members</span>
-                <span className="stat-card__value">{data.team.l2.toLocaleString('en-IN')}</span>
-              </div>
-              <div className="stat-card">
-                <span className="stat-card__label">L3 Members</span>
-                <span className="stat-card__value">{data.team.l3.toLocaleString('en-IN')}</span>
-              </div>
-              <div className="stat-card">
-                <span className="stat-card__label">Total Team</span>
-                <span className="stat-card__value">{data.team.total.toLocaleString('en-IN')}</span>
-              </div>
-            </div>
-          </section>
-
-          <section aria-label="First deposit">
-            <h2 className="section-title" style={{ marginTop: 24 }}>First Deposit</h2>
-            <div className="stat-cards" style={{ marginTop: 12 }}>
-              <div className="stat-card">
-                <span className="stat-card__label">First Depositors</span>
-                <span className="stat-card__value">{data.firstDeposit.count.toLocaleString('en-IN')}</span>
-              </div>
-              <div className="stat-card">
-                <span className="stat-card__label">Total Amount</span>
-                <span className="stat-card__value text-green">₹{data.firstDeposit.totalAmount.toLocaleString('en-IN')}</span>
-              </div>
-            </div>
-          </section>
-
-          {renderStatusTable('Deposits', { totalAmount: data.deposits.totalAmount, totalCount: data.deposits.totalCount }, data.deposits)}
-          {renderStatusTable('Withdrawals', { totalAmount: data.withdrawals.totalAmount, totalCount: data.withdrawals.totalCount }, data.withdrawals)}
-        </div>
+              {membersTotal > 0 && (
+                <div className="pagination">
+                  <span>Page {membersPage} of {Math.ceil(membersTotal / MEMBER_LIMIT)}</span>
+                  <button className="pagination__btn" disabled={membersPage <= 1} onClick={() => loadMembers(membersPage - 1)}>‹</button>
+                  <button className="pagination__btn active">{membersPage}</button>
+                  <button className="pagination__btn" disabled={membersPage >= Math.ceil(membersTotal / MEMBER_LIMIT)} onClick={() => loadMembers(membersPage + 1)}>›</button>
+                </div>
+              )}
+            </>
+          )}
+        </section>
       )}
     </div>
   )

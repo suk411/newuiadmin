@@ -66,3 +66,30 @@ export async function fetchTeamStats(params: Record<string, string>): Promise<Te
   const res = await axiosInstance.get('/agent/team-stats', { params })
   return res.data
 }
+
+/* ── Team Members ── */
+
+export interface TeamMember {
+  userId: number
+  registeredAt: string
+  level: string
+  totalDeposit: number
+  totalWithdrawal: number
+  balance: number
+  bindBank: boolean
+  multipleIp: boolean
+}
+
+export interface TeamMembersResponse {
+  status: string
+  userId: number
+  total: number
+  page: number
+  limit: number
+  items: TeamMember[]
+}
+
+export async function fetchTeamMembers(params: Record<string, string | number>): Promise<TeamMembersResponse> {
+  const res = await axiosInstance.get('/agent/team-members', { params })
+  return res.data
+}
