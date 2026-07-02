@@ -26,17 +26,21 @@ const statusMap: Record<string, { label: string; className: string }> = {
 export default function RechargeTable({ records, loading, onApprove }: Props) {
   if (loading) {
     return (
-      <div className="table-wrap" style={{ padding: '48px 0', textAlign: 'center' }}>
-        <Spinner />
+      <div className="table-wrap">
+        <div style={{ padding: '48px 0', textAlign: 'center' }}>
+          <Spinner />
+        </div>
       </div>
     )
   }
 
   if (records.length === 0) {
     return (
-      <div className="empty-state">
-        <div className="empty-state__icon">📋</div>
-        No recharge records found
+      <div className="table-wrap">
+        <div className="empty-state">
+          <div className="empty-state__icon">📋</div>
+          No recharge records found
+        </div>
       </div>
     )
   }

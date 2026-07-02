@@ -86,7 +86,7 @@ export default function GiftCodes() {
   }
 
   return (
-    <div className="content">
+    <div className="content content--table">
       <div className="filters-bar">
         <div className="filter-group" style={{ alignSelf: 'flex-end' }}>
           <div style={{ display: 'flex', gap: 'var(--space-3)' }}>
@@ -98,15 +98,15 @@ export default function GiftCodes() {
         </div>
       </div>
 
-      {loading ? (
-        <div className="table-wrap" style={{ padding: '48px 0', textAlign: 'center' }}>
-          <Spinner />
-        </div>
-      ) : records.length === 0 ? (
-        <div className="empty-state"><div className="empty-state__icon">📋</div>No gift codes found</div>
-      ) : (
-      <><section className="card">
+      <section className="card">
         <div className="table-wrap">
+          {loading ? (
+            <div style={{ padding: '48px 0', textAlign: 'center' }}>
+              <Spinner />
+            </div>
+          ) : records.length === 0 ? (
+            <div className="empty-state"><div className="empty-state__icon">📋</div>No gift codes found</div>
+          ) : (
           <table className="table">
             <thead><tr><th>Code</th><th>Reward (₹)</th><th>Multiplier</th><th>Max Redemptions</th><th>Used</th><th>Expiry</th><th>Min Deposit</th><th>Status</th><th>Created</th><th>Actions</th></tr></thead>
             <tbody>
@@ -135,8 +135,9 @@ export default function GiftCodes() {
               ))}
             </tbody>
           </table>
+          )}
         </div>
-        {total > 0 && (
+        {!loading && total > 0 && (
           <div className="pagination">
             <span>Page {page} of {Math.ceil(total / LIMIT)}</span>
             <button className="pagination__btn" disabled={page <= 1} onClick={() => load(page - 1)}>‹</button>
@@ -144,8 +145,7 @@ export default function GiftCodes() {
             <button className="pagination__btn" disabled={page >= Math.ceil(total / LIMIT)} onClick={() => load(page + 1)}>›</button>
           </div>
         )}
-      </section></>
-      )}
+      </section>
 
       {showCreate && (
         <div className="dialog-overlay" onClick={closeCreate}>

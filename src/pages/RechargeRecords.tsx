@@ -81,7 +81,7 @@ export default function RechargeRecords() {
   }
 
   return (
-    <div className="content">
+    <div className="content content--table">
       <RechargeFilters onSearch={handleSearch} loading={loading} />
       <section className="card">
         <RechargeTable

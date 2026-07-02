@@ -56,7 +56,7 @@ export default function Transactions() {
   }
 
   return (
-    <div className="content">
+    <div className="content content--table">
       <form className="filters-bar" onSubmit={(e) => { e.preventDefault(); load() }}>
         <div className="filter-group"><label>User ID</label><input placeholder="User ID" value={userId} onChange={(e) => handleUserId(e.target.value)} /></div>
         <div className="filter-group"><label>Order ID</label><input placeholder="Order ID" value={orderId} onChange={(e) => handleOrderId(e.target.value)} /></div>
@@ -80,16 +80,15 @@ export default function Transactions() {
         </div>
       </form>
 
-      {loading && records.length === 0 ? (
-        <div className="table-wrap" style={{ padding: '48px 0', textAlign: 'center' }}>
-          <Spinner />
-        </div>
-      ) : records.length === 0 ? (
-        <div className="empty-state"><div className="empty-state__icon">📋</div>No transactions found</div>
-      ) : (
-      <><section className="card">
-        
+      <section className="card">
         <div className="table-wrap">
+          {loading && records.length === 0 ? (
+            <div style={{ padding: '48px 0', textAlign: 'center' }}>
+              <Spinner />
+            </div>
+          ) : records.length === 0 ? (
+            <div className="empty-state"><div className="empty-state__icon">📋</div>No transactions found</div>
+          ) : (
           <table className="table">
             <thead><tr><th>User ID</th><th>Order ID</th><th>Type</th><th>Amount</th><th>Charge</th><th>Balance</th><th>Status</th><th>Remark</th><th>Created</th><th>Updated</th></tr></thead>
             <tbody>
@@ -109,8 +108,9 @@ export default function Transactions() {
               ))}
             </tbody>
           </table>
+          )}
         </div>
-        {total > 0 && (
+        {!loading && total > 0 && (
           <div className="pagination">
             <span>Page {page} of {Math.ceil(total / LIMIT)}</span>
             <button className="pagination__btn" disabled={page <= 1} onClick={() => load(page - 1)}>‹</button>
@@ -118,8 +118,7 @@ export default function Transactions() {
             <button className="pagination__btn" disabled={page >= Math.ceil(total / LIMIT)} onClick={() => load(page + 1)}>›</button>
           </div>
         )}
-      </section></>
-      )}
+      </section>
     </div>
   )
 }

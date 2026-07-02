@@ -51,7 +51,7 @@ export default function BetRecords() {
   }
 
   return (
-    <div className="content">
+    <div className="content content--table">
       <div className="filters-bar">
         {tab === 'provider' ? (
           <div className="filter-group"><label>Member</label><input placeholder="Member" value={member} onChange={(e) => handleMember(e.target.value)} /></div>
@@ -73,16 +73,15 @@ export default function BetRecords() {
         </div>
       </div>
 
-      {loading && records.length === 0 ? (
-        <div className="table-wrap" style={{ padding: '48px 0', textAlign: 'center' }}>
-          <Spinner />
-        </div>
-      ) : records.length === 0 && !loading ? (
-        <div className="empty-state"><div className="empty-state__icon">📋</div>No bet records found</div>
-      ) : (
-      <><section className="card">
-        
+      <section className="card">
         <div className="table-wrap">
+          {loading && records.length === 0 ? (
+            <div style={{ padding: '48px 0', textAlign: 'center' }}>
+              <Spinner />
+            </div>
+          ) : records.length === 0 && !loading ? (
+            <div className="empty-state"><div className="empty-state__icon">📋</div>No bet records found</div>
+          ) : (
           <table className="table">
             <thead>
               <tr>
@@ -114,8 +113,9 @@ export default function BetRecords() {
               ))}
             </tbody>
           </table>
+          )}
         </div>
-        {total > 0 && (
+        {!loading && total > 0 && (
           <div className="pagination">
             <span>Page {page} of {Math.ceil(total / LIMIT)}</span>
             <button className="pagination__btn" disabled={page <= 1} onClick={() => load(page - 1)}>‹</button>
@@ -123,8 +123,7 @@ export default function BetRecords() {
             <button className="pagination__btn" disabled={page >= Math.ceil(total / LIMIT)} onClick={() => load(page + 1)}>›</button>
           </div>
         )}
-      </section></>
-      )}
+      </section>
     </div>
   )
 }

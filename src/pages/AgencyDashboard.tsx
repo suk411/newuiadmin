@@ -40,7 +40,7 @@ export default function AgencyDashboard() {
   }
 
   return (
-    <div className="content">
+    <div className="content content--table">
       <section aria-label="Agency statistics">
         <div className="stat-cards">
           <div className="stat-card">
@@ -58,16 +58,15 @@ export default function AgencyDashboard() {
         </div>
       </section>
 
-      {loading && members.length === 0 ? (
-        <div className="table-wrap" style={{ padding: '48px 0', textAlign: 'center' }}>
-          <Spinner />
-        </div>
-      ) : members.length === 0 ? (
-        <div className="empty-state"><div className="empty-state__icon">📋</div>No members found</div>
-      ) : (
       <section className="card">
-        
         <div className="table-wrap">
+          {loading && members.length === 0 ? (
+            <div style={{ padding: '48px 0', textAlign: 'center' }}>
+              <Spinner />
+            </div>
+          ) : members.length === 0 ? (
+            <div className="empty-state"><div className="empty-state__icon">📋</div>No members found</div>
+          ) : (
           <table className="table">
             <thead><tr><th>ID</th><th>Name</th><th>Commission</th><th>Status</th><th>Joined</th></tr></thead>
             <tbody>
@@ -82,8 +81,9 @@ export default function AgencyDashboard() {
               ))}
             </tbody>
           </table>
+          )}
         </div>
-        {total > 0 && (
+        {!loading && total > 0 && (
           <div className="pagination">
             <span>Page {page} of {Math.ceil(total / LIMIT)}</span>
             <button className="pagination__btn" disabled={page <= 1} onClick={() => load(page - 1)}>‹</button>
@@ -92,7 +92,6 @@ export default function AgencyDashboard() {
           </div>
         )}
       </section>
-      )}
     </div>
   )
 }

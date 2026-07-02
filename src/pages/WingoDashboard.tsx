@@ -143,7 +143,7 @@ export default function WingoDashboard() {
   )
 
   return (
-    <div className="content">
+    <div className="content content--table">
       <div className="filters-bar">
         <div className="filter-group" style={{ flexDirection: 'row', gap: 0 }}>
           {(['current', 'history', 'resultMode'] as const).map(t => (
@@ -241,7 +241,7 @@ export default function WingoDashboard() {
             {settledLoading && settled.length === 0 ? (
               <div className="table-wrap" style={{ padding: '48px 0', textAlign: 'center' }}><Spinner /></div>
             ) : settled.length === 0 ? (
-              <div className="empty-state"><div className="empty-state__icon">📋</div>No rounds found</div>
+              <div className="table-wrap"><div className="empty-state"><div className="empty-state__icon">📋</div>No rounds found</div></div>
             ) : (
               <div className="table-wrap">
                 <table className="table">
