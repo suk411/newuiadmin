@@ -27,3 +27,28 @@ export async function fetchAgencyMembers(params: Record<string, string | number>
   }
   return { data: [], total: 0 }
 }
+
+/* ── Agency Level Configs ── */
+
+export interface AgencyLevelConfig {
+  _id: string
+  level: number
+  minMembers: number
+  minBets: number
+  minDeposit: number
+  l1Rate: number
+  l2Rate: number
+  l3Rate: number
+  createdAt: string
+  updatedAt: string
+}
+
+export async function fetchAgencyLevels(): Promise<AgencyLevelConfig[]> {
+  const res = await axiosInstance.get('/agency-levels')
+  return res.data.configs ?? []
+}
+
+export async function updateAgencyLevel(level: number, data: Partial<AgencyLevelConfig>): Promise<AgencyLevelConfig> {
+  const res = await axiosInstance.put(`/agency-levels/${level}`, data)
+  return res.data.config
+}
