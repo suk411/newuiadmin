@@ -1,7 +1,7 @@
 import { useState, useRef } from 'react'
 import axios from 'axios'
 import { fetchTeamStats, fetchTeamMembers } from '../api/agency'
-import type { TeamStats, TeamMember } from '../api/agency'
+import type { TeamStats, TeamMember, TierAmount } from '../api/agency'
 import { useToast } from '../contexts/ToastContext'
 import Spinner from '../components/Spinner'
 
@@ -13,9 +13,19 @@ function extractError(err: unknown): string {
   return 'Something went wrong'
 }
 
-const STATUS_LABELS: Record<string, string> = {
-  SUCCESS: 'Success', PENDING: 'Pending', FAILED: 'Failed',
-  EXPIRED: 'Expired', REFUNDED: 'Refunded', AUDITING: 'Auditing', CANCELLED: 'Cancelled',
+function TierStatCards({ label, data }: { label: string; data: TierAmount }) {
+  return (
+    <div className="stat-cards" style={{ marginTop: 8 }}>
+      <div className="stat-card">
+        <span className="stat-card__label">{label} Count</span>
+        <span className="stat-card__value">{data.totalCount.toLocaleString('en-IN')}</span>
+      </div>
+      <div className="stat-card">
+        <span className="stat-card__label">{label} Amount</span>
+        <span className="stat-card__value text-green">₹{data.totalAmount.toLocaleString('en-IN')}</span>
+      </div>
+    </div>
+  )
 }
 
 export default function AgencyDashboard() {
@@ -90,37 +100,14 @@ export default function AgencyDashboard() {
     membersFetched.current = false
   }
 
-  const renderStatusTable = (
-    title: string,
-    totals: { totalAmount: number; totalCount: number },
-    statuses: Record<string, { amount: number; count: number }>,
-  ) => {
-    const entries = Object.entries(statuses).filter(([k]) => k !== 'totalAmount' && k !== 'totalCount')
-    return (
-      <section className="card" style={{ marginTop: 20 }}>
-        <h3 style={{ margin: '0 0 12px', fontSize: 14, fontWeight: 600 }}>{title}</h3>
-        <div className="table-wrap">
-          <table className="table">
-            <thead><tr><th>Status</th><th>Count</th><th>Amount (₹)</th></tr></thead>
-            <tbody>
-              <tr style={{ fontWeight: 600 }}>
-                <td>Total</td>
-                <td>{totals.totalCount.toLocaleString('en-IN')}</td>
-                <td>₹{totals.totalAmount.toLocaleString('en-IN')}</td>
-              </tr>
-              {entries.map(([s, v]) => (
-                <tr key={s}>
-                  <td>{STATUS_LABELS[s] ?? s}</td>
-                  <td>{v.count.toLocaleString('en-IN')}</td>
-                  <td>₹{v.amount.toLocaleString('en-IN')}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </section>
-    )
-  }
+  const renderTierSection = (title: string, data: { l1: TierAmount; l2: TierAmount; l3: TierAmount }) => (
+    <section aria-label={title}>
+      <h2 className="section-title" style={{ marginTop: 24 }}>{title}</h2>
+      {data.l1 && <TierStatCards label="L1" data={data.l1} />}
+      {data.l2 && <TierStatCards label="L2" data={data.l2} />}
+      {data.l3 && <TierStatCards label="L3" data={data.l3} />}
+    </section>
+  )
 
   return (
     <div className="content content--table">
@@ -200,20 +187,13 @@ export default function AgencyDashboard() {
 
               <section aria-label="First deposit">
                 <h2 className="section-title" style={{ marginTop: 24 }}>First Deposit</h2>
-                <div className="stat-cards" style={{ marginTop: 12 }}>
-                  <div className="stat-card">
-                    <span className="stat-card__label">First Depositors</span>
-                    <span className="stat-card__value">{statsData.firstDeposit.count.toLocaleString('en-IN')}</span>
-                  </div>
-                  <div className="stat-card">
-                    <span className="stat-card__label">Total Amount</span>
-                    <span className="stat-card__value text-green">₹{statsData.firstDeposit.totalAmount.toLocaleString('en-IN')}</span>
-                  </div>
-                </div>
+                {statsData.firstDeposit.l1 && <TierStatCards label="L1" data={statsData.firstDeposit.l1} />}
+                {statsData.firstDeposit.l2 && <TierStatCards label="L2" data={statsData.firstDeposit.l2} />}
+                {statsData.firstDeposit.l3 && <TierStatCards label="L3" data={statsData.firstDeposit.l3} />}
               </section>
 
-              {renderStatusTable('Deposits', { totalAmount: statsData.deposits.totalAmount, totalCount: statsData.deposits.totalCount }, statsData.deposits)}
-              {renderStatusTable('Withdrawals', { totalAmount: statsData.withdrawals.totalAmount, totalCount: statsData.withdrawals.totalCount }, statsData.withdrawals)}
+              {renderTierSection('Deposits', statsData.deposits)}
+              {renderTierSection('Withdrawals', statsData.withdrawals)}
             </div>
           )}
         </>

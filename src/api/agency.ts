@@ -55,11 +55,16 @@ export async function updateAgencyLevel(level: number, data: Partial<AgencyLevel
 
 /* ── Team Stats ── */
 
+export interface TierAmount {
+  totalAmount: number
+  totalCount: number
+}
+
 export interface TeamStats {
   team: { l1: number; l2: number; l3: number; total: number }
-  firstDeposit: { count: number; totalAmount: number }
-  deposits: { totalAmount: number; totalCount: number } & Record<string, { amount: number; count: number }>
-  withdrawals: { totalAmount: number; totalCount: number } & Record<string, { amount: number; count: number }>
+  firstDeposit: { l1: TierAmount; l2: TierAmount; l3: TierAmount }
+  deposits: { l1: TierAmount; l2: TierAmount; l3: TierAmount }
+  withdrawals: { l1: TierAmount; l2: TierAmount; l3: TierAmount }
 }
 
 export async function fetchTeamStats(params: Record<string, string>): Promise<TeamStats> {
