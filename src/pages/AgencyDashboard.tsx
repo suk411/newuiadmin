@@ -112,10 +112,22 @@ export default function AgencyDashboard() {
   return (
     <div className="content content--table">
       <div className="filters-bar" style={{ borderBottom: 'none', paddingBottom: 0 }}>
-        <div style={{ display: 'flex', gap: 4 }}>
-          <button type="button" className={`btn btn--sm ${tab === 'stats' ? 'btn--primary' : ''}`}
+        <div style={{ display: 'flex', gap: 12 }}>
+          <button type="button"
+            style={{
+              padding: '8px 24px', fontSize: 14, fontWeight: 600,
+              border: 'none', borderBottom: tab === 'stats' ? '3px solid var(--color-primary, #208fff)' : '3px solid transparent',
+              background: 'none', cursor: 'pointer', color: tab === 'stats' ? 'var(--color-primary, #208fff)' : '#666',
+              transition: 'all 0.15s',
+            }}
             onClick={() => setTab('stats')}>Stats</button>
-          <button type="button" className={`btn btn--sm ${tab === 'members' ? 'btn--primary' : ''}`}
+          <button type="button"
+            style={{
+              padding: '8px 24px', fontSize: 14, fontWeight: 600,
+              border: 'none', borderBottom: tab === 'members' ? '3px solid var(--color-primary, #208fff)' : '3px solid transparent',
+              background: 'none', cursor: 'pointer', color: tab === 'members' ? 'var(--color-primary, #208fff)' : '#666',
+              transition: 'all 0.15s',
+            }}
             onClick={() => setTab('members')}>Members</button>
         </div>
       </div>
