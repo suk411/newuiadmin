@@ -55,7 +55,8 @@ export default function RechargeTable({ records, loading, onApprove }: Props) {
             <th>Amount</th>
             <th>Method</th>
             <th>Status</th>
-            <th>Date</th>
+            <th>Created At</th>
+            <th>Updated At</th>
             <th>Actions</th>
           </tr>
         </thead>
@@ -70,6 +71,7 @@ export default function RechargeTable({ records, loading, onApprove }: Props) {
                 <td>{record.channelName}</td>
                 <td><span className={`badge ${st.className}`}>{st.label}</span></td>
                 <td style={{ whiteSpace: 'nowrap' }}>{formatDateTime(record.createdAt)}</td>
+                <td style={{ whiteSpace: 'nowrap' }}>{record.updatedAt ? formatDateTime(record.updatedAt) : '—'}</td>
                 <td>
                   <div className="cell-actions">
                     {record.status === 'PENDING' && (
