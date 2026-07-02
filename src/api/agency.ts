@@ -62,7 +62,7 @@ export interface TeamStats {
   withdrawals: { totalAmount: number; totalCount: number } & Record<string, { amount: number; count: number }>
 }
 
-export async function fetchTeamStats(params: { userId: string; tier?: string; dateFrom?: string; dateTo?: string }): Promise<TeamStats> {
+export async function fetchTeamStats(params: Record<string, string>): Promise<TeamStats> {
   const res = await axiosInstance.get('/agent/team-stats', { params })
   return res.data
 }
