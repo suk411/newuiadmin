@@ -140,7 +140,7 @@ export default function Withdrawals() {
                 <tr key={r.orderId} tabIndex={0}>
                   <td>{r.userId}</td>
                   <td style={{ fontFamily: 'monospace', fontSize: 12 }}>{r.orderId}</td>
-                  <td style={{ whiteSpace: 'nowrap' }} title={payInfo}>{payInfo}</td>
+                  <td style={{ maxWidth: 160, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', fontSize: 12 }} title={payInfo}>{payInfo}</td>
                   <td>{r.channelName || '—'}</td>
                   <td>₹{Number(r.amount).toLocaleString('en-IN')}</td>
                   <td>{r.charge != null ? `₹${Number(r.charge).toLocaleString('en-IN')}` : '—'}</td>
