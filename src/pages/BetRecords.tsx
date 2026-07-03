@@ -6,21 +6,12 @@ import { formatDateTime } from '../utils/format'
 import { useToast } from '../contexts/ToastContext'
 import Spinner from '../components/Spinner'
 import Pagination from '../components/Pagination'
+import TabButton from '../components/TabButton'
 import { useExportBar } from '../components/ExportBarContext'
 import type { ExportColumn } from '../utils/export'
 
 const LIMIT = 20
 type Tab = 'provider' | 'wingo' | 'daily'
-
-const tabBtn = (isActive: boolean) => ({
-  padding: '6px 19px', fontSize: 11, fontWeight: 600,
-  border: isActive ? '1px solid #d0d0d0' : '1px solid transparent',
-  borderRadius: 4,
-  background: isActive ? '#f97316' : '#f0f0f0',
-  boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
-  cursor: 'pointer', color: isActive ? '#fff' : '#909399',
-  transition: 'all 0.15s',
-} as const)
 
 function extractError(err: unknown): string {
   if (axios.isAxiosError(err) && err.response?.data?.msg) return err.response.data.msg
@@ -115,6 +106,13 @@ export default function BetRecords() {
 
   return (
     <div className="content content--table">
+      <div className="filters-bar" style={{ borderBottom: 'none', paddingBottom: 0 }}>
+        <div style={{ display: 'flex', gap: 8 }}>
+          <TabButton active={tab === 'provider'} onClick={() => { setTab('provider'); setOrderNumber(''); setUserId('') }}>Provider</TabButton>
+          <TabButton active={tab === 'wingo'} onClick={() => { setTab('wingo'); setMember(''); setUserId('') }}>Wingo</TabButton>
+          <TabButton active={tab === 'daily'} onClick={() => { setTab('daily'); setMember(''); setOrderNumber('') }}>Daily Stats</TabButton>
+        </div>
+      </div>
       <div className="filters-bar">
         {tab === 'provider' ? (
           <div className="filter-group"><label>Member</label><input placeholder="Member (u12345)" value={member} onChange={(e) => handleMember(e.target.value)} /></div>
@@ -127,16 +125,6 @@ export default function BetRecords() {
             <div className="filter-group"><label>To</label><input type="date" value={dateTo} onChange={(e) => setDateTo(e.target.value)} /></div>
           </>
         )}
-        <div className="filter-group" style={{ alignSelf: 'flex-end' }}>
-          <div style={{ display: 'flex', gap: 8 }}>
-            <button type="button" style={tabBtn(tab === 'provider')}
-              onClick={() => { setTab('provider'); setOrderNumber(''); setUserId('') }}>Provider</button>
-            <button type="button" style={tabBtn(tab === 'wingo')}
-              onClick={() => { setTab('wingo'); setMember(''); setUserId('') }}>Wingo</button>
-            <button type="button" style={tabBtn(tab === 'daily')}
-              onClick={() => { setTab('daily'); setMember(''); setOrderNumber('') }}>Daily Stats</button>
-          </div>
-        </div>
         <div className="filter-group" style={{ alignSelf: 'flex-end' }}>
           <div style={{ display: 'flex', gap: 'var(--space-3)' }}>
             <button className="btn-filled" onClick={() => load()} disabled={loading}

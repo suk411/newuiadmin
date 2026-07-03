@@ -5,6 +5,7 @@ import type { TeamStats, TeamMember, TierAmount } from '../api/agency'
 import { useToast } from '../contexts/ToastContext'
 import Spinner from '../components/Spinner'
 import Pagination from '../components/Pagination'
+import TabButton from '../components/TabButton'
 import { useExportBar } from '../components/ExportBarContext'
 import type { ExportColumn } from '../utils/export'
 import { formatDateTime12 } from '../utils/format'
@@ -129,28 +130,8 @@ export default function AgencyDashboard() {
     <div className="content content--table">
       <div className="filters-bar" style={{ borderBottom: 'none', paddingBottom: 0 }}>
         <div style={{ display: 'flex', gap: 8 }}>
-          <button type="button"
-            style={{
-              padding: '6px 19px', fontSize: 11, fontWeight: 600,
-              border: tab === 'stats' ? '1px solid #d0d0d0' : '1px solid transparent',
-              borderRadius: 4,
-              background: tab === 'stats' ? '#f97316' : '#f0f0f0',
-              boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
-              cursor: 'pointer', color: tab === 'stats' ? '#fff' : '#909399',
-              transition: 'all 0.15s',
-            }}
-            onClick={() => setTab('stats')}>Stats</button>
-          <button type="button"
-            style={{
-              padding: '6px 19px', fontSize: 11, fontWeight: 600,
-              border: tab === 'members' ? '1px solid #d0d0d0' : '1px solid transparent',
-              borderRadius: 4,
-              background: tab === 'members' ? '#f97316' : '#f0f0f0',
-              boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
-              cursor: 'pointer', color: tab === 'members' ? '#fff' : '#909399',
-              transition: 'all 0.15s',
-            }}
-            onClick={() => setTab('members')}>Members</button>
+          <TabButton active={tab === 'stats'} onClick={() => setTab('stats')}>Stats</TabButton>
+          <TabButton active={tab === 'members'} onClick={() => setTab('members')}>Members</TabButton>
         </div>
       </div>
       <form className="filters-bar" onSubmit={tab === 'stats' ? handleSearchStats : handleSearchMembers}>
