@@ -117,37 +117,29 @@ export default function AgencyDashboard() {
     membersFetched.current = false
   }
 
-  const renderTierCard = (title: string, data: { l1: TierAmount; l2: TierAmount; l3: TierAmount }) => {
-    const amountClass = title === 'First Deposit' ? 'text-green' : 'text-orange'
-    return (
-      <section aria-label={title} style={{ marginTop: 24 }}>
-        <h2 className="section-title">{title}</h2>
-        <div className="card" style={{ padding: 0, overflow: 'hidden' }}>
-          {data.l1 && <TierRow label="L1" data={data.l1} amountClass={amountClass} />}
-          {data.l2 && <TierRow label="L2" data={data.l2} amountClass={amountClass} />}
-          {data.l3 && <TierRow label="L3" data={data.l3} amountClass={amountClass} />}
-        </div>
-      </section>
-    )
-  }
-
   return (
     <div className="content content--table">
       <div className="filters-bar" style={{ borderBottom: 'none', paddingBottom: 0 }}>
-        <div style={{ display: 'flex', gap: 12 }}>
+        <div style={{ display: 'flex', gap: 8 }}>
           <button type="button"
             style={{
               padding: '8px 24px', fontSize: 14, fontWeight: 600,
-              border: 'none', borderBottom: tab === 'stats' ? '3px solid var(--color-primary, #208fff)' : '3px solid transparent',
-              background: 'none', cursor: 'pointer', color: tab === 'stats' ? 'var(--color-primary, #208fff)' : '#666',
+              border: tab === 'stats' ? '1px solid #d0d0d0' : '1px solid transparent',
+              borderRadius: 4,
+              background: tab === 'stats' ? '#fff' : '#f0f0f0',
+              boxShadow: tab === 'stats' ? '0 2px 8px rgba(0,0,0,0.1)' : 'none',
+              cursor: 'pointer', color: tab === 'stats' ? '#303133' : '#909399',
               transition: 'all 0.15s',
             }}
             onClick={() => setTab('stats')}>Stats</button>
           <button type="button"
             style={{
               padding: '8px 24px', fontSize: 14, fontWeight: 600,
-              border: 'none', borderBottom: tab === 'members' ? '3px solid var(--color-primary, #208fff)' : '3px solid transparent',
-              background: 'none', cursor: 'pointer', color: tab === 'members' ? 'var(--color-primary, #208fff)' : '#666',
+              border: tab === 'members' ? '1px solid #d0d0d0' : '1px solid transparent',
+              borderRadius: 4,
+              background: tab === 'members' ? '#fff' : '#f0f0f0',
+              boxShadow: tab === 'members' ? '0 2px 8px rgba(0,0,0,0.1)' : 'none',
+              cursor: 'pointer', color: tab === 'members' ? '#303133' : '#909399',
               transition: 'all 0.15s',
             }}
             onClick={() => setTab('members')}>Members</button>
@@ -196,20 +188,40 @@ export default function AgencyDashboard() {
         <>
           {statsLoading && <div style={{ padding: '48px 0', textAlign: 'center' }}><Spinner /></div>}
           {statsData && (
-            <div style={{ overflow: 'auto', flex: 1, padding: '0 0 16px' }}>
-              <section aria-label="Team breakdown" style={{ marginTop: 24 }}>
-                <h2 className="section-title">Team</h2>
-                <div className="card" style={{ padding: 0, overflow: 'hidden' }}>
+            <div className="card" style={{ marginTop: 16, display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 0, overflow: 'hidden' }}>
+              <section aria-label="Team breakdown" style={{ borderRight: '1px solid #eee', borderBottom: '1px solid #eee' }}>
+                <h2 className="section-title" style={{ padding: '12px 16px', margin: 0 }}>Team</h2>
+                <div style={{ padding: 0 }}>
                   <TeamRow label="L1" value={statsData.team.l1 ?? 0} />
                   <TeamRow label="L2" value={statsData.team.l2 ?? 0} />
                   <TeamRow label="L3" value={statsData.team.l3 ?? 0} />
                   <TeamRow label="Total" value={statsData.team.total ?? 0} />
                 </div>
               </section>
-
-              {renderTierCard('First Deposit', statsData.firstDeposit)}
-              {renderTierCard('Deposits', statsData.deposits)}
-              {renderTierCard('Withdrawals', statsData.withdrawals)}
+              <section aria-label="First deposit" style={{ borderBottom: '1px solid #eee' }}>
+                <h2 className="section-title" style={{ padding: '12px 16px', margin: 0 }}>First Deposit</h2>
+                <div style={{ padding: 0 }}>
+                  {statsData.firstDeposit.l1 && <TierRow label="L1" data={statsData.firstDeposit.l1} amountClass="text-green" />}
+                  {statsData.firstDeposit.l2 && <TierRow label="L2" data={statsData.firstDeposit.l2} amountClass="text-green" />}
+                  {statsData.firstDeposit.l3 && <TierRow label="L3" data={statsData.firstDeposit.l3} amountClass="text-green" />}
+                </div>
+              </section>
+              <section aria-label="Deposits" style={{ borderRight: '1px solid #eee' }}>
+                <h2 className="section-title" style={{ padding: '12px 16px', margin: 0 }}>Deposits</h2>
+                <div style={{ padding: 0 }}>
+                  {statsData.deposits.l1 && <TierRow label="L1" data={statsData.deposits.l1} amountClass="text-orange" />}
+                  {statsData.deposits.l2 && <TierRow label="L2" data={statsData.deposits.l2} amountClass="text-orange" />}
+                  {statsData.deposits.l3 && <TierRow label="L3" data={statsData.deposits.l3} amountClass="text-orange" />}
+                </div>
+              </section>
+              <section aria-label="Withdrawals">
+                <h2 className="section-title" style={{ padding: '12px 16px', margin: 0 }}>Withdrawals</h2>
+                <div style={{ padding: 0 }}>
+                  {statsData.withdrawals.l1 && <TierRow label="L1" data={statsData.withdrawals.l1} amountClass="text-orange" />}
+                  {statsData.withdrawals.l2 && <TierRow label="L2" data={statsData.withdrawals.l2} amountClass="text-orange" />}
+                  {statsData.withdrawals.l3 && <TierRow label="L3" data={statsData.withdrawals.l3} amountClass="text-orange" />}
+                </div>
+              </section>
             </div>
           )}
         </>

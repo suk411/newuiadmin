@@ -250,6 +250,8 @@
 
 .table-wrap {
   overflow: auto;
+  border: 1px solid #d0d0d0;
+  border-radius: 4px;
 }
 
 .table {
@@ -276,7 +278,6 @@
 
 .table td {
   padding: var(--space-5, 9px) var(--space-6, 10px);
-  border-bottom: 1px solid #e0e0e0;
   color: #000;
   background: #fff;
   white-space: nowrap;
@@ -1222,7 +1223,6 @@ html.dark .table th {
 html.dark .table td {
   background: #111;
   color: #fff;
-  border-bottom-color: #333;
 }
 
 html.dark .table tbody tr:nth-child(even) td { background: #1a1a1a; }
