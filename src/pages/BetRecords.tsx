@@ -260,10 +260,10 @@ export default function BetRecords() {
       </form>
 
       {(tab === 'provider' || tab === 'wingo') && summary && records.length > 0 && (
-        <div style={{ display: 'flex', gap: 24, background: '#fff', border: '1px solid #d0d0d0', borderRadius: 4, padding: '12px 20px', boxShadow: '0 2px 8px rgba(0,0,0,0.08)', margin: '12px 0' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}><span style={{ fontSize: 10, color: '#000', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Total Amount</span><span style={{ fontSize: 20, fontWeight: 700, color: '#f97316', lineHeight: 1.2 }}>₹{(summary.totalAmount ?? 0).toLocaleString('en-IN')}</span></div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}><span style={{ fontSize: 10, color: '#000', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Total Payout</span><span style={{ fontSize: 20, fontWeight: 700, color: '#22c55e', lineHeight: 1.2 }}>₹{(summary.totalPayout ?? 0).toLocaleString('en-IN')}</span></div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}><span style={{ fontSize: 10, color: '#000', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Net P&L</span><span style={{ fontSize: 20, fontWeight: 700, lineHeight: 1.2, color: (summary.totalPayout ?? 0) - (summary.totalAmount ?? 0) >= 0 ? '#22c55e' : '#ef4444' }}>{fmt((summary.totalPayout ?? 0) - (summary.totalAmount ?? 0))}</span></div>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 12, background: '#fff', border: '1px solid #d0d0d0', borderRadius: 4, padding: '16px 20px', boxShadow: '0 2px 8px rgba(0,0,0,0.08)', margin: '12px 0' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}><span style={{ fontSize: 10, color: '#000', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Total Amount</span><span style={{ fontSize: 20, fontWeight: 700, color: '#f97316', lineHeight: 1.2 }}>₹{(summary.totalAmount ?? 0).toLocaleString('en-IN')}</span></div>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}><span style={{ fontSize: 10, color: '#000', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Total Payout</span><span style={{ fontSize: 20, fontWeight: 700, color: '#22c55e', lineHeight: 1.2 }}>₹{(summary.totalPayout ?? 0).toLocaleString('en-IN')}</span></div>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}><span style={{ fontSize: 10, color: '#000', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Net P&L</span><span style={{ fontSize: 20, fontWeight: 700, lineHeight: 1.2, color: (summary.totalPayout ?? 0) - (summary.totalAmount ?? 0) >= 0 ? '#22c55e' : '#ef4444' }}>{fmt((summary.totalPayout ?? 0) - (summary.totalAmount ?? 0))}</span></div>
         </div>
       )}
 
