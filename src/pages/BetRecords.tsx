@@ -83,22 +83,22 @@ export default function BetRecords() {
           { key: 'game', label: 'Site' },
           { key: 'amount', label: 'Amount' },
           { key: 'payout', label: 'Payout' },
-          { key: 'turnover', label: 'Turnover' },
           { key: 'gameId', label: 'Game ID' },
           { key: 'product', label: 'Product' },
           { key: 'status', label: 'Status' },
           { key: 'settleTime', label: 'Settle Time' },
+          { key: 'createdAt', label: 'Created At' },
         ],
         data: (records as ProviderBet[]).map((r) => ({
           userId: r.userId,
           game: r.game,
           amount: r.amount,
           payout: r.payout,
-          turnover: r.turnover,
           gameId: r.gameId,
           product: r.product,
           status: r.status,
           settleTime: r.settleTime,
+          createdAt: r.createdAt,
         })),
         filename: 'provider-bets',
       })
@@ -306,7 +306,7 @@ export default function BetRecords() {
               <thead>
                 <tr>
                   {tab === 'provider' ? (
-                    <><th>User ID</th><th>Site</th><th>Amount</th><th>Payout</th><th>Turnover</th><th>Game ID</th><th>Product</th><th>Status</th><th>Settle Time</th></>
+                    <><th>User ID</th><th>Site</th><th>Amount</th><th>Payout</th><th>Game ID</th><th>Product</th><th>Status</th><th>Settle Time</th><th>Created At</th></>
                   ) : (
                     <><th>User ID</th><th>Mode</th><th>Amount</th><th>Real Amt</th><th>Fee</th><th>Payout</th><th>Bet On</th><th>Issue</th><th>Order No</th><th>Status</th><th>Settle Time</th><th>Created At</th></>
                   )}
@@ -325,11 +325,11 @@ export default function BetRecords() {
                           <td>{r.game}</td>
                           <td>₹{Number(r.amount).toLocaleString('en-IN')}</td>
                           <td>₹{Number(r.payout).toLocaleString('en-IN')}</td>
-                          <td>₹{Number(r.turnover).toLocaleString('en-IN')}</td>
                           <td style={{ fontFamily: 'monospace', fontSize: 12 }}>{r.gameId}</td>
                           <td>{r.product}</td>
                           <td><span className={`badge ${r.status === 1 ? 'badge--success' : 'badge--warning'}`}>{r.status === 1 ? 'Valid' : r.status}</span></td>
-                          <td style={{ whiteSpace: 'nowrap' }}>{r.settleTime || formatDateTime(r.createdAt)}</td></>
+                          <td style={{ whiteSpace: 'nowrap' }}>{r.settleTime}</td>
+                          <td style={{ whiteSpace: 'nowrap' }}>{formatDateTime(r.createdAt)}</td></>
                       ) : (
                         <><td>{r.userId}</td>
                           <td>{r.gameMode}</td>
