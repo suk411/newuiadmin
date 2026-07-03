@@ -154,7 +154,7 @@ export default function AgencyDashboard() {
         </div>
       </form>
 
-      <div className="tab-fade-in" key={tab}>
+      <div className="tab-fade-in" key={tab} style={{ display: 'flex', flexDirection: 'column', flex: 1, minHeight: 0 }}>
       {tab === 'stats' && (
         <>
           {statsLoading && <div style={{ padding: '48px 0', textAlign: 'center' }}><Spinner /></div>}
@@ -167,9 +167,9 @@ export default function AgencyDashboard() {
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}><span style={{ fontSize: 10, color: '#000', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Team Total</span><span style={{ fontSize: 20, fontWeight: 700, color: '#409eff', lineHeight: 1.2 }}>{(statsData.team.total ?? 0).toLocaleString('en-IN')}</span></div>
               </div>
               <div style={{ display: 'flex', gap: 32, background: '#fff', border: '1px solid #d0d0d0', borderRadius: 4, padding: '12px 20px', boxShadow: '0 2px 8px rgba(0,0,0,0.08)' }}>
-                {statsData.firstDeposit.l1 && <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}><span style={{ fontSize: 10, color: '#000', textTransform: 'uppercase', letterSpacing: '0.5px' }}>First Dep L1</span><span style={{ fontSize: 20, fontWeight: 700, color: '#22c55e', lineHeight: 1.2 }}>₹{(statsData.firstDeposit.l1.totalAmount ?? 0).toLocaleString('en-IN')} ({(statsData.firstDeposit.l1.totalCount ?? 0).toLocaleString('en-IN')})</span></div>}
-                {statsData.firstDeposit.l2 && <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}><span style={{ fontSize: 10, color: '#000', textTransform: 'uppercase', letterSpacing: '0.5px' }}>First Dep L2</span><span style={{ fontSize: 20, fontWeight: 700, color: '#22c55e', lineHeight: 1.2 }}>₹{(statsData.firstDeposit.l2.totalAmount ?? 0).toLocaleString('en-IN')} ({(statsData.firstDeposit.l2.totalCount ?? 0).toLocaleString('en-IN')})</span></div>}
-                {statsData.firstDeposit.l3 && <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}><span style={{ fontSize: 10, color: '#000', textTransform: 'uppercase', letterSpacing: '0.5px' }}>First Dep L3</span><span style={{ fontSize: 20, fontWeight: 700, color: '#22c55e', lineHeight: 1.2 }}>₹{(statsData.firstDeposit.l3.totalAmount ?? 0).toLocaleString('en-IN')} ({(statsData.firstDeposit.l3.totalCount ?? 0).toLocaleString('en-IN')})</span></div>}
+                {statsData.firstDeposit.l1 && <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}><span style={{ fontSize: 10, color: '#000', textTransform: 'uppercase', letterSpacing: '0.5px' }}>First Dep L1</span><span style={{ fontSize: 20, fontWeight: 700, color: '#22c55e', lineHeight: 1.2 }}>₹{(statsData.firstDeposit.l1.totalAmount ?? 0).toLocaleString('en-IN')}</span></div>}
+                {statsData.firstDeposit.l2 && <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}><span style={{ fontSize: 10, color: '#000', textTransform: 'uppercase', letterSpacing: '0.5px' }}>First Dep L2</span><span style={{ fontSize: 20, fontWeight: 700, color: '#22c55e', lineHeight: 1.2 }}>₹{(statsData.firstDeposit.l2.totalAmount ?? 0).toLocaleString('en-IN')}</span></div>}
+                {statsData.firstDeposit.l3 && <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}><span style={{ fontSize: 10, color: '#000', textTransform: 'uppercase', letterSpacing: '0.5px' }}>First Dep L3</span><span style={{ fontSize: 20, fontWeight: 700, color: '#22c55e', lineHeight: 1.2 }}>₹{(statsData.firstDeposit.l3.totalAmount ?? 0).toLocaleString('en-IN')}</span></div>}
               </div>
               <div style={{ display: 'flex', gap: 32, background: '#fff', border: '1px solid #d0d0d0', borderRadius: 4, padding: '12px 20px', boxShadow: '0 2px 8px rgba(0,0,0,0.08)' }}>
                 {statsData.deposits.l1 && <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}><span style={{ fontSize: 10, color: '#000', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Dep L1</span><span style={{ fontSize: 20, fontWeight: 700, color: '#f97316', lineHeight: 1.2 }}>₹{(statsData.deposits.l1.totalAmount ?? 0).toLocaleString('en-IN')} ({(statsData.deposits.l1.totalCount ?? 0).toLocaleString('en-IN')})</span></div>}

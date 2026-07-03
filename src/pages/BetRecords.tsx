@@ -283,7 +283,7 @@ export default function BetRecords() {
               ) : (
                 dailyRecords.map((r, i) => (
                   <div key={i} style={{ marginTop: i === 0 ? 0 : 20 }}>
-                    <h3 style={{ margin: '0 0 8px', fontSize: 14, fontWeight: 600, color: 'var(--text-color, #303133)' }}>Data of {r.date}</h3>
+                    <h3 style={{ margin: '4px 0 8px', padding: '8px 12px', fontSize: 14, fontWeight: 600, color: 'var(--text-color, #303133)', background: '#f0f7ff', borderRadius: 4 }}>Data of {r.date}</h3>
                       <div style={{ display: 'flex', flexDirection: 'column', gap: 8, width: '100%' }}>
                         <div style={{ display: 'flex', gap: 32, background: '#fff', border: '1px solid #d0d0d0', borderRadius: 4, padding: '12px 20px', boxShadow: '0 2px 8px rgba(0,0,0,0.08)' }}>
                           <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}><span style={{ fontSize: 10, color: '#000', textTransform: 'uppercase', letterSpacing: '0.5px' }}>totalAmount</span><span style={{ fontSize: 20, fontWeight: 700, color: '#f97316', lineHeight: 1.2 }}>₹{(r.wingo?.totalAmount ?? 0).toLocaleString('en-IN')}</span></div>
