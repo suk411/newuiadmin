@@ -20,6 +20,7 @@ function extractError(err: unknown): string {
 }
 
 export default function BetRecords() {
+  const fmt = (v: number) => { const a = Math.abs(v).toLocaleString('en-IN'); return v >= 0 ? `₹${a}` : `-₹${a}` }
   const [tab, setTab] = useState<Tab>('provider')
   const [records, setRecords] = useState<(ProviderBet | WingoBet)[]>([])
   const [dailyRecords, setDailyRecords] = useState<DailyStat[]>([])
@@ -262,7 +263,7 @@ export default function BetRecords() {
         <div style={{ display: 'flex', gap: 24, background: '#fff', border: '1px solid #d0d0d0', borderRadius: 4, padding: '12px 20px', boxShadow: '0 2px 8px rgba(0,0,0,0.08)', margin: '12px 0' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}><span style={{ fontSize: 10, color: '#000', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Total Amount</span><span style={{ fontSize: 20, fontWeight: 700, color: '#f97316', lineHeight: 1.2 }}>₹{(summary.totalAmount ?? 0).toLocaleString('en-IN')}</span></div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}><span style={{ fontSize: 10, color: '#000', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Total Payout</span><span style={{ fontSize: 20, fontWeight: 700, color: '#22c55e', lineHeight: 1.2 }}>₹{(summary.totalPayout ?? 0).toLocaleString('en-IN')}</span></div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}><span style={{ fontSize: 10, color: '#000', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Net P&L</span><span style={{ fontSize: 20, fontWeight: 700, lineHeight: 1.2, color: (summary.totalPayout ?? 0) - (summary.totalAmount ?? 0) >= 0 ? '#22c55e' : '#ef4444' }}>₹{((summary.totalPayout ?? 0) - (summary.totalAmount ?? 0)).toLocaleString('en-IN')}</span></div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}><span style={{ fontSize: 10, color: '#000', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Net P&L</span><span style={{ fontSize: 20, fontWeight: 700, lineHeight: 1.2, color: (summary.totalPayout ?? 0) - (summary.totalAmount ?? 0) >= 0 ? '#22c55e' : '#ef4444' }}>{fmt((summary.totalPayout ?? 0) - (summary.totalAmount ?? 0))}</span></div>
         </div>
       )}
 
@@ -295,7 +296,7 @@ export default function BetRecords() {
                           <div style={{ display: 'flex', gap: 3, alignItems: 'center', whiteSpace: 'nowrap' }}><span style={{ fontSize: 10, color: '#909399' }}>Bets:</span><span style={{ fontSize: 14, fontWeight: 700, color: '#409eff' }}>{r.provider?.betCount ?? 0}</span></div>
                           <div style={{ display: 'flex', gap: 3, alignItems: 'center', whiteSpace: 'nowrap' }}><span style={{ fontSize: 10, color: '#909399' }}>Total Amt:</span><span style={{ fontSize: 14, fontWeight: 700 }}>₹{(r.provider?.totalBets ?? 0).toLocaleString('en-IN')}</span></div>
                           <div style={{ display: 'flex', gap: 3, alignItems: 'center', whiteSpace: 'nowrap' }}><span style={{ fontSize: 10, color: '#909399' }}>Payout:</span><span style={{ fontSize: 14, fontWeight: 700 }}>₹{(r.provider?.totalPayout ?? 0).toLocaleString('en-IN')}</span></div>
-                          <div style={{ display: 'flex', gap: 3, alignItems: 'center', whiteSpace: 'nowrap' }}><span style={{ fontSize: 10, color: '#909399' }}>Net PL:</span><span style={{ fontSize: 14, fontWeight: 700, color: (r.provider?.netPL ?? 0) >= 0 ? '#22c55e' : '#ef4444' }}>₹{(r.provider?.netPL ?? 0).toLocaleString('en-IN')}</span></div>
+                          <div style={{ display: 'flex', gap: 3, alignItems: 'center', whiteSpace: 'nowrap' }}><span style={{ fontSize: 10, color: '#909399' }}>Net PL:</span><span style={{ fontSize: 14, fontWeight: 700, color: (r.provider?.netPL ?? 0) >= 0 ? '#22c55e' : '#ef4444' }}>{fmt(r.provider?.netPL ?? 0)}</span></div>
                         </div>
                       </div>
                     </div>
