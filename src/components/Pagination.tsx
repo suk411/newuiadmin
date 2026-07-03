@@ -31,16 +31,11 @@ export default function Pagination({ page, total, limit, onChange }: Props) {
   }
 
   return (
-    <div className="block" style={{ textAlign: 'right', padding: '20px 5px 2px' }}>
+    <div style={{ textAlign: 'right', padding: '20px 5px 2px' }}>
       <div className="el-pagination">
         <span className="el-pagination__total">Total {total}</span>
-        <button
-          type="button"
-          className="btn-prev"
-          disabled={page <= 1}
-          onClick={() => onChange(page - 1)}
-        >
-          ‹
+        <button type="button" className="btn-prev" disabled={page <= 1} onClick={() => onChange(page - 1)}>
+          <i className="el-icon-arrow-left"></i>
         </button>
         <ul className="el-pager">
           {pages.map((p, i) =>
@@ -49,7 +44,7 @@ export default function Pagination({ page, total, limit, onChange }: Props) {
             ) : (
               <li
                 key={p}
-                className={`el-pager__btn${p === page ? ' active' : ''}`}
+                className={`number${p === page ? ' active' : ''}`}
                 onClick={() => onChange(p)}
               >
                 {p}
@@ -57,22 +52,11 @@ export default function Pagination({ page, total, limit, onChange }: Props) {
             )
           )}
         </ul>
-        <button
-          type="button"
-          className="btn-next"
-          disabled={page >= totalPages}
-          onClick={() => onChange(page + 1)}
-        >
-          ›
+        <button type="button" className="btn-next" disabled={page >= totalPages} onClick={() => onChange(page + 1)}>
+          <i className="el-icon-arrow-right"></i>
         </button>
         <span className="el-pagination__jump">
-          Go to
-          <input
-            type="text"
-            value={jumpValue}
-            onChange={(e) => setJumpValue(e.target.value)}
-            onKeyDown={(e) => { if (e.key === 'Enter') handleJump(e) }}
-          />
+          Go to <input type="number" className="el-input__inner" value={jumpValue} onChange={(e) => setJumpValue(e.target.value)} onKeyDown={(e) => { if (e.key === 'Enter') handleJump(e) }} />
         </span>
       </div>
     </div>

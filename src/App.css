@@ -308,22 +308,18 @@
 
 /* ── Pagination (Element UI style) ── */
 
-.block {
-  display: block;
-}
-
 .el-pagination {
   display: inline-flex;
   align-items: center;
   gap: 4px;
-  font-size: 12px;
-  color: #303133;
+  font-size: 20px;
+  color: rgb(48, 49, 51);
   white-space: nowrap;
 }
 
 .el-pagination__total {
-  font-size: 12px;
-  color: #606266;
+  font-size: 20px;
+  color: rgb(48, 49, 51);
   margin-right: 8px;
 }
 
@@ -334,25 +330,35 @@
   justify-content: center;
   width: 28px;
   height: 28px;
-  border: 1px solid #d0d0d0;
+  background: rgb(255, 255, 255);
+  border: none;
   border-radius: 3px;
-  background: #fff;
-  color: #303133;
+  color: rgb(48, 49, 51);
   font-size: 14px;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: color 0.2s;
+  padding: 0;
 }
 
 .btn-prev:hover:not(:disabled),
 .btn-next:hover:not(:disabled) {
-  color: #409eff;
-  border-color: #c6e2ff;
+  color: rgb(64, 158, 255);
 }
 
 .btn-prev:disabled,
 .btn-next:disabled {
   opacity: 0.4;
   cursor: not-allowed;
+}
+
+.el-icon-arrow-left::before {
+  content: '‹';
+  font-size: 16px;
+}
+
+.el-icon-arrow-right::before {
+  content: '›';
+  font-size: 16px;
 }
 
 .el-pager {
@@ -364,31 +370,29 @@
   padding: 0;
 }
 
-.el-pager__btn {
+.el-pager .number {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   min-width: 28px;
   height: 28px;
-  border: 1px solid #d0d0d0;
+  background: rgb(255, 255, 255);
+  border: none;
   border-radius: 3px;
-  background: #fff;
-  color: #303133;
-  font-size: 12px;
+  color: rgb(48, 49, 51);
+  font-size: 20px;
   cursor: pointer;
   padding: 0 4px;
-  transition: all 0.2s;
+  transition: color 0.2s;
 }
 
-.el-pager__btn:hover {
-  color: #409eff;
-  border-color: #c6e2ff;
+.el-pager .number:hover {
+  color: rgb(64, 158, 255);
 }
 
-.el-pager__btn.active {
-  background: #409eff;
-  color: #fff;
-  border-color: #409eff;
+.el-pager .number.active {
+  color: rgb(64, 158, 255);
+  font-weight: 700;
 }
 
 .el-pager__more {
@@ -397,8 +401,8 @@
   justify-content: center;
   min-width: 28px;
   height: 28px;
-  font-size: 12px;
-  color: #303133;
+  font-size: 20px;
+  color: rgb(48, 49, 51);
   user-select: none;
 }
 
@@ -406,26 +410,37 @@
   display: inline-flex;
   align-items: center;
   gap: 4px;
-  font-size: 12px;
-  color: #606266;
+  font-size: 20px;
+  color: rgb(48, 49, 51);
   margin-left: 8px;
 }
 
-.el-pagination__jump input {
-  width: 40px;
-  height: 24px;
-  border: 1px solid #d0d0d0;
+.el-pagination__jump .el-input__inner {
+  width: 50px;
+  height: 28px;
+  border: 1px solid #dcdfe6;
   border-radius: 3px;
   text-align: center;
-  font-size: 12px;
-  color: #303133;
-  background: #fff;
+  font-size: 20px;
+  color: rgb(48, 49, 51);
+  background: rgb(255, 255, 255);
   outline: none;
   transition: border-color 0.2s;
+  box-sizing: border-box;
 }
 
-.el-pagination__jump input:focus {
-  border-color: #409eff;
+.el-pagination__jump .el-input__inner:focus {
+  border-color: rgb(64, 158, 255);
+}
+
+.el-pagination__jump .el-input__inner::-webkit-outer-spin-button,
+.el-pagination__jump .el-input__inner::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.el-pagination__jump .el-input__inner[type='number'] {
+  -moz-appearance: textfield;
 }
 
 /* ── Link ── */
@@ -1230,22 +1245,23 @@ html.dark .tags-view-item-close:hover {
 
 html.dark .btn-prev,
 html.dark .btn-next,
-html.dark .el-pager__btn {
+html.dark .el-pager .number {
+  background: #111;
+  color: #fff;
+}
+
+html.dark .el-pager .number.active {
+  color: rgb(64, 158, 255);
+}
+
+html.dark .el-pagination__jump .el-input__inner {
   background: #111;
   border-color: #333;
   color: #fff;
 }
 
-html.dark .el-pager__btn.active {
-  background: #409eff;
-  border-color: #409eff;
-  color: #fff;
-}
-
-html.dark .el-pagination__jump input {
-  background: #111;
-  border-color: #333;
-  color: #fff;
+html.dark .el-pagination__jump .el-input__inner:focus {
+  border-color: rgb(64, 158, 255);
 }
 
 html.dark .el-pagination__jump input:focus {
