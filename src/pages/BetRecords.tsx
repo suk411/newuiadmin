@@ -111,12 +111,12 @@ export default function BetRecords() {
           { key: 'realAmount', label: 'Real Amt' },
           { key: 'fee', label: 'Fee' },
           { key: 'payout', label: 'Payout' },
-          { key: 'selectType', label: 'Selection' },
+          { key: 'selectType', label: 'Bet On' },
           { key: 'issueNumber', label: 'Issue' },
           { key: 'orderNumber', label: 'Order No' },
           { key: 'status', label: 'Status' },
-          { key: 'mobile', label: 'Mobile' },
           { key: 'settleTime', label: 'Settle Time' },
+          { key: 'createdAt', label: 'Created At' },
         ],
         data: (records as WingoBet[]).map((r) => ({
           userId: r.userId,
@@ -129,8 +129,8 @@ export default function BetRecords() {
           issueNumber: r.issueNumber,
           orderNumber: r.orderNumber,
           status: r.status,
-          mobile: r.mobile,
           settleTime: r.settleTime,
+          createdAt: r.createdAt,
         })),
         filename: 'wingo-bets',
       })
@@ -308,7 +308,7 @@ export default function BetRecords() {
                   {tab === 'provider' ? (
                     <><th>User ID</th><th>Site</th><th>Amount</th><th>Payout</th><th>Turnover</th><th>Game ID</th><th>Product</th><th>Status</th><th>Settle Time</th></>
                   ) : (
-                    <><th>User ID</th><th>Mode</th><th>Amount</th><th>Real Amt</th><th>Fee</th><th>Payout</th><th>Selection</th><th>Issue</th><th>Order No</th><th>Status</th><th>Mobile</th><th>Settle Time</th></>
+                    <><th>User ID</th><th>Mode</th><th>Amount</th><th>Real Amt</th><th>Fee</th><th>Payout</th><th>Bet On</th><th>Issue</th><th>Order No</th><th>Status</th><th>Settle Time</th><th>Created At</th></>
                   )}
                 </tr>
               </thead>
@@ -341,8 +341,8 @@ export default function BetRecords() {
                           <td style={{ fontFamily: 'monospace', fontSize: 12 }}>{r.issueNumber}</td>
                           <td style={{ fontFamily: 'monospace', fontSize: 12 }}>{r.orderNumber}</td>
                           <td><span className={`badge ${r.status === 'won' ? 'badge--success' : r.status === 'lost' ? 'badge--danger' : 'badge--warning'}`}>{r.status}</span></td>
-                          <td>{r.mobile}</td>
-                          <td style={{ whiteSpace: 'nowrap' }}>{r.settleTime || formatDateTime(r.createdAt)}</td></>
+                          <td style={{ whiteSpace: 'nowrap' }}>{r.settleTime}</td>
+                          <td style={{ whiteSpace: 'nowrap' }}>{formatDateTime(r.createdAt)}</td></>
                       )}
                     </tr>
                   ))
