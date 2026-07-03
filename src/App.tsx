@@ -17,6 +17,7 @@ import { titleMap } from './components/TagsView'
 import type { TagItem } from './components/TagsView'
 import { ExportBarProvider } from './components/ExportBarContext'
 import { ToastProvider, useToast } from './contexts/ToastContext'
+import { watchAutoComplete, stopAutoComplete } from './utils/autocomplete'
 import './App.css'
 
 function ProtectedLayoutContent({ onLogout }: { onLogout: () => void }) {
@@ -34,10 +35,9 @@ function ProtectedLayoutContent({ onLogout }: { onLogout: () => void }) {
 
   useEffect(() => {
     localStorage.setItem('autoFillOff', String(autoFillOff))
-    document.querySelectorAll('input').forEach((el) => {
-      if (autoFillOff) el.setAttribute('autocomplete', 'off')
-      else el.removeAttribute('autocomplete')
-    })
+    const target = document.querySelector('.main-area')
+    if (target) watchAutoComplete(target as HTMLElement, autoFillOff)
+    return stopAutoComplete
   }, [autoFillOff])
 
   const [tags, setTags] = useState<TagItem[]>(() => {
