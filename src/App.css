@@ -341,13 +341,13 @@
   display: inline-flex;
   align-items: center;
   gap: 4px;
-  font-size: 20px;
+  font-size: 13px;
   color: rgb(48, 49, 51);
   white-space: nowrap;
 }
 
 .el-pagination__total {
-  font-size: 20px;
+  font-size: 13px;
   color: rgb(48, 49, 51);
   margin-right: 8px;
 }
@@ -409,7 +409,7 @@
   border: none;
   border-radius: 3px;
   color: rgb(48, 49, 51);
-  font-size: 20px;
+  font-size: 13px;
   cursor: pointer;
   padding: 0 4px;
   transition: color 0.2s;
@@ -423,6 +423,23 @@
   color: rgb(64, 158, 255);
   font-weight: 700;
 }
+.el-pager .number.active.is-loading {
+  cursor: wait;
+}
+
+.pagination-spinner {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  border: 2px solid rgb(64, 158, 255);
+  border-top-color: transparent;
+  border-radius: 50%;
+  animation: pagination-spin 0.6s linear infinite;
+}
+
+@keyframes pagination-spin {
+  to { transform: rotate(360deg); }
+}
 
 .el-pager__more {
   display: inline-flex;
@@ -430,7 +447,7 @@
   justify-content: center;
   min-width: 28px;
   height: 28px;
-  font-size: 20px;
+  font-size: 13px;
   color: rgb(48, 49, 51);
   user-select: none;
 }
@@ -439,7 +456,7 @@
   display: inline-flex;
   align-items: center;
   gap: 4px;
-  font-size: 20px;
+  font-size: 13px;
   color: rgb(48, 49, 51);
   margin-left: 8px;
 }
@@ -450,7 +467,7 @@
   border: 1px solid #dcdfe6;
   border-radius: 3px;
   text-align: center;
-  font-size: 20px;
+  font-size: 13px;
   color: rgb(48, 49, 51);
   background: rgb(255, 255, 255);
   outline: none;

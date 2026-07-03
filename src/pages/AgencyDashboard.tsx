@@ -263,7 +263,7 @@ export default function AgencyDashboard() {
               </tbody>
             </table>
           </div>
-          <Pagination page={membersPage} total={membersTotal} limit={MEMBER_LIMIT} onChange={(p) => loadMembers(p)} />
+          <Pagination page={membersPage} total={membersTotal} limit={MEMBER_LIMIT} loading={membersLoading} onChange={(p) => loadMembers(p)} />
         </section>
       )}
       </div>

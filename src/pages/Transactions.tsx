@@ -127,7 +127,7 @@ export default function Transactions() {
             </tbody>
           </table>
         </div>
-        <Pagination page={page} total={total} limit={LIMIT} onChange={(p) => load(p)} />
+        <Pagination page={page} total={total} limit={LIMIT} loading={loading} onChange={(p) => load(p)} />
       </section>
     </div>
   )

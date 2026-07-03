@@ -188,7 +188,7 @@ export default function Withdrawals() {
             </tbody>
           </table>
         </div>
-        <Pagination page={page} total={total} limit={LIMIT} onChange={(p) => load(p)} />
+        <Pagination page={page} total={total} limit={LIMIT} loading={loading} onChange={(p) => load(p)} />
       </section>
 
       {approveTarget && (
