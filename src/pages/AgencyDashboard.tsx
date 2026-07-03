@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from 'react'
 import axios from 'axios'
 import { fetchTeamStats, fetchTeamMembers } from '../api/agency'
-import type { TeamStats, TeamMember, TierAmount } from '../api/agency'
+import type { TeamStats, TeamMember } from '../api/agency'
 import { useToast } from '../contexts/ToastContext'
 import Spinner from '../components/Spinner'
 import Pagination from '../components/Pagination'
@@ -27,25 +27,6 @@ function extractError(err: unknown): string {
   if (axios.isAxiosError(err) && err.response?.data?.msg) return err.response.data.msg
   if (err instanceof Error) return err.message
   return 'Something went wrong'
-}
-
-function TierRow({ label, data, amountClass }: { label: string; data: TierAmount; amountClass: string }) {
-  return (
-    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-      <span style={{ fontWeight: 600, minWidth: 30 }}>{label}</span>
-      <span className={`stat-card__value ${amountClass}`}>₹{(data?.totalAmount ?? 0).toLocaleString('en-IN')}</span>
-      <span className="stat-card__change up">{(data?.totalCount ?? 0).toLocaleString('en-IN')} orders</span>
-    </div>
-  )
-}
-
-function TeamRow({ label, value }: { label: string; value: number }) {
-  return (
-    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-      <span style={{ fontWeight: 600, minWidth: 30 }}>{label}</span>
-      <span className="stat-card__value text-blue">{(value ?? 0).toLocaleString('en-IN')} members</span>
-    </div>
-  )
 }
 
 export default function AgencyDashboard() {
@@ -178,31 +159,39 @@ export default function AgencyDashboard() {
         <>
           {statsLoading && <div style={{ padding: '48px 0', textAlign: 'center' }}><Spinner /></div>}
           {statsData && (
-            <div className="stat-cards" style={{ marginTop: 16 }}>
-              <div className="stat-card">
-                <span className="stat-card__label">Team</span>
-                <TeamRow label="L1" value={statsData.team.l1 ?? 0} />
-                <TeamRow label="L2" value={statsData.team.l2 ?? 0} />
-                <TeamRow label="L3" value={statsData.team.l3 ?? 0} />
-                <TeamRow label="Total" value={statsData.team.total ?? 0} />
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 8, marginTop: 16 }}>
+              <div className="stat-card" style={{ flexDirection: 'row', alignItems: 'center', gap: 12, padding: '12px 16px' }}>
+                <span className="stat-card__label" style={{ whiteSpace: 'nowrap' }}>Team</span>
+                <div style={{ display: 'flex', gap: 8, alignItems: 'center', flexWrap: 'wrap' }}>
+                  <div style={{ display: 'flex', gap: 3, alignItems: 'center', whiteSpace: 'nowrap' }}><span style={{ fontSize: 10, color: '#909399' }}>L1:</span><span style={{ fontSize: 14, fontWeight: 700, color: '#409eff' }}>{(statsData.team.l1 ?? 0).toLocaleString('en-IN')}</span></div>
+                  <div style={{ display: 'flex', gap: 3, alignItems: 'center', whiteSpace: 'nowrap' }}><span style={{ fontSize: 10, color: '#909399' }}>L2:</span><span style={{ fontSize: 14, fontWeight: 700, color: '#409eff' }}>{(statsData.team.l2 ?? 0).toLocaleString('en-IN')}</span></div>
+                  <div style={{ display: 'flex', gap: 3, alignItems: 'center', whiteSpace: 'nowrap' }}><span style={{ fontSize: 10, color: '#909399' }}>L3:</span><span style={{ fontSize: 14, fontWeight: 700, color: '#409eff' }}>{(statsData.team.l3 ?? 0).toLocaleString('en-IN')}</span></div>
+                  <div style={{ display: 'flex', gap: 3, alignItems: 'center', whiteSpace: 'nowrap' }}><span style={{ fontSize: 10, color: '#909399' }}>Total:</span><span style={{ fontSize: 14, fontWeight: 700, color: '#409eff' }}>{(statsData.team.total ?? 0).toLocaleString('en-IN')}</span></div>
+                </div>
               </div>
-              <div className="stat-card">
-                <span className="stat-card__label">First Deposit</span>
-                {statsData.firstDeposit.l1 && <TierRow label="L1" data={statsData.firstDeposit.l1} amountClass="text-green" />}
-                {statsData.firstDeposit.l2 && <TierRow label="L2" data={statsData.firstDeposit.l2} amountClass="text-green" />}
-                {statsData.firstDeposit.l3 && <TierRow label="L3" data={statsData.firstDeposit.l3} amountClass="text-green" />}
+              <div className="stat-card" style={{ flexDirection: 'row', alignItems: 'center', gap: 12, padding: '12px 16px' }}>
+                <span className="stat-card__label" style={{ whiteSpace: 'nowrap' }}>First Deposit</span>
+                <div style={{ display: 'flex', gap: 8, alignItems: 'center', flexWrap: 'wrap' }}>
+                  {statsData.firstDeposit.l1 && <><div style={{ display: 'flex', gap: 3, alignItems: 'center', whiteSpace: 'nowrap' }}><span style={{ fontSize: 10, color: '#909399' }}>L1:</span><span style={{ fontSize: 14, fontWeight: 700, color: '#22c55e' }}>₹{(statsData.firstDeposit.l1.totalAmount ?? 0).toLocaleString('en-IN')}</span><span style={{ fontSize: 10, color: '#909399' }}>({(statsData.firstDeposit.l1.totalCount ?? 0).toLocaleString('en-IN')})</span></div></>}
+                  {statsData.firstDeposit.l2 && <><div style={{ display: 'flex', gap: 3, alignItems: 'center', whiteSpace: 'nowrap' }}><span style={{ fontSize: 10, color: '#909399' }}>L2:</span><span style={{ fontSize: 14, fontWeight: 700, color: '#22c55e' }}>₹{(statsData.firstDeposit.l2.totalAmount ?? 0).toLocaleString('en-IN')}</span><span style={{ fontSize: 10, color: '#909399' }}>({(statsData.firstDeposit.l2.totalCount ?? 0).toLocaleString('en-IN')})</span></div></>}
+                  {statsData.firstDeposit.l3 && <><div style={{ display: 'flex', gap: 3, alignItems: 'center', whiteSpace: 'nowrap' }}><span style={{ fontSize: 10, color: '#909399' }}>L3:</span><span style={{ fontSize: 14, fontWeight: 700, color: '#22c55e' }}>₹{(statsData.firstDeposit.l3.totalAmount ?? 0).toLocaleString('en-IN')}</span><span style={{ fontSize: 10, color: '#909399' }}>({(statsData.firstDeposit.l3.totalCount ?? 0).toLocaleString('en-IN')})</span></div></>}
+                </div>
               </div>
-              <div className="stat-card">
-                <span className="stat-card__label">Deposits</span>
-                {statsData.deposits.l1 && <TierRow label="L1" data={statsData.deposits.l1} amountClass="text-orange" />}
-                {statsData.deposits.l2 && <TierRow label="L2" data={statsData.deposits.l2} amountClass="text-orange" />}
-                {statsData.deposits.l3 && <TierRow label="L3" data={statsData.deposits.l3} amountClass="text-orange" />}
+              <div className="stat-card" style={{ flexDirection: 'row', alignItems: 'center', gap: 12, padding: '12px 16px' }}>
+                <span className="stat-card__label" style={{ whiteSpace: 'nowrap' }}>Deposits</span>
+                <div style={{ display: 'flex', gap: 8, alignItems: 'center', flexWrap: 'wrap' }}>
+                  {statsData.deposits.l1 && <><div style={{ display: 'flex', gap: 3, alignItems: 'center', whiteSpace: 'nowrap' }}><span style={{ fontSize: 10, color: '#909399' }}>L1:</span><span style={{ fontSize: 14, fontWeight: 700, color: '#f97316' }}>₹{(statsData.deposits.l1.totalAmount ?? 0).toLocaleString('en-IN')}</span><span style={{ fontSize: 10, color: '#909399' }}>({(statsData.deposits.l1.totalCount ?? 0).toLocaleString('en-IN')})</span></div></>}
+                  {statsData.deposits.l2 && <><div style={{ display: 'flex', gap: 3, alignItems: 'center', whiteSpace: 'nowrap' }}><span style={{ fontSize: 10, color: '#909399' }}>L2:</span><span style={{ fontSize: 14, fontWeight: 700, color: '#f97316' }}>₹{(statsData.deposits.l2.totalAmount ?? 0).toLocaleString('en-IN')}</span><span style={{ fontSize: 10, color: '#909399' }}>({(statsData.deposits.l2.totalCount ?? 0).toLocaleString('en-IN')})</span></div></>}
+                  {statsData.deposits.l3 && <><div style={{ display: 'flex', gap: 3, alignItems: 'center', whiteSpace: 'nowrap' }}><span style={{ fontSize: 10, color: '#909399' }}>L3:</span><span style={{ fontSize: 14, fontWeight: 700, color: '#f97316' }}>₹{(statsData.deposits.l3.totalAmount ?? 0).toLocaleString('en-IN')}</span><span style={{ fontSize: 10, color: '#909399' }}>({(statsData.deposits.l3.totalCount ?? 0).toLocaleString('en-IN')})</span></div></>}
+                </div>
               </div>
-              <div className="stat-card">
-                <span className="stat-card__label">Withdrawals</span>
-                {statsData.withdrawals.l1 && <TierRow label="L1" data={statsData.withdrawals.l1} amountClass="text-orange" />}
-                {statsData.withdrawals.l2 && <TierRow label="L2" data={statsData.withdrawals.l2} amountClass="text-orange" />}
-                {statsData.withdrawals.l3 && <TierRow label="L3" data={statsData.withdrawals.l3} amountClass="text-orange" />}
+              <div className="stat-card" style={{ flexDirection: 'row', alignItems: 'center', gap: 12, padding: '12px 16px' }}>
+                <span className="stat-card__label" style={{ whiteSpace: 'nowrap' }}>Withdrawals</span>
+                <div style={{ display: 'flex', gap: 8, alignItems: 'center', flexWrap: 'wrap' }}>
+                  {statsData.withdrawals.l1 && <><div style={{ display: 'flex', gap: 3, alignItems: 'center', whiteSpace: 'nowrap' }}><span style={{ fontSize: 10, color: '#909399' }}>L1:</span><span style={{ fontSize: 14, fontWeight: 700, color: '#f97316' }}>₹{(statsData.withdrawals.l1.totalAmount ?? 0).toLocaleString('en-IN')}</span><span style={{ fontSize: 10, color: '#909399' }}>({(statsData.withdrawals.l1.totalCount ?? 0).toLocaleString('en-IN')})</span></div></>}
+                  {statsData.withdrawals.l2 && <><div style={{ display: 'flex', gap: 3, alignItems: 'center', whiteSpace: 'nowrap' }}><span style={{ fontSize: 10, color: '#909399' }}>L2:</span><span style={{ fontSize: 14, fontWeight: 700, color: '#f97316' }}>₹{(statsData.withdrawals.l2.totalAmount ?? 0).toLocaleString('en-IN')}</span><span style={{ fontSize: 10, color: '#909399' }}>({(statsData.withdrawals.l2.totalCount ?? 0).toLocaleString('en-IN')})</span></div></>}
+                  {statsData.withdrawals.l3 && <><div style={{ display: 'flex', gap: 3, alignItems: 'center', whiteSpace: 'nowrap' }}><span style={{ fontSize: 10, color: '#909399' }}>L3:</span><span style={{ fontSize: 14, fontWeight: 700, color: '#f97316' }}>₹{(statsData.withdrawals.l3.totalAmount ?? 0).toLocaleString('en-IN')}</span><span style={{ fontSize: 10, color: '#909399' }}>({(statsData.withdrawals.l3.totalCount ?? 0).toLocaleString('en-IN')})</span></div></>}
+                </div>
               </div>
             </div>
           )}

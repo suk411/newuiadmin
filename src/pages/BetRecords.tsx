@@ -286,8 +286,8 @@ export default function BetRecords() {
                 dailyRecords.map((r, i) => (
                   <div key={i} style={{ marginTop: i === 0 ? 0 : 20 }}>
                     <h3 style={{ margin: '0 0 8px', fontSize: 14, fontWeight: 600, color: 'var(--text-color, #303133)' }}>{r.date}</h3>
-                    <div style={{ display: 'flex', gap: 16, width: '100%' }}>
-                      <div className="stat-card" style={{ flex: 1, flexDirection: 'row', alignItems: 'center', gap: 12, padding: '12px 16px' }}>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: 8, width: '100%' }}>
+                      <div className="stat-card" style={{ flexDirection: 'row', alignItems: 'center', gap: 12, padding: '12px 16px' }}>
                         <span className="stat-card__label" style={{ whiteSpace: 'nowrap' }}>Wingo</span>
                         <div style={{ display: 'flex', gap: 8, alignItems: 'center', flexWrap: 'wrap' }}>
                           <div style={{ display: 'flex', gap: 3, alignItems: 'center', whiteSpace: 'nowrap' }}><span style={{ fontSize: 10, color: '#909399' }}>Bets:</span><span style={{ fontSize: 14, fontWeight: 700, color: '#409eff' }}>{r.wingo?.betCount ?? 0}</span></div>
@@ -297,7 +297,7 @@ export default function BetRecords() {
                           <div style={{ display: 'flex', gap: 3, alignItems: 'center', whiteSpace: 'nowrap' }}><span style={{ fontSize: 10, color: '#909399' }}>Lost:</span><span style={{ fontSize: 14, fontWeight: 700, color: '#ef4444' }}>{r.wingo?.lostCount ?? 0}</span></div>
                         </div>
                       </div>
-                      <div className="stat-card" style={{ flex: 1, flexDirection: 'row', alignItems: 'center', gap: 12, padding: '12px 16px' }}>
+                      <div className="stat-card" style={{ flexDirection: 'row', alignItems: 'center', gap: 12, padding: '12px 16px' }}>
                         <span className="stat-card__label" style={{ whiteSpace: 'nowrap' }}>Provider</span>
                         <div style={{ display: 'flex', gap: 8, alignItems: 'center', flexWrap: 'wrap' }}>
                           <div style={{ display: 'flex', gap: 3, alignItems: 'center', whiteSpace: 'nowrap' }}><span style={{ fontSize: 10, color: '#909399' }}>Bets:</span><span style={{ fontSize: 14, fontWeight: 700, color: '#409eff' }}>{r.provider?.betCount ?? 0}</span></div>
