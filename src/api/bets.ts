@@ -69,7 +69,7 @@ export async function fetchWingoBets(params: Record<string, string | number>): P
 
 export interface DailyStatWingo {
   betCount: number
-  totalBets: number
+  totalAmount: number
   totalPayout: number
   wonCount: number
   lostCount: number
@@ -77,9 +77,8 @@ export interface DailyStatWingo {
 
 export interface DailyStatProvider {
   betCount: number
-  totalBets: number
+  totalAmount: number
   totalPayout: number
-  netPL: number
 }
 
 export interface DailyStat {
