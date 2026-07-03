@@ -47,7 +47,7 @@ export default function AdminLogs() {
 
   return (
     <div className="content content--table">
-      <div className="filters-bar">
+      <form className="filters-bar" onSubmit={(e) => { e.preventDefault(); load() }}>
         <div className="filter-group">
           <label>Level</label>
           <select value={level} onChange={(e) => setLevel(e.target.value)}>
@@ -62,12 +62,12 @@ export default function AdminLogs() {
         </div>
         <div className="filter-group" style={{ alignSelf: 'flex-end' }}>
           <div style={{ display: 'flex', gap: 'var(--space-3)' }}>
-            <button className="btn-filled" onClick={load} disabled={loading}
+            <button type="submit" className="btn-filled" disabled={loading}
               style={{ opacity: loading ? 0.6 : 1 }}>Apply</button>
             <button type="button" className="btn-outline" onClick={() => { setLevel(''); setSince('') }}>Reset</button>
           </div>
         </div>
-      </div>
+      </form>
 
       <section className="card">
         {loading && logs.length === 0 ? (
