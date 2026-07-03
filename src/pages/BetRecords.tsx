@@ -283,18 +283,22 @@ export default function BetRecords() {
                     <div style={{ display: 'flex', gap: 16, width: '100%' }}>
                       <div className="stat-card" style={{ flex: 1 }}>
                         <span className="stat-card__label">Wingo</span>
-                        <div style={{ display: 'flex', justifyContent: 'space-between' }}><span>Bets</span><span className="stat-card__value text-blue">{r.wingo?.betCount ?? 0}</span></div>
-                        <div style={{ display: 'flex', justifyContent: 'space-between' }}><span>Total Amt</span><span className="stat-card__value">₹{(r.wingo?.totalBets ?? 0).toLocaleString('en-IN')}</span></div>
-                        <div style={{ display: 'flex', justifyContent: 'space-between' }}><span>Payout</span><span className="stat-card__value">₹{(r.wingo?.totalPayout ?? 0).toLocaleString('en-IN')}</span></div>
-                        <div style={{ display: 'flex', justifyContent: 'space-between' }}><span>Won</span><span className="stat-card__value text-green">{r.wingo?.wonCount ?? 0}</span></div>
-                        <div style={{ display: 'flex', justifyContent: 'space-between' }}><span>Lost</span><span className="stat-card__value text-red">{r.wingo?.lostCount ?? 0}</span></div>
+                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 8, marginTop: 8 }}>
+                          <div><div style={{ fontSize: 11, color: '#909399' }}>Bets</div><div className="stat-card__value text-blue">{r.wingo?.betCount ?? 0}</div></div>
+                          <div><div style={{ fontSize: 11, color: '#909399' }}>Total Amt</div><div className="stat-card__value">₹{(r.wingo?.totalBets ?? 0).toLocaleString('en-IN')}</div></div>
+                          <div><div style={{ fontSize: 11, color: '#909399' }}>Payout</div><div className="stat-card__value">₹{(r.wingo?.totalPayout ?? 0).toLocaleString('en-IN')}</div></div>
+                          <div><div style={{ fontSize: 11, color: '#909399' }}>Won</div><div className="stat-card__value text-green">{r.wingo?.wonCount ?? 0}</div></div>
+                          <div><div style={{ fontSize: 11, color: '#909399' }}>Lost</div><div className="stat-card__value text-red">{r.wingo?.lostCount ?? 0}</div></div>
+                        </div>
                       </div>
                       <div className="stat-card" style={{ flex: 1 }}>
                         <span className="stat-card__label">Provider</span>
-                        <div style={{ display: 'flex', justifyContent: 'space-between' }}><span>Bets</span><span className="stat-card__value text-blue">{r.provider?.betCount ?? 0}</span></div>
-                        <div style={{ display: 'flex', justifyContent: 'space-between' }}><span>Total Amt</span><span className="stat-card__value">₹{(r.provider?.totalBets ?? 0).toLocaleString('en-IN')}</span></div>
-                        <div style={{ display: 'flex', justifyContent: 'space-between' }}><span>Payout</span><span className="stat-card__value">₹{(r.provider?.totalPayout ?? 0).toLocaleString('en-IN')}</span></div>
-                        <div style={{ display: 'flex', justifyContent: 'space-between' }}><span>Net PL</span><span className={`stat-card__value ${(r.provider?.netPL ?? 0) >= 0 ? 'text-green' : 'text-red'}`}>₹{(r.provider?.netPL ?? 0).toLocaleString('en-IN')}</span></div>
+                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 8, marginTop: 8 }}>
+                          <div><div style={{ fontSize: 11, color: '#909399' }}>Bets</div><div className="stat-card__value text-blue">{r.provider?.betCount ?? 0}</div></div>
+                          <div><div style={{ fontSize: 11, color: '#909399' }}>Total Amt</div><div className="stat-card__value">₹{(r.provider?.totalBets ?? 0).toLocaleString('en-IN')}</div></div>
+                          <div><div style={{ fontSize: 11, color: '#909399' }}>Payout</div><div className="stat-card__value">₹{(r.provider?.totalPayout ?? 0).toLocaleString('en-IN')}</div></div>
+                          <div><div style={{ fontSize: 11, color: '#909399' }}>Net PL</div><div className={`stat-card__value ${(r.provider?.netPL ?? 0) >= 0 ? 'text-green' : 'text-red'}`}>₹{(r.provider?.netPL ?? 0).toLocaleString('en-IN')}</div></div>
+                        </div>
                       </div>
                     </div>
                   </div>
