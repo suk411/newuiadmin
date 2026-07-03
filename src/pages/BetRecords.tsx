@@ -9,6 +9,7 @@ import Pagination from '../components/Pagination'
 import TabButton from '../components/TabButton'
 import { useExportBar } from '../components/ExportBarContext'
 import type { ExportColumn } from '../utils/export'
+import { useSearchSuggest } from '../hooks/useSearchSuggest'
 
 const LIMIT = 20
 type Tab = 'provider' | 'wingo' | 'daily'
@@ -47,6 +48,9 @@ export default function BetRecords() {
   const [dailyDateTo, setDailyDateTo] = useState('')
 
   const { setExportProps } = useExportBar()
+  const memberSuggest = useSearchSuggest('member')
+  const wingoSuggest = useSearchSuggest('wingoUserId')
+  const dailySuggest = useSearchSuggest('dailyUserId')
 
   useEffect(() => {
     if (tab === 'daily') {
@@ -144,6 +148,7 @@ export default function BetRecords() {
     setSummary(null)
     try {
       if (tab === 'daily') {
+        if (dailyUserId) dailySuggest.saveValue(dailyUserId)
         const params: Record<string, string | number> = { page: p, limit: LIMIT }
         if (dailyUserId) params.userId = dailyUserId
         if (dailyDateFrom) params.dateFrom = dailyDateFrom
@@ -152,6 +157,7 @@ export default function BetRecords() {
         setDailyRecords(res.data)
         setTotal(res.total)
       } else if (tab === 'provider') {
+        if (member) memberSuggest.saveValue(member)
         const params: Record<string, string | number> = { page: p, limit: LIMIT }
         if (member) params.member = member.startsWith('u') ? member : `u${member}`
         if (site) params.site = site
@@ -163,6 +169,7 @@ export default function BetRecords() {
         setTotal(res.total)
         setSummary(res.summary)
       } else {
+        if (wingoUserId) wingoSuggest.saveValue(wingoUserId)
         const params: Record<string, string | number> = { page: p, limit: LIMIT }
         if (wingoUserId) params.userId = wingoUserId
         if (gameMode) params.gameMode = gameMode
@@ -201,7 +208,7 @@ export default function BetRecords() {
       <form className="filters-bar" onSubmit={(e) => { e.preventDefault(); load() }}>
         {tab === 'provider' ? (
           <>
-            <div className="filter-group"><label>Member</label><input placeholder="User ID or u+userId" value={member} onChange={(e) => setMember(e.target.value)} /></div>
+            <div className="filter-group"><label>Member</label><input placeholder="User ID or u+userId" value={member} onChange={(e) => setMember(e.target.value)} list={memberSuggest.listId} onFocus={memberSuggest.loadSuggestions} /><datalist id={memberSuggest.listId}>{memberSuggest.items.map((v, i) => <option key={i} value={v} />)}</datalist></div>
             <div className="filter-group"><label>Site</label>
               <select value={site} onChange={(e) => setSite(e.target.value)}>
                 <option value="">All</option>
@@ -222,7 +229,7 @@ export default function BetRecords() {
           </>
         ) : tab === 'wingo' ? (
           <>
-            <div className="filter-group"><label>User ID</label><input placeholder="User ID" value={wingoUserId} onChange={(e) => setWingoUserId(e.target.value)} /></div>
+            <div className="filter-group"><label>User ID</label><input placeholder="User ID" value={wingoUserId} onChange={(e) => setWingoUserId(e.target.value)} list={wingoSuggest.listId} onFocus={wingoSuggest.loadSuggestions} /><datalist id={wingoSuggest.listId}>{wingoSuggest.items.map((v, i) => <option key={i} value={v} />)}</datalist></div>
             <div className="filter-group"><label>Game Mode</label>
               <select value={gameMode} onChange={(e) => setGameMode(e.target.value)}>
                 <option value="">All</option>
@@ -245,7 +252,7 @@ export default function BetRecords() {
           </>
         ) : (
           <>
-            <div className="filter-group"><label>User ID</label><input placeholder="User ID" value={dailyUserId} onChange={(e) => setDailyUserId(e.target.value)} /></div>
+            <div className="filter-group"><label>User ID</label><input placeholder="User ID" value={dailyUserId} onChange={(e) => setDailyUserId(e.target.value)} list={dailySuggest.listId} onFocus={dailySuggest.loadSuggestions} /><datalist id={dailySuggest.listId}>{dailySuggest.items.map((v, i) => <option key={i} value={v} />)}</datalist></div>
             <div className="filter-group"><label>From</label><input type="date" value={dailyDateFrom} onChange={(e) => setDailyDateFrom(e.target.value)} /></div>
             <div className="filter-group"><label>To</label><input type="date" value={dailyDateTo} onChange={(e) => setDailyDateTo(e.target.value)} /></div>
           </>
