@@ -6,6 +6,7 @@ import { formatDateTime12 } from '../utils/format'
 import WithdrawApproveDialog from '../components/WithdrawApproveDialog'
 import { useToast } from '../contexts/ToastContext'
 import Spinner from '../components/Spinner'
+import Pagination from '../components/Pagination'
 import ExportButton from '../components/ExportButton'
 import type { ExportColumn } from '../utils/export'
 
@@ -143,60 +144,51 @@ export default function Withdrawals() {
           <ExportButton columns={WITHDRAWAL_COLUMNS} data={records as unknown as Record<string, unknown>[]} filename="withdrawals" />
         </div>
         <div className="table-wrap">
-          {loading && records.length === 0 ? (
-            <div style={{ padding: '48px 0', textAlign: 'center' }}>
-              <Spinner />
-            </div>
-          ) : records.length === 0 ? (
-            <div className="empty-state"><div className="empty-state__icon">📋</div>No withdrawal records found</div>
-          ) : (
           <table className="table">
             <thead><tr><th>User ID</th><th>Order ID</th><th>Payment</th><th>Channel</th><th>Amount</th><th>Charge</th><th>Charge From</th><th>Note</th><th>Created</th><th>Updated</th><th>Status</th><th>Actions</th></tr></thead>
             <tbody>
-              {records.map((r: any) => {
-                const pd = r.paymentDetails || {}
-                const payInfo = pd.upiId ? `UPI: ${pd.upiId}` : pd.accountNo ? `${pd.bankName || ''} ${pd.holderName || ''} ${pd.accountNo}`.trim() : '—'
-                return (
-                <tr key={r.orderId} tabIndex={0}>
-                  <td>{r.userId}</td>
-                  <td style={{ fontFamily: 'monospace', fontSize: 12 }}>{r.orderId}</td>
-                  <td style={{ maxWidth: 160, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', fontSize: 12 }} title={payInfo}>{payInfo}</td>
-                  <td>{r.channelName || '—'}</td>
-                  <td>₹{Number(r.amount).toLocaleString('en-IN')}</td>
-                  <td>{r.charge != null ? `₹${Number(r.charge).toLocaleString('en-IN')}` : '—'}</td>
-                  <td style={{ fontSize: 12 }}>{r.chargeFrom || '—'}</td>
-                  <td style={{ whiteSpace: 'nowrap' }} title={r.note || ''}>{r.note || '—'}</td>
-                  <td style={{ whiteSpace: 'nowrap', fontSize: 12 }}>{formatDateTime12(r.createdAt)}</td>
-                  <td style={{ whiteSpace: 'nowrap', fontSize: 12 }}>{r.updatedAt ? formatDateTime12(r.updatedAt) : '—'}</td>
-                  <td><span className={`badge ${['SUCCESS', 'approved'].includes(r.status) ? 'badge--success' : ['FAILED', 'cancelled'].includes(r.status) ? 'badge--danger' : 'badge--warning'}`}>{r.status}</span></td>
-                  <td>
-                    <div className="cell-actions">
-                      {['PENDING', 'pending'].includes(r.status) && (
-                        <>
-                          <button className="btn btn--success btn--sm" onClick={() => handleApproveClick(r)} disabled={actionLoading === r.orderId}>
-                            {actionLoading === r.orderId ? <Spinner /> : 'Approve'}
-                          </button>
-                          <button className="btn btn--danger btn--sm" onClick={() => handleCancel(r.orderId)} disabled={actionLoading === r.orderId}>
-                            {actionLoading === r.orderId ? <Spinner /> : 'Cancel'}
-                          </button>
-                        </>
-                      )}
-                    </div>
-                  </td>
-                </tr>
-              )})}
+              {records.length === 0 ? (
+                <tr><td colSpan={12} style={{ textAlign: 'center', padding: '48px 0' }}>
+                  {loading ? <Spinner /> : <div className="empty-state"><div className="empty-state__icon">📋</div>No withdrawal records found</div>}
+                </td></tr>
+              ) : (
+                records.map((r: any) => {
+                  const pd = r.paymentDetails || {}
+                  const payInfo = pd.upiId ? `UPI: ${pd.upiId}` : pd.accountNo ? `${pd.bankName || ''} ${pd.holderName || ''} ${pd.accountNo}`.trim() : '—'
+                  return (
+                  <tr key={r.orderId} tabIndex={0}>
+                    <td>{r.userId}</td>
+                    <td style={{ fontFamily: 'monospace', fontSize: 12 }}>{r.orderId}</td>
+                    <td style={{ maxWidth: 160, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', fontSize: 12 }} title={payInfo}>{payInfo}</td>
+                    <td>{r.channelName || '—'}</td>
+                    <td>₹{Number(r.amount).toLocaleString('en-IN')}</td>
+                    <td>{r.charge != null ? `₹${Number(r.charge).toLocaleString('en-IN')}` : '—'}</td>
+                    <td style={{ fontSize: 12 }}>{r.chargeFrom || '—'}</td>
+                    <td style={{ whiteSpace: 'nowrap' }} title={r.note || ''}>{r.note || '—'}</td>
+                    <td style={{ whiteSpace: 'nowrap', fontSize: 12 }}>{formatDateTime12(r.createdAt)}</td>
+                    <td style={{ whiteSpace: 'nowrap', fontSize: 12 }}>{r.updatedAt ? formatDateTime12(r.updatedAt) : '—'}</td>
+                    <td><span className={`badge ${['SUCCESS', 'approved'].includes(r.status) ? 'badge--success' : ['FAILED', 'cancelled'].includes(r.status) ? 'badge--danger' : 'badge--warning'}`}>{r.status}</span></td>
+                    <td>
+                      <div className="cell-actions">
+                        {['PENDING', 'pending'].includes(r.status) && (
+                          <>
+                            <button className="btn btn--success btn--sm" onClick={() => handleApproveClick(r)} disabled={actionLoading === r.orderId}>
+                              {actionLoading === r.orderId ? <Spinner /> : 'Approve'}
+                            </button>
+                            <button className="btn btn--danger btn--sm" onClick={() => handleCancel(r.orderId)} disabled={actionLoading === r.orderId}>
+                              {actionLoading === r.orderId ? <Spinner /> : 'Cancel'}
+                            </button>
+                          </>
+                        )}
+                      </div>
+                    </td>
+                  </tr>
+                )})
+              )}
             </tbody>
           </table>
-          )}
         </div>
-        {!loading && total > 0 && (
-          <div className="pagination">
-            <span>Page {page} of {Math.ceil(total / LIMIT)}</span>
-            <button className="pagination__btn" disabled={page <= 1} onClick={() => load(page - 1)}>‹</button>
-            <button className="pagination__btn active">{page}</button>
-            <button className="pagination__btn" disabled={page >= Math.ceil(total / LIMIT)} onClick={() => load(page + 1)}>›</button>
-          </div>
-        )}
+        <Pagination page={page} total={total} limit={LIMIT} onChange={(p) => load(p)} />
       </section>
 
       {approveTarget && (

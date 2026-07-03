@@ -1,3 +1,5 @@
+import { useState } from 'react'
+
 interface Props {
   page: number
   total: number
@@ -7,6 +9,7 @@ interface Props {
 
 export default function Pagination({ page, total, limit, onChange }: Props) {
   const totalPages = Math.max(1, Math.ceil(total / limit))
+  const [jumpValue, setJumpValue] = useState('')
 
   const pages: (number | string)[] = []
   const start = Math.max(1, page - 2)
@@ -18,28 +21,60 @@ export default function Pagination({ page, total, limit, onChange }: Props) {
   if (end < totalPages - 1) pages.push('...')
   if (end < totalPages) pages.push(totalPages)
 
+  const handleJump = (e: React.FormEvent) => {
+    e.preventDefault()
+    const p = parseInt(jumpValue, 10)
+    if (p >= 1 && p <= totalPages) {
+      onChange(p)
+      setJumpValue('')
+    }
+  }
+
   return (
-    <div className="pagination">
-      <span>Page {page} of {totalPages}</span>
-      <button className="pagination__btn" disabled={page <= 1} onClick={() => onChange(page - 1)}>
-        ‹
-      </button>
-      {pages.map((p, i) =>
-        typeof p === 'string' ? (
-          <span key={`ellipsis-${i}`}>...</span>
-        ) : (
-          <button
-            key={p}
-            className={`pagination__btn ${p === page ? 'active' : ''}`}
-            onClick={() => onChange(p)}
-          >
-            {p}
-          </button>
-        ),
-      )}
-      <button className="pagination__btn" disabled={page >= totalPages} onClick={() => onChange(page + 1)}>
-        ›
-      </button>
+    <div className="block" style={{ textAlign: 'right', padding: '20px 5px 2px' }}>
+      <div className="el-pagination">
+        <span className="el-pagination__total">Total {total}</span>
+        <button
+          type="button"
+          className="btn-prev"
+          disabled={page <= 1}
+          onClick={() => onChange(page - 1)}
+        >
+          ‹
+        </button>
+        <ul className="el-pager">
+          {pages.map((p, i) =>
+            typeof p === 'string' ? (
+              <li key={`ellipsis-${i}`} className="el-pager__more">...</li>
+            ) : (
+              <li
+                key={p}
+                className={`el-pager__btn${p === page ? ' active' : ''}`}
+                onClick={() => onChange(p)}
+              >
+                {p}
+              </li>
+            )
+          )}
+        </ul>
+        <button
+          type="button"
+          className="btn-next"
+          disabled={page >= totalPages}
+          onClick={() => onChange(page + 1)}
+        >
+          ›
+        </button>
+        <span className="el-pagination__jump">
+          Go to
+          <input
+            type="text"
+            value={jumpValue}
+            onChange={(e) => setJumpValue(e.target.value)}
+            onKeyDown={(e) => { if (e.key === 'Enter') handleJump(e) }}
+          />
+        </span>
+      </div>
     </div>
   )
 }

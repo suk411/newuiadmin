@@ -5,6 +5,7 @@ import type { TransactionRecord } from '../api/transactions'
 import { formatDateTime12 } from '../utils/format'
 import { useToast } from '../contexts/ToastContext'
 import Spinner from '../components/Spinner'
+import Pagination from '../components/Pagination'
 import ExportButton from '../components/ExportButton'
 import type { ExportColumn } from '../utils/export'
 
@@ -100,42 +101,33 @@ export default function Transactions() {
           <ExportButton columns={TRANSACTION_COLUMNS} data={records as unknown as Record<string, unknown>[]} filename="transactions" />
         </div>
         <div className="table-wrap">
-          {loading && records.length === 0 ? (
-            <div style={{ padding: '48px 0', textAlign: 'center' }}>
-              <Spinner />
-            </div>
-          ) : records.length === 0 ? (
-            <div className="empty-state"><div className="empty-state__icon">📋</div>No transactions found</div>
-          ) : (
           <table className="table">
             <thead><tr><th>User ID</th><th>Order ID</th><th>Type</th><th>Amount</th><th>Charge</th><th>Balance</th><th>Status</th><th>Remark</th><th>Created</th><th>Updated</th></tr></thead>
             <tbody>
-              {records.map((r) => (
-                <tr key={r.orderId} tabIndex={0}>
-                  <td>{r.userId}</td>
-                  <td style={{ fontFamily: 'monospace', fontSize: 12 }}>{r.orderId}</td>
-                  <td>{r.type}</td>
-                  <td>₹{r.amount.toLocaleString('en-IN')}</td>
-                  <td>₹{r.charge.toLocaleString('en-IN')}</td>
-                  <td>₹{r.balanceAfter.toLocaleString('en-IN')}</td>
-                  <td><span className={`badge ${r.status === 'SUCCESS' ? 'badge--success' : r.status === 'FAILED' ? 'badge--danger' : 'badge--warning'}`}>{r.status}</span></td>
-                  <td>{r.remark || '-'}</td>
-                  <td style={{ whiteSpace: 'nowrap' }}>{formatDateTime12(r.createdAt)}</td>
-                  <td style={{ whiteSpace: 'nowrap' }}>{formatDateTime12(r.updatedAt)}</td>
-                </tr>
-              ))}
+              {records.length === 0 ? (
+                <tr><td colSpan={10} style={{ textAlign: 'center', padding: '48px 0' }}>
+                  {loading ? <Spinner /> : <div className="empty-state"><div className="empty-state__icon">📋</div>No transactions found</div>}
+                </td></tr>
+              ) : (
+                records.map((r) => (
+                  <tr key={r.orderId} tabIndex={0}>
+                    <td>{r.userId}</td>
+                    <td style={{ fontFamily: 'monospace', fontSize: 12 }}>{r.orderId}</td>
+                    <td>{r.type}</td>
+                    <td>₹{r.amount.toLocaleString('en-IN')}</td>
+                    <td>₹{r.charge.toLocaleString('en-IN')}</td>
+                    <td>₹{r.balanceAfter.toLocaleString('en-IN')}</td>
+                    <td><span className={`badge ${r.status === 'SUCCESS' ? 'badge--success' : r.status === 'FAILED' ? 'badge--danger' : 'badge--warning'}`}>{r.status}</span></td>
+                    <td>{r.remark || '-'}</td>
+                    <td style={{ whiteSpace: 'nowrap' }}>{formatDateTime12(r.createdAt)}</td>
+                    <td style={{ whiteSpace: 'nowrap' }}>{formatDateTime12(r.updatedAt)}</td>
+                  </tr>
+                ))
+              )}
             </tbody>
           </table>
-          )}
         </div>
-        {!loading && total > 0 && (
-          <div className="pagination">
-            <span>Page {page} of {Math.ceil(total / LIMIT)}</span>
-            <button className="pagination__btn" disabled={page <= 1} onClick={() => load(page - 1)}>‹</button>
-            <button className="pagination__btn active">{page}</button>
-            <button className="pagination__btn" disabled={page >= Math.ceil(total / LIMIT)} onClick={() => load(page + 1)}>›</button>
-          </div>
-        )}
+        <Pagination page={page} total={total} limit={LIMIT} onChange={(p) => load(p)} />
       </section>
     </div>
   )

@@ -5,6 +5,7 @@ import type { GiftCode } from '../api/giftCodes'
 import { formatDateTime } from '../utils/format'
 import { useToast } from '../contexts/ToastContext'
 import Spinner from '../components/Spinner'
+import Pagination from '../components/Pagination'
 
 const LIMIT = 20
 
@@ -100,51 +101,42 @@ export default function GiftCodes() {
 
       <section className="card">
         <div className="table-wrap">
-          {loading ? (
-            <div style={{ padding: '48px 0', textAlign: 'center' }}>
-              <Spinner />
-            </div>
-          ) : records.length === 0 ? (
-            <div className="empty-state"><div className="empty-state__icon">📋</div>No gift codes found</div>
-          ) : (
           <table className="table">
             <thead><tr><th>Code</th><th>Reward (₹)</th><th>Multiplier</th><th>Max Redemptions</th><th>Used</th><th>Expiry</th><th>Min Deposit</th><th>Status</th><th>Created</th><th>Actions</th></tr></thead>
             <tbody>
-              {records.map((r) => (
-                <tr key={r.code} tabIndex={0}>
-                  <td style={{ fontFamily: 'monospace', fontSize: 12, fontWeight: 600 }}>{r.code}</td>
-                  <td>₹{r.rewardAmount.toLocaleString('en-IN')}</td>
-                  <td>{r.turnoverMultiplier}x</td>
-                  <td>{r.maxRedemptions}</td>
-                  <td>{r.usedCount}</td>
-                  <td style={{ whiteSpace: 'nowrap' }}>{r.expiryDate ? formatDateTime(r.expiryDate) : '-'}</td>
-                  <td>₹{r.minDepositToday.toLocaleString('en-IN')}</td>
-                  <td><span className={`badge ${r.isActive ? 'badge--success' : 'badge--danger'}`}>{r.isActive ? 'Active' : 'Inactive'}</span></td>
-                  <td style={{ whiteSpace: 'nowrap' }}>{formatDateTime(r.createdAt)}</td>
-                  <td>
-                    <div className="cell-actions">
-                      <button className="btn btn--sm" style={{ color: '#409eff' }} onClick={async () => { await toggleGiftCode(r.code); load() }}>
-                        {r.isActive ? 'Deactivate' : 'Activate'}
-                      </button>
-                      <button className="btn btn--danger btn--sm" onClick={async () => { if (confirm('Delete this code?')) { await deleteGiftCode(r.code); load() } }}>
-                        Delete
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              ))}
+              {records.length === 0 ? (
+                <tr><td colSpan={10} style={{ textAlign: 'center', padding: '48px 0' }}>
+                  {loading ? <Spinner /> : <div className="empty-state"><div className="empty-state__icon">📋</div>No gift codes found</div>}
+                </td></tr>
+              ) : (
+                records.map((r) => (
+                  <tr key={r.code} tabIndex={0}>
+                    <td style={{ fontFamily: 'monospace', fontSize: 12, fontWeight: 600 }}>{r.code}</td>
+                    <td>₹{r.rewardAmount.toLocaleString('en-IN')}</td>
+                    <td>{r.turnoverMultiplier}x</td>
+                    <td>{r.maxRedemptions}</td>
+                    <td>{r.usedCount}</td>
+                    <td style={{ whiteSpace: 'nowrap' }}>{r.expiryDate ? formatDateTime(r.expiryDate) : '-'}</td>
+                    <td>₹{r.minDepositToday.toLocaleString('en-IN')}</td>
+                    <td><span className={`badge ${r.isActive ? 'badge--success' : 'badge--danger'}`}>{r.isActive ? 'Active' : 'Inactive'}</span></td>
+                    <td style={{ whiteSpace: 'nowrap' }}>{formatDateTime(r.createdAt)}</td>
+                    <td>
+                      <div className="cell-actions">
+                        <button className="btn btn--sm" style={{ color: '#409eff' }} onClick={async () => { await toggleGiftCode(r.code); load() }}>
+                          {r.isActive ? 'Deactivate' : 'Activate'}
+                        </button>
+                        <button className="btn btn--danger btn--sm" onClick={async () => { if (confirm('Delete this code?')) { await deleteGiftCode(r.code); load() } }}>
+                          Delete
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))
+              )}
             </tbody>
           </table>
-          )}
         </div>
-        {!loading && total > 0 && (
-          <div className="pagination">
-            <span>Page {page} of {Math.ceil(total / LIMIT)}</span>
-            <button className="pagination__btn" disabled={page <= 1} onClick={() => load(page - 1)}>‹</button>
-            <button className="pagination__btn active">{page}</button>
-            <button className="pagination__btn" disabled={page >= Math.ceil(total / LIMIT)} onClick={() => load(page + 1)}>›</button>
-          </div>
-        )}
+        <Pagination page={page} total={total} limit={LIMIT} onChange={(p) => load(p)} />
       </section>
 
       {showCreate && (

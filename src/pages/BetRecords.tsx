@@ -5,6 +5,7 @@ import type { ProviderBet, WingoBet } from '../api/bets'
 import { formatDateTime } from '../utils/format'
 import { useToast } from '../contexts/ToastContext'
 import Spinner from '../components/Spinner'
+import Pagination from '../components/Pagination'
 import ExportButton from '../components/ExportButton'
 import type { ExportColumn } from '../utils/export'
 
@@ -89,13 +90,6 @@ export default function BetRecords() {
           <ExportButton columns={BET_COLUMNS} data={records as unknown as Record<string, unknown>[]} filename="bet-records" />
         </div>
         <div className="table-wrap">
-          {loading && records.length === 0 ? (
-            <div style={{ padding: '48px 0', textAlign: 'center' }}>
-              <Spinner />
-            </div>
-          ) : records.length === 0 && !loading ? (
-            <div className="empty-state"><div className="empty-state__icon">📋</div>No bet records found</div>
-          ) : (
           <table className="table">
             <thead>
               <tr>
@@ -107,36 +101,34 @@ export default function BetRecords() {
               </tr>
             </thead>
             <tbody>
-              {records.map((r: any) => (
-                <tr key={r.id} tabIndex={0}>
-                  {tab === 'provider' ? (
-                    <><td style={{ fontFamily: 'monospace', fontSize: 12 }}>{r.id}</td>
-                      <td>{r.member}</td><td>{r.site}</td>
-                      <td>₹{Number(r.amount).toLocaleString('en-IN')}</td>
-                      <td><span className="badge badge--success">{r.status}</span></td>
-                      <td style={{ whiteSpace: 'nowrap' }}>{formatDateTime(r.createdAt)}</td></>
-                  ) : (
-                    <><td style={{ fontFamily: 'monospace', fontSize: 12 }}>{r.id}</td>
-                      <td>{r.userId}</td><td style={{ fontFamily: 'monospace', fontSize: 12 }}>{r.orderNumber}</td>
-                      <td>{r.issueNumber}</td>
-                      <td>₹{Number(r.amount).toLocaleString('en-IN')}</td>
-                      <td><span className="badge badge--success">{r.status}</span></td>
-                      <td style={{ whiteSpace: 'nowrap' }}>{formatDateTime(r.createdAt)}</td></>
-                  )}
-                </tr>
-              ))}
+              {records.length === 0 ? (
+                <tr><td colSpan={tab === 'provider' ? 6 : 7} style={{ textAlign: 'center', padding: '48px 0' }}>
+                  {loading ? <Spinner /> : <div className="empty-state"><div className="empty-state__icon">📋</div>No bet records found</div>}
+                </td></tr>
+              ) : (
+                records.map((r: any) => (
+                  <tr key={r.id} tabIndex={0}>
+                    {tab === 'provider' ? (
+                      <><td style={{ fontFamily: 'monospace', fontSize: 12 }}>{r.id}</td>
+                        <td>{r.member}</td><td>{r.site}</td>
+                        <td>₹{Number(r.amount).toLocaleString('en-IN')}</td>
+                        <td><span className="badge badge--success">{r.status}</span></td>
+                        <td style={{ whiteSpace: 'nowrap' }}>{formatDateTime(r.createdAt)}</td></>
+                    ) : (
+                      <><td style={{ fontFamily: 'monospace', fontSize: 12 }}>{r.id}</td>
+                        <td>{r.userId}</td><td style={{ fontFamily: 'monospace', fontSize: 12 }}>{r.orderNumber}</td>
+                        <td>{r.issueNumber}</td>
+                        <td>₹{Number(r.amount).toLocaleString('en-IN')}</td>
+                        <td><span className="badge badge--success">{r.status}</span></td>
+                        <td style={{ whiteSpace: 'nowrap' }}>{formatDateTime(r.createdAt)}</td></>
+                    )}
+                  </tr>
+                ))
+              )}
             </tbody>
           </table>
-          )}
         </div>
-        {!loading && total > 0 && (
-          <div className="pagination">
-            <span>Page {page} of {Math.ceil(total / LIMIT)}</span>
-            <button className="pagination__btn" disabled={page <= 1} onClick={() => load(page - 1)}>‹</button>
-            <button className="pagination__btn active">{page}</button>
-            <button className="pagination__btn" disabled={page >= Math.ceil(total / LIMIT)} onClick={() => load(page + 1)}>›</button>
-          </div>
-        )}
+        <Pagination page={page} total={total} limit={LIMIT} onChange={(p) => load(p)} />
       </section>
     </div>
   )

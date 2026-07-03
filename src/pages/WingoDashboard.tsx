@@ -5,6 +5,7 @@ import type { CurrentRound, RoundStats, CurrentRoundBetsItem, SettledRound, Roun
 import { formatDateTime } from '../utils/format'
 import { useToast } from '../contexts/ToastContext'
 import Spinner from '../components/Spinner'
+import Pagination from '../components/Pagination'
 
 const LIMIT = 25
 
@@ -209,28 +210,27 @@ export default function WingoDashboard() {
               <table className="table">
                 <thead><tr><th>User</th><th>Mobile</th><th>Order No</th><th>Selection</th><th>Amount</th><th>Status</th><th>Time</th></tr></thead>
                 <tbody>
-                  {bets.map(b => (
-                    <tr key={b._id} tabIndex={0}>
-                      <td>{b.userId}</td>
-                      <td>{b.mobile || '-'}</td>
-                      <td style={{ fontFamily: 'monospace', fontSize: 12 }}>{b.orderNumber}</td>
-                      <td><span className="badge badge--info">{b.selectType}</span></td>
-                      <td>₹{b.betAmount.toLocaleString('en-IN')}</td>
-                      <td><span className={`badge ${b.status === 'won' ? 'badge--success' : b.status === 'lost' ? 'badge--danger' : 'badge--warning'}`}>{b.status}</span></td>
-                      <td style={{ whiteSpace: 'nowrap' }}>{formatDateTime(b.createdAt)}</td>
-                    </tr>
-                  ))}
-</tbody>
-</table>
+                  {bets.length === 0 ? (
+                    <tr><td colSpan={7} style={{ textAlign: 'center', padding: '48px 0' }}>
+                      <div className="empty-state"><div className="empty-state__icon">📋</div>No bets found</div>
+                    </td></tr>
+                  ) : (
+                    bets.map(b => (
+                      <tr key={b._id} tabIndex={0}>
+                        <td>{b.userId}</td>
+                        <td>{b.mobile || '-'}</td>
+                        <td style={{ fontFamily: 'monospace', fontSize: 12 }}>{b.orderNumber}</td>
+                        <td><span className="badge badge--info">{b.selectType}</span></td>
+                        <td>₹{b.betAmount.toLocaleString('en-IN')}</td>
+                        <td><span className={`badge ${b.status === 'won' ? 'badge--success' : b.status === 'lost' ? 'badge--danger' : 'badge--warning'}`}>{b.status}</span></td>
+                        <td style={{ whiteSpace: 'nowrap' }}>{formatDateTime(b.createdAt)}</td>
+                      </tr>
+                    ))
+                  )}
+                </tbody>
+              </table>
             </div>
-            {betsTotal > 50 && (
-              <div className="pagination">
-                <span>Page {betsPage} of {Math.ceil(betsTotal / 50)}</span>
-                <button className="pagination__btn" disabled={betsPage <= 1} onClick={() => loadBets(gameMode, betsPage - 1)}>‹</button>
-                <button className="pagination__btn active">{betsPage}</button>
-                <button className="pagination__btn" disabled={betsPage >= Math.ceil(betsTotal / 50)} onClick={() => loadBets(gameMode, betsPage + 1)}>›</button>
-              </div>
-            )}
+            <Pagination page={betsPage} total={betsTotal} limit={50} onChange={(p) => loadBets(gameMode, p)} />
           </section>
         </>
       )}
@@ -238,16 +238,18 @@ export default function WingoDashboard() {
       {tab === 'history' && (
         <>
           <section className="card">
-            {settledLoading && settled.length === 0 ? (
-              <div className="table-wrap" style={{ padding: '48px 0', textAlign: 'center' }}><Spinner /></div>
-            ) : settled.length === 0 ? (
-              <div className="table-wrap"><div className="empty-state"><div className="empty-state__icon">📋</div>No rounds found</div></div>
-            ) : (
-              <div className="table-wrap">
-                <table className="table">
-                  <thead><tr><th>Issue</th><th>Result</th><th>Bets</th><th>Amount</th><th>Status</th><th>Date</th><th>Actions</th></tr></thead>
-                  <tbody>
-                    {settled.map(r => (
+            <div className="table-wrap">
+              <table className="table">
+                <thead><tr><th>Issue</th><th>Result</th><th>Bets</th><th>Amount</th><th>Status</th><th>Date</th><th>Actions</th></tr></thead>
+                <tbody>
+                  {settledLoading && settled.length === 0 ? (
+                    <tr><td colSpan={7} style={{ textAlign: 'center', padding: '48px 0' }}><Spinner /></td></tr>
+                  ) : settled.length === 0 ? (
+                    <tr><td colSpan={7} style={{ textAlign: 'center', padding: '48px 0' }}>
+                      <div className="empty-state"><div className="empty-state__icon">📋</div>No rounds found</div>
+                    </td></tr>
+                  ) : (
+                    settled.map(r => (
                       <tr key={r.issueNumber} tabIndex={0}>
                         <td>{r.issueNumber}</td>
                         <td style={{ fontWeight: 600, color: r.result?.color?.includes('red') ? '#ef4444' : r.result?.color?.includes('green') ? '#22c55e' : '#a855f7' }}>{r.result?.number ?? '—'}</td>
@@ -257,20 +259,13 @@ export default function WingoDashboard() {
                         <td style={{ whiteSpace: 'nowrap' }}>{new Date(r.createdAt).toISOString().slice(0, 19).replace('T', ' ')}</td>
                         <td><div className="cell-actions"><button className="btn btn--primary btn--sm" onClick={() => viewDetail(r.issueNumber)}>View Stats</button></div></td>
                       </tr>
-                    ))}
-</tbody>
-                  </table>
-                </div>
-              )}
-              {settledTotal > 0 && (
-                <div className="pagination">
-                  <span>Page {settledPage} of {Math.ceil(settledTotal / LIMIT)}</span>
-                  <button className="pagination__btn" disabled={settledPage <= 1} onClick={() => loadSettled(gameMode, settledPage - 1)}>‹</button>
-                  <button className="pagination__btn active">{settledPage}</button>
-                  <button className="pagination__btn" disabled={settledPage >= Math.ceil(settledTotal / LIMIT)} onClick={() => loadSettled(gameMode, settledPage + 1)}>›</button>
-                </div>
-              )}
-            </section>
+                    ))
+                  )}
+                </tbody>
+              </table>
+            </div>
+            <Pagination page={settledPage} total={settledTotal} limit={LIMIT} onChange={(p) => loadSettled(gameMode, p)} />
+          </section>
 
           {roundDetail && (
             <div className="dialog-overlay" onClick={() => setRoundDetail(null)}>

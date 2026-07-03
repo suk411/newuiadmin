@@ -14,6 +14,7 @@ import { fetchAgencyLevels, updateAgencyLevel } from '../api/agency'
 import type { AgencyLevelConfig } from '../api/agency'
 import { useToast } from '../contexts/ToastContext'
 import Spinner from '../components/Spinner'
+import Pagination from '../components/Pagination'
 import { formatDateTime } from '../utils/format'
 
 function extractError(err: unknown): string {
@@ -506,44 +507,40 @@ export default function Settings() {
                 <button className="btn-filled" style={{ background: '#22c55e', borderColor: '#22c55e' }} onClick={gcOpenCreate}>+ New</button>
                 <button className="btn-outline" onClick={() => loadGc(1)}>Refresh</button>
               </div>
-              {gcLoading ? <div style={{ padding: '24px 0', textAlign: 'center' }}><Spinner /></div> : gcRecords.length === 0 ? <div className="empty-state"><div className="empty-state__icon">📋</div>No gift codes</div> : (
-                <>
-                  <div className="table-wrap">
-                    <table className="table">
-                      <thead><tr><th>Code</th><th>Reward</th><th>Multiplier</th><th>Max Redemptions</th><th>Used</th><th>Expires</th><th>Min Deposit</th><th>Active</th><th>Actions</th></tr></thead>
-                      <tbody>
-                        {gcRecords.map(g => (
-                          <tr key={g._id || g.code} tabIndex={0}>
-                            <td style={{ fontFamily: 'monospace', fontSize: 12 }}>{g.code}</td>
-                            <td>₹{g.rewardAmount.toLocaleString('en-IN')}</td>
-                            <td>{g.turnoverMultiplier}x</td>
-                            <td>{g.maxRedemptions}</td>
-                            <td>{g.usedCount}</td>
-                            <td style={{ whiteSpace: 'nowrap' }}>{g.expiryDate ? formatDateTime(g.expiryDate) : '-'}</td>
-                            <td>{g.minDepositToday ? `₹${g.minDepositToday.toLocaleString('en-IN')}` : '-'}</td>
-                            <td><span className={`badge ${g.isActive ? 'badge--success' : 'badge--danger'}`}>{g.isActive ? 'Active' : 'Inactive'}</span></td>
-                            <td><div className="cell-actions">
-                              <button className="btn btn--sm" style={{ background: g.isActive ? '#ef4444' : '#22c55e', color: '#fff', border: 'none' }} onClick={() => gcHandleToggle(g.code)}>{g.isActive ? 'Deactivate' : 'Activate'}</button>
-                              <button className="btn btn--danger btn--sm" onClick={() => gcHandleDelete(g.code)}>Delete</button>
-                            </div></td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
-                  {gcTotal > 0 && (
-                    <div className="pagination">
-                      <span>Page {gcPage} of {Math.ceil(gcTotal / GC_LIMIT)}</span>
-                      <button className="pagination__btn" disabled={gcPage <= 1} onClick={() => loadGc(gcPage - 1)}>‹</button>
-                      <button className="pagination__btn active">{gcPage}</button>
-                      <button className="pagination__btn" disabled={gcPage >= Math.ceil(gcTotal / GC_LIMIT)} onClick={() => loadGc(gcPage + 1)}>›</button>
-                    </div>
-                  )}
-                </>
-              )}
-            </div>
+              <div className="table-wrap">
+                <table className="table">
+                  <thead><tr><th>Code</th><th>Reward</th><th>Multiplier</th><th>Max Redemptions</th><th>Used</th><th>Expires</th><th>Min Deposit</th><th>Active</th><th>Actions</th></tr></thead>
+                  <tbody>
+                    {gcLoading ? (
+                      <tr><td colSpan={9} style={{ textAlign: 'center', padding: '24px 0' }}><Spinner /></td></tr>
+                    ) : gcRecords.length === 0 ? (
+                      <tr><td colSpan={9} style={{ textAlign: 'center', padding: '24px 0' }}>
+                        <div className="empty-state"><div className="empty-state__icon">📋</div>No gift codes</div>
+                      </td></tr>
+                    ) : (
+                      gcRecords.map(g => (
+                        <tr key={g._id || g.code} tabIndex={0}>
+                          <td style={{ fontFamily: 'monospace', fontSize: 12 }}>{g.code}</td>
+                          <td>₹{g.rewardAmount.toLocaleString('en-IN')}</td>
+                          <td>{g.turnoverMultiplier}x</td>
+                          <td>{g.maxRedemptions}</td>
+                          <td>{g.usedCount}</td>
+                          <td style={{ whiteSpace: 'nowrap' }}>{g.expiryDate ? formatDateTime(g.expiryDate) : '-'}</td>
+                          <td>{g.minDepositToday ? `₹${g.minDepositToday.toLocaleString('en-IN')}` : '-'}</td>
+                          <td><span className={`badge ${g.isActive ? 'badge--success' : 'badge--danger'}`}>{g.isActive ? 'Active' : 'Inactive'}</span></td>
+                          <td><div className="cell-actions">
+                            <button className="btn btn--sm" style={{ background: g.isActive ? '#ef4444' : '#22c55e', color: '#fff', border: 'none' }} onClick={() => gcHandleToggle(g.code)}>{g.isActive ? 'Deactivate' : 'Activate'}</button>
+                            <button className="btn btn--danger btn--sm" onClick={() => gcHandleDelete(g.code)}>Delete</button>
+                          </div></td>
+                        </tr>
+                      ))
+                    )}
+                  </tbody>
+                </table>
+              </div>
           </div>
         </div>
+      </div>
       )}
       {gcShowCreate && (
         <div className="dialog-overlay" onClick={() => setGcShowCreate(false)}>

@@ -4,6 +4,7 @@ import { fetchTeamStats, fetchTeamMembers } from '../api/agency'
 import type { TeamStats, TeamMember, TierAmount } from '../api/agency'
 import { useToast } from '../contexts/ToastContext'
 import Spinner from '../components/Spinner'
+import Pagination from '../components/Pagination'
 import ExportButton from '../components/ExportButton'
 import type { ExportColumn } from '../utils/export'
 import { formatDateTime12 } from '../utils/format'
@@ -216,55 +217,48 @@ export default function AgencyDashboard() {
 
       {tab === 'members' && (
         <section className="card" style={{ flex: 1, overflow: 'auto' }}>
-          {membersLoading ? (
-            <div style={{ padding: '48px 0', textAlign: 'center' }}><Spinner /></div>
-          ) : !membersFetched.current ? (
-            <div className="empty-state"><div className="empty-state__icon">📋</div>Search a user to view team members</div>
-          ) : members.length === 0 ? (
-            <div className="empty-state"><div className="empty-state__icon">📋</div>No team members found</div>
-          ) : (
-            <>
-              <div style={{ display: 'flex', justifyContent: 'flex-end', padding: '8px 16px' }}>
-                <ExportButton columns={MEMBER_COLUMNS} data={members as unknown as Record<string, unknown>[]} filename="team-members" />
-              </div>
-              <div className="table-wrap">
-                <table className="table">
-                  <thead><tr>
-                    <th>User ID</th>
-                    <th>Level</th>
-                    <th>Registered</th>
-                    <th>Total Deposit</th>
-                    <th>Total Withdrawal</th>
-                    <th>Balance</th>
-                    <th>Bank Bound</th>
-                    <th>Multi IP</th>
-                  </tr></thead>
-                  <tbody>
-                    {members.map((m) => (
-                      <tr key={m.userId} tabIndex={0}>
-                        <td style={{ fontFamily: 'monospace', fontSize: 12 }}>{m.userId}</td>
-                        <td>{m.level}</td>
-                        <td style={{ whiteSpace: 'nowrap' }}>{formatDateTime12(m.registeredAt)}</td>
-                        <td>₹{m.totalDeposit.toLocaleString('en-IN')}</td>
-                        <td>₹{m.totalWithdrawal.toLocaleString('en-IN')}</td>
-                        <td>₹{m.balance.toLocaleString('en-IN')}</td>
-                        <td><span className={`badge ${m.bindBank ? 'badge--success' : 'badge--danger'}`}>{m.bindBank ? 'Yes' : 'No'}</span></td>
-                        <td><span className={`badge ${m.multipleIp ? 'badge--danger' : 'badge--success'}`}>{m.multipleIp ? 'Yes' : 'No'}</span></td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-              {membersTotal > 0 && (
-                <div className="pagination">
-                  <span>Page {membersPage} of {Math.ceil(membersTotal / MEMBER_LIMIT)}</span>
-                  <button className="pagination__btn" disabled={membersPage <= 1} onClick={() => loadMembers(membersPage - 1)}>‹</button>
-                  <button className="pagination__btn active">{membersPage}</button>
-                  <button className="pagination__btn" disabled={membersPage >= Math.ceil(membersTotal / MEMBER_LIMIT)} onClick={() => loadMembers(membersPage + 1)}>›</button>
-                </div>
-              )}
-            </>
-          )}
+          <div style={{ display: 'flex', justifyContent: 'flex-end', padding: '8px 16px' }}>
+            <ExportButton columns={MEMBER_COLUMNS} data={members as unknown as Record<string, unknown>[]} filename="team-members" />
+          </div>
+          <div className="table-wrap">
+            <table className="table">
+              <thead><tr>
+                <th>User ID</th>
+                <th>Level</th>
+                <th>Registered</th>
+                <th>Total Deposit</th>
+                <th>Total Withdrawal</th>
+                <th>Balance</th>
+                <th>Bank Bound</th>
+                <th>Multi IP</th>
+              </tr></thead>
+              <tbody>
+                {!membersFetched.current && !membersLoading ? (
+                  <tr><td colSpan={8} style={{ textAlign: 'center', padding: '48px 0' }}>
+                    <div className="empty-state"><div className="empty-state__icon">📋</div>Search a user to view team members</div>
+                  </td></tr>
+                ) : members.length === 0 ? (
+                  <tr><td colSpan={8} style={{ textAlign: 'center', padding: '48px 0' }}>
+                    {membersLoading ? <Spinner /> : <div className="empty-state"><div className="empty-state__icon">📋</div>No team members found</div>}
+                  </td></tr>
+                ) : (
+                  members.map((m) => (
+                    <tr key={m.userId} tabIndex={0}>
+                      <td style={{ fontFamily: 'monospace', fontSize: 12 }}>{m.userId}</td>
+                      <td>{m.level}</td>
+                      <td style={{ whiteSpace: 'nowrap' }}>{formatDateTime12(m.registeredAt)}</td>
+                      <td>₹{m.totalDeposit.toLocaleString('en-IN')}</td>
+                      <td>₹{m.totalWithdrawal.toLocaleString('en-IN')}</td>
+                      <td>₹{m.balance.toLocaleString('en-IN')}</td>
+                      <td><span className={`badge ${m.bindBank ? 'badge--success' : 'badge--danger'}`}>{m.bindBank ? 'Yes' : 'No'}</span></td>
+                      <td><span className={`badge ${m.multipleIp ? 'badge--danger' : 'badge--success'}`}>{m.multipleIp ? 'Yes' : 'No'}</span></td>
+                    </tr>
+                  ))
+                )}
+              </tbody>
+            </table>
+          </div>
+          <Pagination page={membersPage} total={membersTotal} limit={MEMBER_LIMIT} onChange={(p) => loadMembers(p)} />
         </section>
       )}
     </div>
