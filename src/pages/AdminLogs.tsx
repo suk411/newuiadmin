@@ -4,7 +4,7 @@ import { fetchLogs } from '../api/logs'
 import type { LogEntry } from '../api/logs'
 import { formatDateTime } from '../utils/format'
 import Spinner from '../components/Spinner'
-import ExportButton from '../components/ExportButton'
+import { useExportBar } from '../components/ExportBarContext'
 import type { ExportColumn } from '../utils/export'
 
 const LOG_COLUMNS: ExportColumn[] = [
@@ -24,6 +24,12 @@ export default function AdminLogs() {
   const [level, setLevel] = useState('')
   const [since, setSince] = useState('')
   const [loading, setLoading] = useState(false)
+  const { setExportProps } = useExportBar()
+
+  useEffect(() => {
+    setExportProps({ columns: LOG_COLUMNS, data: logs as unknown as Record<string, unknown>[], filename: 'admin-logs' })
+    return () => setExportProps(null)
+  }, [logs, setExportProps])
 
   const load = async () => {
     setLoading(true)
@@ -64,9 +70,6 @@ export default function AdminLogs() {
       </div>
 
       <section className="card">
-        <div style={{ display: 'flex', justifyContent: 'flex-end', padding: '8px 16px' }}>
-          <ExportButton columns={LOG_COLUMNS} data={logs as unknown as Record<string, unknown>[]} filename="admin-logs" />
-        </div>
         {loading && logs.length === 0 ? (
           <div className="table-wrap" style={{ padding: '48px 0', textAlign: 'center' }}>
             <Spinner />

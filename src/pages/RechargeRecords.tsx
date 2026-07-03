@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react'
+import { useState, useCallback, useEffect } from 'react'
 import axios from 'axios'
 import { fetchDeposits, approveDeposit } from '../api/deposits'
 import type { DepositRecord, DepositFilters } from '../api/deposits'
@@ -6,7 +6,7 @@ import RechargeFilters from '../components/RechargeFilters'
 import RechargeTable from '../components/RechargeTable'
 import ApproveDialog from '../components/ApproveDialog'
 import Pagination from '../components/Pagination'
-import ExportButton from '../components/ExportButton'
+import { useExportBar } from '../components/ExportBarContext'
 import type { ExportColumn } from '../utils/export'
 import { useToast } from '../contexts/ToastContext'
 
@@ -44,6 +44,12 @@ export default function RechargeRecords() {
   const [currentFilters, setCurrentFilters] = useState<DepositFilters | null>(null)
   const [approving, setApproving] = useState(false)
   const [approveTarget, setApproveTarget] = useState<DepositRecord | null>(null)
+  const { setExportProps } = useExportBar()
+
+  useEffect(() => {
+    setExportProps({ columns: RECHARGE_COLUMNS, data: records as unknown as Record<string, unknown>[], filename: 'recharge-records' })
+    return () => setExportProps(null)
+  }, [records, setExportProps])
 
   const loadRecords = useCallback(async (filters: DepositFilters) => {
     setLoading(true)
@@ -101,9 +107,6 @@ export default function RechargeRecords() {
     <div className="content content--table">
       <RechargeFilters onSearch={handleSearch} loading={loading} />
       <section className="card">
-        <div style={{ display: 'flex', justifyContent: 'flex-end', padding: '8px 16px' }}>
-          <ExportButton columns={RECHARGE_COLUMNS} data={records as unknown as Record<string, unknown>[]} filename="recharge-records" />
-        </div>
         <RechargeTable
           records={records}
           loading={loading}

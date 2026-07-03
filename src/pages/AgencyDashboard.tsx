@@ -1,11 +1,11 @@
-import { useState, useRef } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import axios from 'axios'
 import { fetchTeamStats, fetchTeamMembers } from '../api/agency'
 import type { TeamStats, TeamMember, TierAmount } from '../api/agency'
 import { useToast } from '../contexts/ToastContext'
 import Spinner from '../components/Spinner'
 import Pagination from '../components/Pagination'
-import ExportButton from '../components/ExportButton'
+import { useExportBar } from '../components/ExportBarContext'
 import type { ExportColumn } from '../utils/export'
 import { formatDateTime12 } from '../utils/format'
 
@@ -64,6 +64,14 @@ export default function AgencyDashboard() {
   const [membersTotal, setMembersTotal] = useState(0)
   const [membersPage, setMembersPage] = useState(1)
   const membersFetched = useRef(false)
+  const { setExportProps } = useExportBar()
+
+  useEffect(() => {
+    if (tab === 'members') {
+      setExportProps({ columns: MEMBER_COLUMNS, data: members as unknown as Record<string, unknown>[], filename: 'team-members' })
+    }
+    return () => setExportProps(null)
+  }, [tab, members, setExportProps])
 
   const buildParams = (extra: Record<string, string | number> = {}) => {
     const p: Record<string, string | number> = { userId: userId.trim(), ...extra }
@@ -222,9 +230,6 @@ export default function AgencyDashboard() {
 
       {tab === 'members' && (
         <section className="card" style={{ flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
-          <div style={{ display: 'flex', justifyContent: 'flex-end', padding: '8px 16px', flexShrink: 0 }}>
-            <ExportButton columns={MEMBER_COLUMNS} data={members as unknown as Record<string, unknown>[]} filename="team-members" />
-          </div>
           <div className="table-wrap" style={{ flex: 1, minHeight: 0, overflow: 'auto' }}>
             <table className="table">
               <thead><tr>

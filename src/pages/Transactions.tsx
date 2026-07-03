@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import axios from 'axios'
 import { fetchTransactions } from '../api/transactions'
 import type { TransactionRecord } from '../api/transactions'
@@ -6,7 +6,7 @@ import { formatDateTime12 } from '../utils/format'
 import { useToast } from '../contexts/ToastContext'
 import Spinner from '../components/Spinner'
 import Pagination from '../components/Pagination'
-import ExportButton from '../components/ExportButton'
+import { useExportBar } from '../components/ExportBarContext'
 import type { ExportColumn } from '../utils/export'
 
 const LIMIT = 20
@@ -42,6 +42,12 @@ export default function Transactions() {
   const [type, setType] = useState('')
   const [dateFrom, setDateFrom] = useState('')
   const [dateTo, setDateTo] = useState('')
+  const { setExportProps } = useExportBar()
+
+  useEffect(() => {
+    setExportProps({ columns: TRANSACTION_COLUMNS, data: records as unknown as Record<string, unknown>[], filename: 'transactions' })
+    return () => setExportProps(null)
+  }, [records, setExportProps])
 
   const handleUserId = (v: string) => { setUserId(v); if (v) { setOrderId(''); setTransactionId('') } }
   const handleOrderId = (v: string) => { setOrderId(v); if (v) { setUserId(''); setTransactionId('') } }
@@ -97,9 +103,6 @@ export default function Transactions() {
       </form>
 
       <section className="card">
-        <div style={{ display: 'flex', justifyContent: 'flex-end', padding: '8px 16px' }}>
-          <ExportButton columns={TRANSACTION_COLUMNS} data={records as unknown as Record<string, unknown>[]} filename="transactions" />
-        </div>
         <div className="table-wrap">
           <table className="table">
             <thead><tr><th>User ID</th><th>Order ID</th><th>Type</th><th>Amount</th><th>Charge</th><th>Balance</th><th>Status</th><th>Remark</th><th>Created</th><th>Updated</th></tr></thead>

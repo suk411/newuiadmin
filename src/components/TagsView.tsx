@@ -1,5 +1,7 @@
 import { useRef, useEffect } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
+import { useExportBar } from './ExportBarContext'
+import ExportButton from './ExportButton'
 
 export interface TagItem {
   path: string
@@ -28,6 +30,7 @@ export default function TagsView({ tags, onClose }: Props) {
   const location = useLocation()
   const navigate = useNavigate()
   const scrollRef = useRef<HTMLDivElement>(null)
+  const { exportProps } = useExportBar()
 
   useEffect(() => {
     if (scrollRef.current) {
@@ -66,6 +69,11 @@ export default function TagsView({ tags, onClose }: Props) {
           )
         })}
       </div>
+      {exportProps && (
+        <div style={{ marginLeft: 'auto', flexShrink: 0, padding: '0 8px' }}>
+          <ExportButton columns={exportProps.columns} data={exportProps.data} filename={exportProps.filename} />
+        </div>
+      )}
     </div>
   )
 }

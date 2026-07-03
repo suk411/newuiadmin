@@ -1,235 +1,218 @@
-# Wingo Game API - Admin Side (Admin Backend)
+# Bet Search - Admin API
 
-## Base URL
-
-```
-https://admin-backend-7lwn.onrender.com/api/admin
-```
-
-## Authentication
-
-All admin endpoints require Bearer token with admin privileges:
+All endpoints require Bearer token with admin privileges:
 
 ```
 Authorization: Bearer <admin_token>
 ```
 
-## Game Modes
-
-Most admin endpoints support filtering by game mode via `?mode=` query parameter (defaults to `30s`):
-
-| Mode | Duration | Game Code | Issue Example |
-|------|----------|-----------|---------------|
-| `30s` | 30 sec | `WinGo_30S` | `20260628000001` |
-| `1m` | 1 min | `WinGo_1M` | `1M_20260628000001` |
-| `3m` | 3 min | `WinGo_3M` | `3M_20260628000001` |
-| `5m` | 5 min | `WinGo_5M` | `5M_20260628000001` |
-
-Issue numbers for non-30s modes are prefixed with the mode (e.g., `1M_`, `3M_`, `5M_`).
-
 ---
 
-## Result Generation Mode
+## Provider Game Bets (All Bets by Member)
 
-Each game mode has its own independent result mode (RANDOM, MAX_PROFIT, MAX_LOSS).
-
-### Get Current Mode
+**Base URL:** `https://admin-backend-7lwn.onrender.com/api/admin`
 
 ```
-GET /api/admin/result-mode?mode=30s
+GET /api/admin/game/all-bets?member=u12345&site=JE&status=1&dateFrom=2026-01-01&dateTo=2026-03-20&page=1&limit=50
 ```
 
-**Query Params:** `mode` (optional, default: `30s`)
+Search provider game bet records by member (userId).
 
-**Response:**
-```json
-{
-  "success": true,
-  "mode": "RANDOM"
-}
-```
-
-### Set Mode
-
-```
-POST /api/admin/result-mode
-```
-
-**Body:**
-```json
-{
-  "mode": "MAX_PROFIT",
-  "gameMode": "30s"
-}
-```
-
+**Query Params:**
 | Param | Type | Required | Description |
 |-------|------|---------|-------------|
-| mode | string | Yes | `RANDOM`, `MAX_PROFIT`, or `MAX_LOSS` |
-| gameMode | string | No | Target game mode (`30s`, `1m`, `3m`, `5m`). Defaults to `30s`. |
-
-| Result Mode | Description |
-|------|-------------|
-| `RANDOM` | Truly random result |
-| `MAX_PROFIT` | Generates result for maximum platform profit |
-| `MAX_LOSS` | Generates result for maximum platform loss |
-
-**Response:**
-```json
-{
-  "success": true,
-  "currentIssue": "1M_20260628000001",
-  "applyIssue": "1M_20260628000002"
-}
-```
-
----
-
-## Current Round Info
-
-```
-GET /api/admin/current-round?mode=30s
-```
-
-Returns current round with bet type breakdown for the specified game mode.
-
-**Query Params:** `mode` (optional, default: `30s`)
+| member | string | Yes | Member ID (format: `u` + userId, e.g. `u12345`) |
+| site | string | No | Provider code: JE, PG, JD, TU |
+| status | number | No | Bet status (1=valid) |
+| dateFrom | string | No | Start date (YYYY-MM-DD). Filters by settleTime |
+| dateTo | string | No | End date (YYYY-MM-DD). Filters by settleTime |
+| page | number | No | Page number (default: 1) |
+| limit | number | No | Items per page (default: 50, max: 100) |
 
 **Response:**
+
 ```json
 {
-  "success": true,
-  "round": {
-    "issueNumber": "20260628000002",
-    "gameMode": "30s",
-    "status": "open",
-    "startTime": 1777274790000,
-    "endTime": 1777274820000
-  },
-  "stats": {
-    "totalBets": 150,
-    "totalBetAmount": 50000,
-    "uniqueUsers": 42,
-    "breakdown": {
-      "red": 10000,
-      "green": 15000,
-      "violet": 5000,
-      "big": 10000,
-      "small": 10000,
-      "0": 0, "1": 0, "2": 0, "3": 0, "4": 0,
-      "5": 0, "6": 0, "7": 0, "8": 0, "9": 0
-    }
-  }
-}
-```
-
----
-
-## Current Round Bets
-
-```
-GET /api/admin/current-round/bets?page=1&limit=50&mode=30s
-```
-
-Returns all bets for the current round with user mobile numbers.
-
-**Query Params:** `mode` (optional, default: `30s`), `page` (default: 1), `limit` (default: 50, max: 100)
-
-**Response:**
-```json
-{
-  "success": true,
+  "status": "success",
+  "member": "u12345",
   "page": 1,
   "limit": 50,
-  "total": 150,
-  "issueNumber": "20260628000002",
+  "total": 25,
+  "summary": {
+    "totalBet": 5000,
+    "totalPayout": 3000,
+    "totalTurnover": 5000,
+    "netPnl": -2000
+  },
   "items": [
     {
-      "_id": "...",
-      "userId": "123456",
-      "mobile": "9876543210",
-      "orderNumber": "WGO1712345678901",
-      "betAmount": 100,
-      "fee": 0,
-      "selectType": "green",
-      "status": "pending",
-      "result": null,
+      "bet": 200,
+      "payout": 100,
+      "turnover": 200,
+      "gameId": "51",
+      "site": "JE",
+      "product": "slot",
+      "betTime": "2026-03-19T10:30:00.000Z",
+      "settleTime": "2026-03-19T10:30:00.000Z",
       "createdAt": "2026-03-19T10:30:00.000Z"
     }
   ]
 }
 ```
 
+| Field | Description |
+|-------|-------------|
+| items[].bet | Bet amount |
+| items[].payout | Payout amount |
+| items[].turnover | Turnover amount |
+| items[].gameId | Game ID |
+| items[].site | Provider code |
+| items[].product | Game product type |
+| items[].settleTime | Settlement time |
+| totalBet | Sum of bet amounts in current page |
+| totalPayout | Sum of payouts in current page |
+| totalTurnover | Sum of turnover amounts |
+| netPnl | totalPayout - totalBet (negative = platform profit) |
+
 ---
 
-## Round Stats
+## Wingo Bet Search (All Bets)
+
+**Base URL:** `https://admin-backend-7lwn.onrender.com/api/admin`
 
 ```
-GET /api/admin/round-stats/:issueNumber
+GET /api/admin/wingo/all-bets?userId=123&gameMode=30s&status=won&dateFrom=2026-07-01&dateTo=2026-07-03&page=1&limit=50
 ```
 
-Full stats for a specific round with profit/loss calculation. The game mode is inferred from the issue number prefix (e.g., `1M_` prefix = 1m mode, no prefix = 30s).
+Search Wingo bets with multiple filters. Returns each bet with user mobile number.
+
+**Query Params:**
+| Param | Type | Required | Description |
+|-------|------|---------|-------------|
+| userId | string | No | Filter by user ID |
+| issueNumber | string | No | Filter by issue/round number |
+| gameMode | string | No | Filter: `30s`, `1m`, `3m`, `5m` |
+| status | string | No | Filter: `pending`, `won`, `lost` |
+| orderNumber | string | No | Filter by exact order number |
+| dateFrom | string | No | Start date (YYYY-MM-DD). Filters by createdAt |
+| dateTo | string | No | End date (YYYY-MM-DD). Filters by createdAt |
+| page | number | No | Page number (default: 1) |
+| limit | number | No | Items per page (default: 50, max: 100) |
 
 **Response:**
+
 ```json
 {
-  "success": true,
-  "issue": { "issueNumber": "1M_20260628000001", "gameMode": "1m" },
-  "stats": {
-    "totalBets": 150,
-    "totalBetAmount": 50000,
-    "totalPayout": 30000,
-    "profitLoss": 20000,
-    "wonCount": 60,
-    "lostCount": 90,
-    "uniqueUsers": 42,
-    "breakdown": {
-      "red": { "count": 30, "amount": 10000 },
-      "green": { "count": 40, "amount": 15000 },
-      "violet": { "count": 20, "amount": 5000 },
-      "big": { "count": 30, "amount": 10000 },
-      "small": { "count": 30, "amount": 10000 }
+  "status": "success",
+  "page": 1,
+  "limit": 50,
+  "total": 25,
+  "summary": {
+    "totalBet": 5000,
+    "totalPayout": 1200,
+    "wonCount": 3,
+    "lostCount": 22
+  },
+  "items": [
+    {
+      "userId": "123",
+      "issueNumber": "202607030000001",
+      "orderNumber": "WGO1712345678901",
+      "betAmount": 100,
+      "fee": 2,
+      "selectType": "green",
+      "status": "won",
+      "gameMode": "30s",
+      "result": {
+        "number": "5",
+        "selectType": "green",
+        "colour": "green",
+        "premium": null,
+        "profitAmount": 90,
+        "timestamp": "03-07-2026 10:30:00"
+      },
+      "mobile": "98****76",
+      "createdAt": "2026-07-03T05:00:00.000Z"
     }
-  }
+  ]
 }
 ```
 
+| Field | Description |
+|-------|-------------|
+| summary.totalBet | Sum of all betAmount in current page |
+| summary.totalPayout | Sum of all result.profitAmount |
+| summary.wonCount | Count of won bets in current page |
+| summary.lostCount | Count of lost bets in current page |
+| items[].orderNumber | Unique order number for this bet |
+| items[].selectType | Bet selection: red, green, violet, big, small, or 0-9 |
+| items[].gameMode | Game mode: 30s, 1m, 3m, 5m |
+| items[].status | Bet status: pending, won, lost |
+| items[].result | Full result object (number, selectType, colour, premium, profitAmount, timestamp) |
+| items[].mobile | User mobile number (masked) |
+
 ---
 
-## Settled Rounds
+## User Bet Daily Stats
+
+**Base URL:** `https://admin-backend-7lwn.onrender.com/api/admin`
 
 ```
-GET /api/admin/rounds?page=1&limit=25&mode=30s
+GET /api/admin/bets/daily-stats?userId=123&dateFrom=2026-07-01&dateTo=2026-07-03&page=1&limit=31
 ```
 
-Paginated list of settled rounds with per-round stats for the specified game mode.
+Per-user daily aggregated bet stats (Wingo + game provider) grouped by date.
 
-**Query Params:** `mode` (optional, default: `30s`), `page` (default: 1), `limit` (default: 25, max: 50)
+**Query Params:**
+| Param | Type | Required | Description |
+|-------|------|---------|-------------|
+| userId | number | Yes | User ID |
+| dateFrom | string | No | Start date (YYYY-MM-DD). Default: today |
+| dateTo | string | No | End date (YYYY-MM-DD). Default: today |
+| page | number | No | Page number (default: 1) |
+| limit | number | No | Items per page (default: 31, max: 365) |
 
 **Response:**
+
 ```json
 {
-  "success": true,
+  "status": "success",
+  "userId": 123,
+  "total": 3,
   "page": 1,
-  "limit": 25,
-  "total": 200,
-  "items": [
+  "limit": 31,
+  "data": [
     {
-      "issueNumber": "20260628000001",
-      "result": 5,
-      "resultMode": "RANDOM",
-      "status": "settled",
-      "startTime": 1777274790000,
-      "endTime": 1777274820000,
-      "createdAt": "2026-06-28T00:00:00.000Z",
-      "stats": {
-        "totalBets": 150,
-        "totalBetAmount": 50000,
-        "totalPayout": 30000,
-        "wonCount": 60,
-        "lostCount": 90
+      "date": "2026-07-03",
+      "wingo": {
+        "betCount": 12,
+        "totalBets": 2400,
+        "totalPayout": 1500,
+        "wonCount": 5,
+        "lostCount": 7
+      },
+      "provider": {
+        "betCount": 8,
+        "totalBets": 4000,
+        "totalPayout": 3200,
+        "netPL": -800
       }
     }
   ]
 }
 ```
+
+| Field | Description |
+|-------|-------------|
+| data[].date | Date in IST (YYYY-MM-DD) |
+| data[].wingo.betCount | Number of Wingo bets placed |
+| data[].wingo.totalBets | Total Wingo bet amount |
+| data[].wingo.totalPayout | Total Wingo payout (sum of profitAmount) |
+| data[].wingo.wonCount | Number of winning Wingo bets |
+| data[].wingo.lostCount | Number of losing Wingo bets |
+| data[].provider.betCount | Number of provider game bets |
+| data[].provider.totalBets | Total provider bet amount |
+| data[].provider.totalPayout | Total provider payout |
+| data[].provider.netPL | Provider net P&L (totalBets - totalPayout) |
+
+

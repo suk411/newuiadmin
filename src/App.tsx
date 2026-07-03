@@ -15,6 +15,7 @@ import Sidebar from './components/Sidebar'
 import TagsView from './components/TagsView'
 import { titleMap } from './components/TagsView'
 import type { TagItem } from './components/TagsView'
+import { ExportBarProvider } from './components/ExportBarContext'
 import { ToastProvider, useToast } from './contexts/ToastContext'
 import './App.css'
 
@@ -137,7 +138,9 @@ function ProtectedLayoutContent({ onLogout }: { onLogout: () => void }) {
 function ProtectedLayout({ onLogout }: { onLogout: () => void }) {
   return (
     <ToastProvider>
-      <ProtectedLayoutContent onLogout={onLogout} />
+      <ExportBarProvider>
+        <ProtectedLayoutContent onLogout={onLogout} />
+      </ExportBarProvider>
     </ToastProvider>
   )
 }

@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import axios from 'axios'
 import { fetchWithdrawals, approveWithdrawal, cancelWithdrawal } from '../api/withdrawals'
 import type { WithdrawalRecord } from '../api/withdrawals'
@@ -7,7 +7,7 @@ import WithdrawApproveDialog from '../components/WithdrawApproveDialog'
 import { useToast } from '../contexts/ToastContext'
 import Spinner from '../components/Spinner'
 import Pagination from '../components/Pagination'
-import ExportButton from '../components/ExportButton'
+import { useExportBar } from '../components/ExportBarContext'
 import type { ExportColumn } from '../utils/export'
 
 const LIMIT = 20
@@ -45,6 +45,12 @@ export default function Withdrawals() {
   const [chargeFrom, setChargeFrom] = useState('')
   const [dateFrom, setDateFrom] = useState('')
   const [dateTo, setDateTo] = useState('')
+  const { setExportProps } = useExportBar()
+
+  useEffect(() => {
+    setExportProps({ columns: WITHDRAWAL_COLUMNS, data: records as unknown as Record<string, unknown>[], filename: 'withdrawals' })
+    return () => setExportProps(null)
+  }, [records, setExportProps])
 
   const handleUserId = (v: string) => { setUserId(v); if (v) setOrderId('') }
   const handleOrderId = (v: string) => { setOrderId(v); if (v) setUserId('') }
@@ -140,9 +146,6 @@ export default function Withdrawals() {
       </form>
 
       <section className="card">
-        <div style={{ display: 'flex', justifyContent: 'flex-end', padding: '8px 16px' }}>
-          <ExportButton columns={WITHDRAWAL_COLUMNS} data={records as unknown as Record<string, unknown>[]} filename="withdrawals" />
-        </div>
         <div className="table-wrap">
           <table className="table">
             <thead><tr><th>User ID</th><th>Order ID</th><th>Payment</th><th>Channel</th><th>Amount</th><th>Charge</th><th>Charge From</th><th>Note</th><th>Created</th><th>Updated</th><th>Status</th><th>Actions</th></tr></thead>
