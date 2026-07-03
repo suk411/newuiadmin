@@ -1,5 +1,3 @@
-import bgLogo from '../assets/bgLogo.png'
-
 interface Props {
   show: boolean
 }
@@ -12,16 +10,12 @@ export default function SessionExpiredDialog({ show }: Props) {
       style={{
         position: 'fixed', inset: 0, zIndex: 10000,
         display: 'flex', alignItems: 'center', justifyContent: 'center',
-        background: '#000',
+        background: 'rgba(0,0,0,0.6)',
+        backdropFilter: 'blur(6px)',
+        WebkitBackdropFilter: 'blur(6px)',
       }}
     >
-      <div
-        style={{
-          background: `url(${bgLogo}) center / cover no-repeat`,
-          position: 'absolute', inset: 0, opacity: 0.5,
-        }}
-      />
-      <div className="login-card" style={{ position: 'relative', textAlign: 'center' }}>
+      <div className="login-card" style={{ textAlign: 'center' }}>
         <h1>Session Expired</h1>
         <p style={{ color: 'rgba(255,255,255,0.7)', fontSize: 14, margin: '0 0 24px', lineHeight: 1.6 }}>
           Your session has expired.<br />Please login again to continue.
