@@ -284,7 +284,8 @@ export default function BetRecords() {
                 dailyRecords.map((r, i) => (
                   <div key={i} style={{ marginTop: i === 0 ? 0 : 20 }}>
                     <h3 style={{ margin: '4px 0 8px', padding: '8px 12px', fontSize: 14, fontWeight: 600, color: 'var(--text-color, #303133)', background: '#f0f7ff', borderRadius: 4 }}>Data of {r.date}</h3>
-                      <div style={{ display: 'flex', flexDirection: 'column', gap: 8, width: '100%' }}>
+                      <section aria-label="Wingo">
+                        <h2 className="section-title">Wingo</h2>
                         <div style={{ display: 'flex', gap: 32, background: '#fff', border: '1px solid #d0d0d0', borderRadius: 4, padding: '12px 20px', boxShadow: '0 2px 8px rgba(0,0,0,0.08)' }}>
                           <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}><span style={{ fontSize: 10, color: '#000', textTransform: 'uppercase', letterSpacing: '0.5px' }}>totalAmount</span><span style={{ fontSize: 20, fontWeight: 700, color: '#f97316', lineHeight: 1.2 }}>₹{(r.wingo?.totalAmount ?? 0).toLocaleString('en-IN')}</span></div>
                           <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}><span style={{ fontSize: 10, color: '#000', textTransform: 'uppercase', letterSpacing: '0.5px' }}>totalPayout</span><span style={{ fontSize: 20, fontWeight: 700, color: '#22c55e', lineHeight: 1.2 }}>₹{(r.wingo?.totalPayout ?? 0).toLocaleString('en-IN')}</span></div>
@@ -293,13 +294,16 @@ export default function BetRecords() {
                           <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}><span style={{ fontSize: 10, color: '#000', textTransform: 'uppercase', letterSpacing: '0.5px' }}>wonCount</span><span style={{ fontSize: 20, fontWeight: 700, color: '#22c55e', lineHeight: 1.2 }}>{r.wingo?.wonCount ?? 0}</span></div>
                           <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}><span style={{ fontSize: 10, color: '#000', textTransform: 'uppercase', letterSpacing: '0.5px' }}>lostCount</span><span style={{ fontSize: 20, fontWeight: 700, color: '#ef4444', lineHeight: 1.2 }}>{r.wingo?.lostCount ?? 0}</span></div>
                         </div>
+                      </section>
+                      <section aria-label="Provider" style={{ marginTop: 16 }}>
+                        <h2 className="section-title">Provider</h2>
                         <div style={{ display: 'flex', gap: 32, background: '#fff', border: '1px solid #d0d0d0', borderRadius: 4, padding: '12px 20px', boxShadow: '0 2px 8px rgba(0,0,0,0.08)' }}>
                           <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}><span style={{ fontSize: 10, color: '#000', textTransform: 'uppercase', letterSpacing: '0.5px' }}>totalAmount</span><span style={{ fontSize: 20, fontWeight: 700, color: '#f97316', lineHeight: 1.2 }}>₹{(r.provider?.totalAmount ?? 0).toLocaleString('en-IN')}</span></div>
                           <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}><span style={{ fontSize: 10, color: '#000', textTransform: 'uppercase', letterSpacing: '0.5px' }}>totalPayout</span><span style={{ fontSize: 20, fontWeight: 700, color: '#22c55e', lineHeight: 1.2 }}>₹{(r.provider?.totalPayout ?? 0).toLocaleString('en-IN')}</span></div>
                           <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}><span style={{ fontSize: 10, color: '#000', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Net P/L</span><span style={{ fontSize: 20, fontWeight: 700, lineHeight: 1.2, color: (r.provider?.totalPayout ?? 0) - (r.provider?.totalAmount ?? 0) >= 0 ? '#22c55e' : '#ef4444' }}>{fmt((r.provider?.totalPayout ?? 0) - (r.provider?.totalAmount ?? 0))}</span></div>
                           <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}><span style={{ fontSize: 10, color: '#000', textTransform: 'uppercase', letterSpacing: '0.5px' }}>betCount</span><span style={{ fontSize: 20, fontWeight: 700, color: '#409eff', lineHeight: 1.2 }}>{r.provider?.betCount ?? 0}</span></div>
                         </div>
-                      </div>
+                      </section>
                   </div>
                 ))
               )}
