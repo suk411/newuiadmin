@@ -27,12 +27,12 @@ function extractError(err: unknown): string {
   return 'Something went wrong'
 }
 
-function TierRow({ label, data }: { label: string; data: TierAmount }) {
+function TierRow({ label, data, amountClass }: { label: string; data: TierAmount; amountClass: string }) {
   return (
     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 16px' }}>
       <span style={{ fontWeight: 600, minWidth: 30 }}>{label}</span>
-      <span style={{ color: 'var(--color-primary, #208fff)', fontWeight: 600 }}>₹{(data?.totalAmount ?? 0).toLocaleString('en-IN')}</span>
-      <span>{(data?.totalCount ?? 0).toLocaleString('en-IN')} orders</span>
+      <span className={`stat-card__value ${amountClass}`}>₹{(data?.totalAmount ?? 0).toLocaleString('en-IN')}</span>
+      <span className="stat-card__change up">{(data?.totalCount ?? 0).toLocaleString('en-IN')} orders</span>
     </div>
   )
 }
@@ -41,7 +41,7 @@ function TeamRow({ label, value }: { label: string; value: number }) {
   return (
     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 16px' }}>
       <span style={{ fontWeight: 600, minWidth: 30 }}>{label}</span>
-      <span style={{ fontWeight: 600 }}>{(value ?? 0).toLocaleString('en-IN')} members</span>
+      <span className="stat-card__value text-blue">{(value ?? 0).toLocaleString('en-IN')} members</span>
     </div>
   )
 }
@@ -116,16 +116,19 @@ export default function AgencyDashboard() {
     membersFetched.current = false
   }
 
-  const renderTierCard = (title: string, data: { l1: TierAmount; l2: TierAmount; l3: TierAmount }) => (
-    <section aria-label={title} style={{ marginTop: 24 }}>
-      <h2 className="section-title">{title}</h2>
-      <div className="card" style={{ padding: 0, overflow: 'hidden' }}>
-        {data.l1 && <TierRow label="L1" data={data.l1} />}
-        {data.l2 && <TierRow label="L2" data={data.l2} />}
-        {data.l3 && <TierRow label="L3" data={data.l3} />}
-      </div>
-    </section>
-  )
+  const renderTierCard = (title: string, data: { l1: TierAmount; l2: TierAmount; l3: TierAmount }) => {
+    const amountClass = title === 'First Deposit' ? 'text-green' : 'text-orange'
+    return (
+      <section aria-label={title} style={{ marginTop: 24 }}>
+        <h2 className="section-title">{title}</h2>
+        <div className="card" style={{ padding: 0, overflow: 'hidden' }}>
+          {data.l1 && <TierRow label="L1" data={data.l1} amountClass={amountClass} />}
+          {data.l2 && <TierRow label="L2" data={data.l2} amountClass={amountClass} />}
+          {data.l3 && <TierRow label="L3" data={data.l3} amountClass={amountClass} />}
+        </div>
+      </section>
+    )
+  }
 
   return (
     <div className="content content--table">
