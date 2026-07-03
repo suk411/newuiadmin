@@ -37,6 +37,15 @@ function TierRow({ label, data }: { label: string; data: TierAmount }) {
   )
 }
 
+function TeamRow({ label, value }: { label: string; value: number }) {
+  return (
+    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 16px' }}>
+      <span style={{ fontWeight: 600, minWidth: 30 }}>{label}</span>
+      <span style={{ fontWeight: 600 }}>{(value ?? 0).toLocaleString('en-IN')} members</span>
+    </div>
+  )
+}
+
 export default function AgencyDashboard() {
   const [tab, setTab] = useState<'stats' | 'members'>('stats')
   const [userId, setUserId] = useState('')
@@ -184,25 +193,13 @@ export default function AgencyDashboard() {
           {statsLoading && <div style={{ padding: '48px 0', textAlign: 'center' }}><Spinner /></div>}
           {statsData && (
             <div style={{ overflow: 'auto', flex: 1, padding: '0 0 16px' }}>
-              <section aria-label="Team breakdown">
+              <section aria-label="Team breakdown" style={{ marginTop: 24 }}>
                 <h2 className="section-title">Team</h2>
-                <div className="stat-cards" style={{ marginTop: 12 }}>
-                  <div className="stat-card">
-                    <span className="stat-card__label">L1 Members</span>
-                    <span className="stat-card__value">{(statsData.team.l1 ?? 0).toLocaleString('en-IN')}</span>
-                  </div>
-                  <div className="stat-card">
-                    <span className="stat-card__label">L2 Members</span>
-                    <span className="stat-card__value">{(statsData.team.l2 ?? 0).toLocaleString('en-IN')}</span>
-                  </div>
-                  <div className="stat-card">
-                    <span className="stat-card__label">L3 Members</span>
-                    <span className="stat-card__value">{(statsData.team.l3 ?? 0).toLocaleString('en-IN')}</span>
-                  </div>
-                  <div className="stat-card">
-                    <span className="stat-card__label">Total Team</span>
-                    <span className="stat-card__value">{(statsData.team.total ?? 0).toLocaleString('en-IN')}</span>
-                  </div>
+                <div className="card" style={{ padding: 0, overflow: 'hidden' }}>
+                  <TeamRow label="L1" value={statsData.team.l1 ?? 0} />
+                  <TeamRow label="L2" value={statsData.team.l2 ?? 0} />
+                  <TeamRow label="L3" value={statsData.team.l3 ?? 0} />
+                  <TeamRow label="Total" value={statsData.team.total ?? 0} />
                 </div>
               </section>
 
