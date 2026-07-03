@@ -22,7 +22,7 @@ export default function ExportButton({ columns, data, filename }: Props) {
 
   return (
     <div ref={ref} style={{ position: 'relative' }}>
-      <button className="btn-outline" style={{ fontSize: 12 }} onClick={() => setOpen(!open)}>
+      <button className="btn-outline btn-outline--orange" style={{ fontSize: 12 }} onClick={() => setOpen(!open)}>
         Export ▾
       </button>
       {open && (
