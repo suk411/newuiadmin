@@ -221,8 +221,8 @@ export default function AgencyDashboard() {
       )}
 
       {tab === 'members' && (
-        <section className="card" style={{ flex: 1, overflow: 'auto' }}>
-          <div style={{ display: 'flex', justifyContent: 'flex-end', padding: '8px 16px' }}>
+        <section className="card" style={{ flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
+          <div style={{ display: 'flex', justifyContent: 'flex-end', padding: '8px 16px', flexShrink: 0 }}>
             <ExportButton columns={MEMBER_COLUMNS} data={members as unknown as Record<string, unknown>[]} filename="team-members" />
           </div>
           <div className="table-wrap">

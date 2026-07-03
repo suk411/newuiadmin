@@ -108,7 +108,7 @@ export default function RechargeRecords() {
           loading={loading}
           onApprove={handleApproveClick}
         />
-        {total > 0 && (() => {
+        {(() => {
           const totalPages = Math.max(1, Math.ceil(total / DEFAULT_LIMIT))
           const pages: (number | string)[] = []
           const start = Math.max(1, page - 2)
