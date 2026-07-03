@@ -8,15 +8,116 @@ Authorization: Bearer <admin_token>
 
 ---
 
-## Provider Game Bets (All Bets by Member)
+## Endpoint Summary
+
+| Endpoint | Description |
+|----------|-------------|
+| `GET /api/admin/bets/wingo` | Search Wingo bets with filters |
+| `GET /api/admin/bets/provider` | Search provider game bets by member |
+| `GET /api/admin/bets/daily-stats` | Per-user daily aggregated bet stats |
+
+All three endpoints share the same response wrapper:
+
+```json
+{
+  "status": "success",
+  "total": 25,
+  "page": 1,
+  "limit": 50,
+  "data": [...],
+  "summary": { "totalAmount": 5000, "totalPayout": 3000 }
+}
+```
+
+---
+
+## Wingo Bet Search
 
 **Base URL:** `https://admin-backend-7lwn.onrender.com/api/admin`
 
 ```
-GET /api/admin/game/all-bets?member=u12345&site=JE&status=1&dateFrom=2026-01-01&dateTo=2026-03-20&page=1&limit=50
+GET /api/admin/bets/wingo?userId=123&dateFrom=2026-07-01&dateTo=2026-07-03&page=1&limit=50
 ```
 
-Search provider game bet records by member (userId).
+Search Wingo bets by user ID and date range.
+
+**Query Params:**
+| Param | Type | Required | Description |
+|-------|------|---------|-------------|
+| userId | string | No | Filter by user ID |
+| dateFrom | string | No | Start date (YYYY-MM-DD). Filters by createdAt |
+| dateTo | string | No | End date (YYYY-MM-DD). Filters by createdAt |
+| page | number | No | Page number (default: 1) |
+| limit | number | No | Items per page (default: 50, max: 100) |
+
+**Response:**
+
+```json
+{
+  "status": "success",
+  "total": 25,
+  "page": 1,
+  "limit": 50,
+  "data": [
+    {
+      "userId": "123",
+      "game": "wingo",
+      "gameMode": "30s",
+      "amount": 100,
+      "realAmount": 98,
+      "fee": 2,
+      "payout": 90,
+      "selectType": "green",
+      "issueNumber": "202607030000001",
+      "orderNumber": "WGO1712345678901",
+      "result": {
+        "number": "5",
+        "colour": "green",
+        "profitAmount": 90
+      },
+      "status": "won",
+      "mobile": "98****76",
+      "settleTime": "03-07-2026 10:30:00",
+      "createdAt": "2026-07-03T05:00:00.000Z"
+    }
+  ],
+  "summary": {
+    "totalAmount": 5000,
+    "totalPayout": 1200
+  }
+}
+```
+
+| Field | Description |
+|-------|-------------|
+| data[].userId | User ID |
+| data[].game | Always `"wingo"` |
+| data[].gameMode | Game mode: 30s, 1m, 3m, 5m |
+| data[].amount | Bet amount placed |
+| data[].realAmount | Bet amount after fee deduction |
+| data[].fee | Fee charged |
+| data[].payout | Payout (profitAmount from result) |
+| data[].selectType | Bet selection: red, green, violet, big, small, or 0-9 |
+| data[].issueNumber | Issue/round number |
+| data[].orderNumber | Unique order number |
+| data[].result | Result object: number, colour, profitAmount |
+| data[].status | Bet status: pending, won, lost |
+| data[].mobile | User mobile number (masked) |
+| data[].settleTime | Bet settlement/resolve time in IST (`DD-MM-YYYY HH:mm:ss`) |
+| summary.totalAmount | Sum of all `amount` in current page |
+| summary.totalPayout | Sum of all `payout` in current page |
+
+---
+
+## Provider Game Bets
+
+**Base URL:** `https://admin-backend-7lwn.onrender.com/api/admin`
+
+```
+GET /api/admin/bets/provider?member=u12345&site=JE&status=1&dateFrom=2026-01-01&dateTo=2026-03-20&page=1&limit=50
+```
+
+Search provider game bet records by member.
 
 **Query Params:**
 | Param | Type | Required | Description |
@@ -34,122 +135,43 @@ Search provider game bet records by member (userId).
 ```json
 {
   "status": "success",
-  "member": "u12345",
+  "total": 25,
   "page": 1,
   "limit": 50,
-  "total": 25,
-  "summary": {
-    "totalBet": 5000,
-    "totalPayout": 3000,
-    "totalTurnover": 5000,
-    "netPnl": -2000
-  },
-  "items": [
+  "data": [
     {
-      "bet": 200,
+      "userId": 12345,
+      "game": "JE",
+      "amount": 200,
       "payout": 100,
       "turnover": 200,
       "gameId": "51",
-      "site": "JE",
       "product": "slot",
-      "betTime": "2026-03-19T10:30:00.000Z",
-      "settleTime": "2026-03-19T10:30:00.000Z",
-      "createdAt": "2026-03-19T10:30:00.000Z"
-    }
-  ]
-}
-```
-
-| Field | Description |
-|-------|-------------|
-| items[].bet | Bet amount |
-| items[].payout | Payout amount |
-| items[].turnover | Turnover amount |
-| items[].gameId | Game ID |
-| items[].site | Provider code |
-| items[].product | Game product type |
-| items[].settleTime | Settlement time |
-| totalBet | Sum of bet amounts in current page |
-| totalPayout | Sum of payouts in current page |
-| totalTurnover | Sum of turnover amounts |
-| netPnl | totalPayout - totalBet (negative = platform profit) |
-
----
-
-## Wingo Bet Search (All Bets)
-
-**Base URL:** `https://admin-backend-7lwn.onrender.com/api/admin`
-
-```
-GET /api/admin/wingo/all-bets?userId=123&gameMode=30s&status=won&dateFrom=2026-07-01&dateTo=2026-07-03&page=1&limit=50
-```
-
-Search Wingo bets with multiple filters. Returns each bet with user mobile number.
-
-**Query Params:**
-| Param | Type | Required | Description |
-|-------|------|---------|-------------|
-| userId | string | No | Filter by user ID |
-| issueNumber | string | No | Filter by issue/round number |
-| gameMode | string | No | Filter: `30s`, `1m`, `3m`, `5m` |
-| status | string | No | Filter: `pending`, `won`, `lost` |
-| orderNumber | string | No | Filter by exact order number |
-| dateFrom | string | No | Start date (YYYY-MM-DD). Filters by createdAt |
-| dateTo | string | No | End date (YYYY-MM-DD). Filters by createdAt |
-| page | number | No | Page number (default: 1) |
-| limit | number | No | Items per page (default: 50, max: 100) |
-
-**Response:**
-
-```json
-{
-  "status": "success",
-  "page": 1,
-  "limit": 50,
-  "total": 25,
-  "summary": {
-    "totalBet": 5000,
-    "totalPayout": 1200,
-    "wonCount": 3,
-    "lostCount": 22
-  },
-  "items": [
-    {
-      "userId": "123",
-      "issueNumber": "202607030000001",
-      "orderNumber": "WGO1712345678901",
-      "betAmount": 100,
-      "fee": 2,
-      "selectType": "green",
-      "status": "won",
-      "gameMode": "30s",
-      "result": {
-        "number": "5",
-        "selectType": "green",
-        "colour": "green",
-        "premium": null,
-        "profitAmount": 90,
-        "timestamp": "03-07-2026 10:30:00"
-      },
-      "mobile": "98****76",
+      "member": "u12345",
+      "status": 1,
+      "settleTime": "03-07-2026 10:30:00",
       "createdAt": "2026-07-03T05:00:00.000Z"
     }
-  ]
+  ],
+  "summary": {
+    "totalAmount": 5000,
+    "totalPayout": 3000
+  }
 }
 ```
 
 | Field | Description |
 |-------|-------------|
-| summary.totalBet | Sum of all betAmount in current page |
-| summary.totalPayout | Sum of all result.profitAmount |
-| summary.wonCount | Count of won bets in current page |
-| summary.lostCount | Count of lost bets in current page |
-| items[].orderNumber | Unique order number for this bet |
-| items[].selectType | Bet selection: red, green, violet, big, small, or 0-9 |
-| items[].gameMode | Game mode: 30s, 1m, 3m, 5m |
-| items[].status | Bet status: pending, won, lost |
-| items[].result | Full result object (number, selectType, colour, premium, profitAmount, timestamp) |
-| items[].mobile | User mobile number (masked) |
+| data[].userId | Numeric user ID (extracted from member) |
+| data[].game | Provider site code |
+| data[].amount | Bet amount |
+| data[].payout | Payout amount |
+| data[].turnover | Turnover amount |
+| data[].gameId | Game ID |
+| data[].product | Game product type |
+| data[].member | Raw member ID (`u` + userId) |
+| data[].status | Bet status |
+| data[].settleTime | Settlement time in IST (`DD-MM-YYYY HH:mm:ss`) |
 
 ---
 
@@ -214,5 +236,3 @@ Per-user daily aggregated bet stats (Wingo + game provider) grouped by date.
 | data[].provider.totalBets | Total provider bet amount |
 | data[].provider.totalPayout | Total provider payout |
 | data[].provider.netPL | Provider net P&L (totalBets - totalPayout) |
-
-

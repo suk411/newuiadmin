@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import axios from 'axios'
 import { fetchProviderBets, fetchWingoBets, fetchDailyStats } from '../api/bets'
-import type { ProviderBet, WingoBet, DailyStat } from '../api/bets'
+import type { ProviderBet, WingoBet, DailyStat, BetSummary } from '../api/bets'
 import { formatDateTime } from '../utils/format'
 import { useToast } from '../contexts/ToastContext'
 import Spinner from '../components/Spinner'
@@ -23,15 +23,28 @@ export default function BetRecords() {
   const [tab, setTab] = useState<Tab>('provider')
   const [records, setRecords] = useState<(ProviderBet | WingoBet)[]>([])
   const [dailyRecords, setDailyRecords] = useState<DailyStat[]>([])
+  const [summary, setSummary] = useState<BetSummary | null>(null)
   const [total, setTotal] = useState(0)
   const [page, setPage] = useState(1)
   const { toast } = useToast()
   const [loading, setLoading] = useState(false)
+
   const [member, setMember] = useState('')
-  const [orderNumber, setOrderNumber] = useState('')
-  const [userId, setUserId] = useState('')
-  const [dateFrom, setDateFrom] = useState('')
-  const [dateTo, setDateTo] = useState('')
+  const [site, setSite] = useState('')
+  const [provStatus, setProvStatus] = useState('')
+  const [provDateFrom, setProvDateFrom] = useState('')
+  const [provDateTo, setProvDateTo] = useState('')
+
+  const [wingoUserId, setWingoUserId] = useState('')
+  const [gameMode, setGameMode] = useState('')
+  const [wingoStatus, setWingoStatus] = useState('')
+  const [wingoDateFrom, setWingoDateFrom] = useState('')
+  const [wingoDateTo, setWingoDateTo] = useState('')
+
+  const [dailyUserId, setDailyUserId] = useState('')
+  const [dailyDateFrom, setDailyDateFrom] = useState('')
+  const [dailyDateTo, setDailyDateTo] = useState('')
+
   const { setExportProps } = useExportBar()
 
   useEffect(() => {
@@ -63,38 +76,102 @@ export default function BetRecords() {
         })),
         filename: 'daily-stats',
       })
+    } else if (tab === 'provider') {
+      setExportProps({
+        columns: [
+          { key: 'userId', label: 'User ID' },
+          { key: 'game', label: 'Site' },
+          { key: 'amount', label: 'Amount' },
+          { key: 'payout', label: 'Payout' },
+          { key: 'turnover', label: 'Turnover' },
+          { key: 'gameId', label: 'Game ID' },
+          { key: 'product', label: 'Product' },
+          { key: 'status', label: 'Status' },
+          { key: 'settleTime', label: 'Settle Time' },
+        ],
+        data: (records as ProviderBet[]).map((r) => ({
+          userId: r.userId,
+          game: r.game,
+          amount: r.amount,
+          payout: r.payout,
+          turnover: r.turnover,
+          gameId: r.gameId,
+          product: r.product,
+          status: r.status,
+          settleTime: r.settleTime,
+        })),
+        filename: 'provider-bets',
+      })
     } else {
-      setExportProps({ columns: [], data: records as unknown as Record<string, unknown>[], filename: 'bet-records' })
+      setExportProps({
+        columns: [
+          { key: 'userId', label: 'User ID' },
+          { key: 'gameMode', label: 'Mode' },
+          { key: 'amount', label: 'Amount' },
+          { key: 'realAmount', label: 'Real Amt' },
+          { key: 'fee', label: 'Fee' },
+          { key: 'payout', label: 'Payout' },
+          { key: 'selectType', label: 'Selection' },
+          { key: 'issueNumber', label: 'Issue' },
+          { key: 'orderNumber', label: 'Order No' },
+          { key: 'status', label: 'Status' },
+          { key: 'mobile', label: 'Mobile' },
+          { key: 'settleTime', label: 'Settle Time' },
+        ],
+        data: (records as WingoBet[]).map((r) => ({
+          userId: r.userId,
+          gameMode: r.gameMode,
+          amount: r.amount,
+          realAmount: r.realAmount,
+          fee: r.fee,
+          payout: r.payout,
+          selectType: r.selectType,
+          issueNumber: r.issueNumber,
+          orderNumber: r.orderNumber,
+          status: r.status,
+          mobile: r.mobile,
+          settleTime: r.settleTime,
+        })),
+        filename: 'wingo-bets',
+      })
     }
     return () => setExportProps(null)
   }, [tab, records, dailyRecords, setExportProps])
 
-  const handleMember = (v: string) => { setMember(v); if (v) setOrderNumber('') }
-  const handleOrderNo = (v: string) => { setOrderNumber(v); if (v) setMember('') }
-
   const load = async (p = 1) => {
     setLoading(true)
+    setSummary(null)
     try {
       if (tab === 'daily') {
         const params: Record<string, string | number> = { page: p, limit: LIMIT }
-        if (userId) params.userId = userId
-        if (dateFrom) params.dateFrom = dateFrom
-        if (dateTo) params.dateTo = dateTo
+        if (dailyUserId) params.userId = dailyUserId
+        if (dailyDateFrom) params.dateFrom = dailyDateFrom
+        if (dailyDateTo) params.dateTo = dailyDateTo
         const res = await fetchDailyStats(params)
         setDailyRecords(res.data)
         setTotal(res.total)
       } else if (tab === 'provider') {
         const params: Record<string, string | number> = { page: p, limit: LIMIT }
-        if (member) params.member = member
+        if (member) params.member = member.startsWith('u') ? member : `u${member}`
+        if (site) params.site = site
+        if (provStatus) params.status = provStatus
+        if (provDateFrom) params.dateFrom = provDateFrom
+        if (provDateTo) params.dateTo = provDateTo
         const res = await fetchProviderBets(params)
         setRecords(res.data)
         setTotal(res.total)
+        setSummary(res.summary)
       } else {
         const params: Record<string, string | number> = { page: p, limit: LIMIT }
-        if (orderNumber) params.orderNumber = orderNumber
+        if (wingoUserId) params.userId = wingoUserId
+        if (gameMode) params.gameMode = gameMode
+        if (wingoStatus) params.status = wingoStatus
+        if (wingoDateFrom) params.dateFrom = wingoDateFrom
+        if (wingoDateTo) params.dateTo = wingoDateTo
         const res = await fetchWingoBets(params)
         setRecords(res.data)
         setTotal(res.total)
+        setSummary(res.summary)
       }
       setPage(p)
     } catch (err: unknown) {
@@ -104,35 +181,92 @@ export default function BetRecords() {
     }
   }
 
+  const reset = () => {
+    setMember(''); setSite(''); setProvStatus(''); setProvDateFrom(''); setProvDateTo('')
+    setWingoUserId(''); setGameMode(''); setWingoStatus(''); setWingoDateFrom(''); setWingoDateTo('')
+    setDailyUserId(''); setDailyDateFrom(''); setDailyDateTo('')
+    setRecords([]); setDailyRecords([]); setTotal(0); setSummary(null)
+  }
+
   return (
     <div className="content content--table">
       <div className="filters-bar" style={{ borderBottom: 'none', paddingBottom: 0 }}>
         <div style={{ display: 'flex', gap: 8 }}>
-          <TabButton active={tab === 'provider'} onClick={() => { setTab('provider'); setOrderNumber(''); setUserId('') }}>Provider</TabButton>
-          <TabButton active={tab === 'wingo'} onClick={() => { setTab('wingo'); setMember(''); setUserId('') }}>Wingo</TabButton>
-          <TabButton active={tab === 'daily'} onClick={() => { setTab('daily'); setMember(''); setOrderNumber('') }}>Daily Stats</TabButton>
+          <TabButton active={tab === 'provider'} onClick={() => { setTab('provider'); reset() }}>Provider</TabButton>
+          <TabButton active={tab === 'wingo'} onClick={() => { setTab('wingo'); reset() }}>Wingo</TabButton>
+          <TabButton active={tab === 'daily'} onClick={() => { setTab('daily'); reset() }}>Daily Stats</TabButton>
         </div>
       </div>
       <div className="filters-bar">
         {tab === 'provider' ? (
-          <div className="filter-group"><label>Member</label><input placeholder="Member (u12345)" value={member} onChange={(e) => handleMember(e.target.value)} /></div>
+          <>
+            <div className="filter-group"><label>Member</label><input placeholder="User ID or u+userId" value={member} onChange={(e) => setMember(e.target.value)} /></div>
+            <div className="filter-group"><label>Site</label>
+              <select value={site} onChange={(e) => setSite(e.target.value)}>
+                <option value="">All</option>
+                <option value="JE">JE</option>
+                <option value="PG">PG</option>
+                <option value="JD">JD</option>
+                <option value="TU">TU</option>
+              </select>
+            </div>
+            <div className="filter-group"><label>Status</label>
+              <select value={provStatus} onChange={(e) => setProvStatus(e.target.value)}>
+                <option value="">All</option>
+                <option value="1">Valid</option>
+              </select>
+            </div>
+            <div className="filter-group"><label>From</label><input type="date" value={provDateFrom} onChange={(e) => setProvDateFrom(e.target.value)} /></div>
+            <div className="filter-group"><label>To</label><input type="date" value={provDateTo} onChange={(e) => setProvDateTo(e.target.value)} /></div>
+          </>
         ) : tab === 'wingo' ? (
-          <div className="filter-group"><label>Order No</label><input placeholder="Order no" value={orderNumber} onChange={(e) => handleOrderNo(e.target.value)} /></div>
+          <>
+            <div className="filter-group"><label>User ID</label><input placeholder="User ID" value={wingoUserId} onChange={(e) => setWingoUserId(e.target.value)} /></div>
+            <div className="filter-group"><label>Game Mode</label>
+              <select value={gameMode} onChange={(e) => setGameMode(e.target.value)}>
+                <option value="">All</option>
+                <option value="30s">30s</option>
+                <option value="1m">1m</option>
+                <option value="3m">3m</option>
+                <option value="5m">5m</option>
+              </select>
+            </div>
+            <div className="filter-group"><label>Status</label>
+              <select value={wingoStatus} onChange={(e) => setWingoStatus(e.target.value)}>
+                <option value="">All</option>
+                <option value="pending">Pending</option>
+                <option value="won">Won</option>
+                <option value="lost">Lost</option>
+              </select>
+            </div>
+            <div className="filter-group"><label>From</label><input type="date" value={wingoDateFrom} onChange={(e) => setWingoDateFrom(e.target.value)} /></div>
+            <div className="filter-group"><label>To</label><input type="date" value={wingoDateTo} onChange={(e) => setWingoDateTo(e.target.value)} /></div>
+          </>
         ) : (
           <>
-            <div className="filter-group"><label>User ID</label><input placeholder="User ID" value={userId} onChange={(e) => setUserId(e.target.value)} /></div>
-            <div className="filter-group"><label>From</label><input type="date" value={dateFrom} onChange={(e) => setDateFrom(e.target.value)} /></div>
-            <div className="filter-group"><label>To</label><input type="date" value={dateTo} onChange={(e) => setDateTo(e.target.value)} /></div>
+            <div className="filter-group"><label>User ID</label><input placeholder="User ID" value={dailyUserId} onChange={(e) => setDailyUserId(e.target.value)} /></div>
+            <div className="filter-group"><label>From</label><input type="date" value={dailyDateFrom} onChange={(e) => setDailyDateFrom(e.target.value)} /></div>
+            <div className="filter-group"><label>To</label><input type="date" value={dailyDateTo} onChange={(e) => setDailyDateTo(e.target.value)} /></div>
           </>
         )}
         <div className="filter-group" style={{ alignSelf: 'flex-end' }}>
           <div style={{ display: 'flex', gap: 'var(--space-3)' }}>
             <button className="btn-filled" onClick={() => load()} disabled={loading}
               style={{ opacity: loading ? 0.6 : 1 }}>Search</button>
-            <button type="button" className="btn-outline" onClick={() => { setMember(''); setOrderNumber(''); setUserId(''); setDateFrom(''); setDateTo(''); setRecords([]); setDailyRecords([]); setTotal(0) }}>Reset</button>
+            <button type="button" className="btn-outline" onClick={reset}>Reset</button>
           </div>
         </div>
       </div>
+
+      {(tab === 'provider' || tab === 'wingo') && summary && records.length > 0 && (
+        <div className="stat-cards" style={{ margin: '12px 0' }}>
+          <div className="stat-card" style={{ display: 'flex', gap: 32, padding: '12px 20px' }}>
+            <div><span className="stat-card__label">Total Amount</span><div className="stat-card__value text-orange">₹{summary.totalAmount.toLocaleString('en-IN')}</div></div>
+            <div><span className="stat-card__label">Total Payout</span><div className="stat-card__value text-green">₹{summary.totalPayout.toLocaleString('en-IN')}</div></div>
+            <div><span className="stat-card__label">Net P&L</span><div className={`stat-card__value ${summary.totalPayout - summary.totalAmount >= 0 ? 'text-green' : 'text-red'}`}>₹{(summary.totalPayout - summary.totalAmount).toLocaleString('en-IN')}</div></div>
+          </div>
+        </div>
+      )}
 
       <section className="card">
         <div className="table-wrap">
@@ -149,45 +283,18 @@ export default function BetRecords() {
                     <div className="stat-cards">
                       <div className="stat-card">
                         <span className="stat-card__label">Wingo</span>
-                        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                          <span>Bets</span>
-                          <span className="stat-card__value text-blue">{r.wingo.betCount}</span>
-                        </div>
-                        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                          <span>Total Amt</span>
-                          <span className="stat-card__value">₹{r.wingo.totalBets.toLocaleString('en-IN')}</span>
-                        </div>
-                        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                          <span>Payout</span>
-                          <span className="stat-card__value">₹{r.wingo.totalPayout.toLocaleString('en-IN')}</span>
-                        </div>
-                        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                          <span>Won</span>
-                          <span className="stat-card__value text-green">{r.wingo.wonCount}</span>
-                        </div>
-                        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                          <span>Lost</span>
-                          <span className="stat-card__value text-red">{r.wingo.lostCount}</span>
-                        </div>
+                        <div style={{ display: 'flex', justifyContent: 'space-between' }}><span>Bets</span><span className="stat-card__value text-blue">{r.wingo.betCount}</span></div>
+                        <div style={{ display: 'flex', justifyContent: 'space-between' }}><span>Total Amt</span><span className="stat-card__value">₹{r.wingo.totalBets.toLocaleString('en-IN')}</span></div>
+                        <div style={{ display: 'flex', justifyContent: 'space-between' }}><span>Payout</span><span className="stat-card__value">₹{r.wingo.totalPayout.toLocaleString('en-IN')}</span></div>
+                        <div style={{ display: 'flex', justifyContent: 'space-between' }}><span>Won</span><span className="stat-card__value text-green">{r.wingo.wonCount}</span></div>
+                        <div style={{ display: 'flex', justifyContent: 'space-between' }}><span>Lost</span><span className="stat-card__value text-red">{r.wingo.lostCount}</span></div>
                       </div>
                       <div className="stat-card">
                         <span className="stat-card__label">Provider</span>
-                        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                          <span>Bets</span>
-                          <span className="stat-card__value text-blue">{r.provider.betCount}</span>
-                        </div>
-                        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                          <span>Total Amt</span>
-                          <span className="stat-card__value">₹{r.provider.totalBets.toLocaleString('en-IN')}</span>
-                        </div>
-                        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                          <span>Payout</span>
-                          <span className="stat-card__value">₹{r.provider.totalPayout.toLocaleString('en-IN')}</span>
-                        </div>
-                        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                          <span>Net PL</span>
-                          <span className={`stat-card__value ${r.provider.netPL >= 0 ? 'text-green' : 'text-red'}`}>₹{r.provider.netPL.toLocaleString('en-IN')}</span>
-                        </div>
+                        <div style={{ display: 'flex', justifyContent: 'space-between' }}><span>Bets</span><span className="stat-card__value text-blue">{r.provider.betCount}</span></div>
+                        <div style={{ display: 'flex', justifyContent: 'space-between' }}><span>Total Amt</span><span className="stat-card__value">₹{r.provider.totalBets.toLocaleString('en-IN')}</span></div>
+                        <div style={{ display: 'flex', justifyContent: 'space-between' }}><span>Payout</span><span className="stat-card__value">₹{r.provider.totalPayout.toLocaleString('en-IN')}</span></div>
+                        <div style={{ display: 'flex', justifyContent: 'space-between' }}><span>Net PL</span><span className={`stat-card__value ${r.provider.netPL >= 0 ? 'text-green' : 'text-red'}`}>₹{r.provider.netPL.toLocaleString('en-IN')}</span></div>
                       </div>
                     </div>
                   </div>
@@ -199,33 +306,43 @@ export default function BetRecords() {
               <thead>
                 <tr>
                   {tab === 'provider' ? (
-                    <><th>ID</th><th>Member</th><th>Site</th><th>Amount</th><th>Status</th><th>Date</th></>
+                    <><th>User ID</th><th>Site</th><th>Amount</th><th>Payout</th><th>Turnover</th><th>Game ID</th><th>Product</th><th>Status</th><th>Settle Time</th></>
                   ) : (
-                    <><th>ID</th><th>User</th><th>Order No</th><th>Issue</th><th>Amount</th><th>Status</th><th>Date</th></>
+                    <><th>User ID</th><th>Mode</th><th>Amount</th><th>Real Amt</th><th>Fee</th><th>Payout</th><th>Selection</th><th>Issue</th><th>Order No</th><th>Status</th><th>Mobile</th><th>Settle Time</th></>
                   )}
                 </tr>
               </thead>
               <tbody>
                 {records.length === 0 ? (
-                  <tr><td colSpan={tab === 'provider' ? 6 : 7} style={{ textAlign: 'center', padding: '48px 0' }}>
+                  <tr><td colSpan={tab === 'provider' ? 9 : 12} style={{ textAlign: 'center', padding: '48px 0' }}>
                     {loading ? <Spinner /> : <div className="empty-state"><div className="empty-state__icon">📋</div>No bet records found</div>}
                   </td></tr>
                 ) : (
-                  records.map((r: any) => (
-                    <tr key={r.id} tabIndex={0}>
+                  records.map((r: any, i: number) => (
+                    <tr key={i} tabIndex={0}>
                       {tab === 'provider' ? (
-                        <><td style={{ fontFamily: 'monospace', fontSize: 12 }}>{r.id}</td>
-                          <td>{r.member}</td><td>{r.site}</td>
+                        <><td>{r.userId}</td>
+                          <td>{r.game}</td>
                           <td>₹{Number(r.amount).toLocaleString('en-IN')}</td>
-                          <td><span className="badge badge--success">{r.status}</span></td>
-                          <td style={{ whiteSpace: 'nowrap' }}>{formatDateTime(r.createdAt)}</td></>
+                          <td>₹{Number(r.payout).toLocaleString('en-IN')}</td>
+                          <td>₹{Number(r.turnover).toLocaleString('en-IN')}</td>
+                          <td style={{ fontFamily: 'monospace', fontSize: 12 }}>{r.gameId}</td>
+                          <td>{r.product}</td>
+                          <td><span className={`badge ${r.status === 1 ? 'badge--success' : 'badge--warning'}`}>{r.status === 1 ? 'Valid' : r.status}</span></td>
+                          <td style={{ whiteSpace: 'nowrap' }}>{r.settleTime || formatDateTime(r.createdAt)}</td></>
                       ) : (
-                        <><td style={{ fontFamily: 'monospace', fontSize: 12 }}>{r.id}</td>
-                          <td>{r.userId}</td><td style={{ fontFamily: 'monospace', fontSize: 12 }}>{r.orderNumber}</td>
-                          <td>{r.issueNumber}</td>
+                        <><td>{r.userId}</td>
+                          <td>{r.gameMode}</td>
                           <td>₹{Number(r.amount).toLocaleString('en-IN')}</td>
-                          <td><span className="badge badge--success">{r.status}</span></td>
-                          <td style={{ whiteSpace: 'nowrap' }}>{formatDateTime(r.createdAt)}</td></>
+                          <td>₹{Number(r.realAmount).toLocaleString('en-IN')}</td>
+                          <td>₹{Number(r.fee).toLocaleString('en-IN')}</td>
+                          <td>₹{Number(r.payout).toLocaleString('en-IN')}</td>
+                          <td>{r.selectType}</td>
+                          <td style={{ fontFamily: 'monospace', fontSize: 12 }}>{r.issueNumber}</td>
+                          <td style={{ fontFamily: 'monospace', fontSize: 12 }}>{r.orderNumber}</td>
+                          <td><span className={`badge ${r.status === 'won' ? 'badge--success' : r.status === 'lost' ? 'badge--danger' : 'badge--warning'}`}>{r.status}</span></td>
+                          <td>{r.mobile}</td>
+                          <td style={{ whiteSpace: 'nowrap' }}>{r.settleTime || formatDateTime(r.createdAt)}</td></>
                       )}
                     </tr>
                   ))

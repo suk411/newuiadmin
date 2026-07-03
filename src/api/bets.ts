@@ -1,40 +1,70 @@
 import axiosInstance from './axiosInstance'
 
 export interface ProviderBet {
-  id: string
-  member: string
-  site: string
+  userId: number
+  game: string
   amount: number
-  status: string
+  payout: number
+  turnover: number
+  gameId: string
+  product: string
+  member: string
+  status: number
+  settleTime: string
   createdAt: string
 }
 
 export interface WingoBet {
-  id: string
-  userId: number
-  orderNumber: string
-  issueNumber: string
+  userId: string
+  game: string
+  gameMode: string
   amount: number
+  realAmount: number
+  fee: number
+  payout: number
+  selectType: string
+  issueNumber: string
+  orderNumber: string
+  result: {
+    number: string
+    colour: string
+    profitAmount: number
+  }
   status: string
+  mobile: string
+  settleTime: string
   createdAt: string
 }
 
-export async function fetchProviderBets(params: Record<string, string | number>): Promise<{ data: ProviderBet[]; total: number }> {
-  const res = await axiosInstance.get('/game/all-bets', { params })
-  const body = res.data
-  if (body.items && Array.isArray(body.items)) {
-    return { data: body.items, total: body.total ?? 0 }
-  }
-  return { data: [], total: 0 }
+export interface BetSummary {
+  totalAmount: number
+  totalPayout: number
 }
 
-export async function fetchWingoBets(params: Record<string, string | number>): Promise<{ data: WingoBet[]; total: number }> {
-  const res = await axiosInstance.get('/wingo/all-bets', { params })
+interface ListResponse<T> {
+  data: T[]
+  total: number
+  page: number
+  summary: BetSummary
+}
+
+async function fetchList<T>(url: string, params: Record<string, string | number>): Promise<ListResponse<T>> {
+  const res = await axiosInstance.get(url, { params })
   const body = res.data
-  if (body.items && Array.isArray(body.items)) {
-    return { data: body.items, total: body.total ?? 0 }
+  return {
+    data: Array.isArray(body.data) ? body.data : [],
+    total: body.total ?? 0,
+    page: body.page ?? 1,
+    summary: body.summary ?? { totalAmount: 0, totalPayout: 0 },
   }
-  return { data: [], total: 0 }
+}
+
+export async function fetchProviderBets(params: Record<string, string | number>): Promise<ListResponse<ProviderBet>> {
+  return fetchList<ProviderBet>('/bets/provider', params)
+}
+
+export async function fetchWingoBets(params: Record<string, string | number>): Promise<ListResponse<WingoBet>> {
+  return fetchList<WingoBet>('/bets/wingo', params)
 }
 
 export interface DailyStatWingo {
@@ -61,8 +91,9 @@ export interface DailyStat {
 export async function fetchDailyStats(params: Record<string, string | number>): Promise<{ data: DailyStat[]; total: number; page: number }> {
   const res = await axiosInstance.get('/bets/daily-stats', { params })
   const body = res.data
-  if (body.data && Array.isArray(body.data)) {
-    return { data: body.data, total: body.total ?? 0, page: body.page ?? 1 }
+  return {
+    data: Array.isArray(body.data) ? body.data : [],
+    total: body.total ?? 0,
+    page: body.page ?? 1,
   }
-  return { data: [], total: 0, page: 1 }
 }
