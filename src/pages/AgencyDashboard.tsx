@@ -27,17 +27,12 @@ function extractError(err: unknown): string {
   return 'Something went wrong'
 }
 
-function TierStatCards({ label, data }: { label: string; data: TierAmount }) {
+function TierRow({ label, data }: { label: string; data: TierAmount }) {
   return (
-    <div className="stat-cards" style={{ marginTop: 8 }}>
-      <div className="stat-card">
-        <span className="stat-card__label">{label} Count</span>
-        <span className="stat-card__value">{(data?.totalCount ?? 0).toLocaleString('en-IN')}</span>
-      </div>
-      <div className="stat-card">
-        <span className="stat-card__label">{label} Amount</span>
-        <span className="stat-card__value text-green">₹{(data?.totalAmount ?? 0).toLocaleString('en-IN')}</span>
-      </div>
+    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 16px' }}>
+      <span style={{ fontWeight: 600, minWidth: 30 }}>{label}</span>
+      <span style={{ color: 'var(--color-primary, #208fff)', fontWeight: 600 }}>₹{(data?.totalAmount ?? 0).toLocaleString('en-IN')}</span>
+      <span>{(data?.totalCount ?? 0).toLocaleString('en-IN')} orders</span>
     </div>
   )
 }
@@ -112,12 +107,14 @@ export default function AgencyDashboard() {
     membersFetched.current = false
   }
 
-  const renderTierSection = (title: string, data: { l1: TierAmount; l2: TierAmount; l3: TierAmount }) => (
-    <section aria-label={title}>
-      <h2 className="section-title" style={{ marginTop: 24 }}>{title}</h2>
-      {data.l1 && <TierStatCards label="L1" data={data.l1} />}
-      {data.l2 && <TierStatCards label="L2" data={data.l2} />}
-      {data.l3 && <TierStatCards label="L3" data={data.l3} />}
+  const renderTierCard = (title: string, data: { l1: TierAmount; l2: TierAmount; l3: TierAmount }) => (
+    <section aria-label={title} style={{ marginTop: 24 }}>
+      <h2 className="section-title">{title}</h2>
+      <div className="card" style={{ padding: 0, overflow: 'hidden' }}>
+        {data.l1 && <TierRow label="L1" data={data.l1} />}
+        {data.l2 && <TierRow label="L2" data={data.l2} />}
+        {data.l3 && <TierRow label="L3" data={data.l3} />}
+      </div>
     </section>
   )
 
@@ -209,15 +206,9 @@ export default function AgencyDashboard() {
                 </div>
               </section>
 
-              <section aria-label="First deposit">
-                <h2 className="section-title" style={{ marginTop: 24 }}>First Deposit</h2>
-                {statsData.firstDeposit.l1 && <TierStatCards label="L1" data={statsData.firstDeposit.l1} />}
-                {statsData.firstDeposit.l2 && <TierStatCards label="L2" data={statsData.firstDeposit.l2} />}
-                {statsData.firstDeposit.l3 && <TierStatCards label="L3" data={statsData.firstDeposit.l3} />}
-              </section>
-
-              {renderTierSection('Deposits', statsData.deposits)}
-              {renderTierSection('Withdrawals', statsData.withdrawals)}
+              {renderTierCard('First Deposit', statsData.firstDeposit)}
+              {renderTierCard('Deposits', statsData.deposits)}
+              {renderTierCard('Withdrawals', statsData.withdrawals)}
             </div>
           )}
         </>
