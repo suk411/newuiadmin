@@ -19,77 +19,37 @@ export default function Dashboard() {
     <div className="content">
       <section aria-label="User statistics">
         <h2 className="section-title">Users</h2>
-        <div className="stat-cards" style={{ marginTop: 12 }}>
-          <div className="stat-card">
-            <span className="stat-card__label">Total Users</span>
-            <span className="stat-card__value text-blue">{ov?.totalUsers != null ? ov.totalUsers.toLocaleString() : '—'}</span>
-            <span className="stat-card__change">Registered accounts</span>
-          </div>
-          <div className="stat-card">
-            <span className="stat-card__label">New Today</span>
-            <span className="stat-card__value text-green">{ov?.newUsers != null ? ov.newUsers.toLocaleString() : '—'}</span>
-            <span className="stat-card__change up">+{ov?.newUsers ?? 0} today</span>
-          </div>
+        <div style={{ display: 'flex', gap: 32, background: '#fff', border: '1px solid #d0d0d0', borderRadius: 4, padding: '12px 20px', boxShadow: '0 2px 8px rgba(0,0,0,0.08)', marginTop: 12 }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}><span style={{ fontSize: 10, color: '#000', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Total Users</span><span style={{ fontSize: 20, fontWeight: 700, color: '#409eff', lineHeight: 1.2 }}>{ov?.totalUsers != null ? ov.totalUsers.toLocaleString() : '—'}</span></div>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}><span style={{ fontSize: 10, color: '#000', textTransform: 'uppercase', letterSpacing: '0.5px' }}>New Today</span><span style={{ fontSize: 20, fontWeight: 700, color: '#22c55e', lineHeight: 1.2 }}>{ov?.newUsers != null ? ov.newUsers.toLocaleString() : '—'}</span></div>
         </div>
       </section>
 
-      <section aria-label="Deposit statistics">
+      <section aria-label="Deposit statistics" style={{ marginTop: 16 }}>
         <h2 className="section-title">Deposits</h2>
-        <div className="stat-cards" style={{ marginTop: 12 }}>
-          <div className="stat-card">
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <span className="stat-card__label">Total Recharges</span>
-              <span className="stat-card__change up">{dep?.count ?? 0} orders</span>
-            </div>
-            <span className="stat-card__value text-orange">{dep?.total != null ? `₹${Number(dep.total).toLocaleString('en-IN')}` : '—'}</span>
-          </div>
-          <div className="stat-card">
-            <span className="stat-card__label">Pending</span>
-            <span className="stat-card__value text-red">{dep?.pendingCount != null ? dep.pendingCount.toLocaleString() : '—'}</span>
-            <span className="stat-card__change down">Awaiting approval</span>
-          </div>
+        <div style={{ display: 'flex', gap: 32, background: '#fff', border: '1px solid #d0d0d0', borderRadius: 4, padding: '12px 20px', boxShadow: '0 2px 8px rgba(0,0,0,0.08)', marginTop: 12 }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}><span style={{ fontSize: 10, color: '#000', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Total Recharges</span><span style={{ fontSize: 20, fontWeight: 700, color: '#f97316', lineHeight: 1.2 }}>{dep?.total != null ? `₹${Number(dep.total).toLocaleString('en-IN')}` : '—'}</span></div>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}><span style={{ fontSize: 10, color: '#000', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Orders</span><span style={{ fontSize: 20, fontWeight: 700, color: '#409eff', lineHeight: 1.2 }}>{dep?.count != null ? dep.count.toLocaleString() : '—'}</span></div>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}><span style={{ fontSize: 10, color: '#000', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Pending</span><span style={{ fontSize: 20, fontWeight: 700, color: '#ef4444', lineHeight: 1.2 }}>{dep?.pendingCount != null ? dep.pendingCount.toLocaleString() : '—'}</span></div>
         </div>
       </section>
 
-      <section aria-label="Withdrawal statistics">
+      <section aria-label="Withdrawal statistics" style={{ marginTop: 16 }}>
         <h2 className="section-title">Withdrawals</h2>
-        <div className="stat-cards" style={{ marginTop: 12 }}>
-          <div className="stat-card">
-            <span className="stat-card__label">Total Requests</span>
-            <span className="stat-card__value">{wd?.count != null ? wd.count.toLocaleString() : '—'}</span>
-            <span className="stat-card__change">All withdrawals</span>
-          </div>
-          <div className="stat-card">
-            <span className="stat-card__label">Total Amount</span>
-            <span className="stat-card__value text-orange">{wd?.total != null ? `₹${Number(wd.total).toLocaleString('en-IN')}` : '—'}</span>
-            <span className="stat-card__change">Charge: ₹{wd?.chargeTotal != null ? Number(wd.chargeTotal).toLocaleString('en-IN') : '—'}</span>
-          </div>
-          <div className="stat-card">
-            <span className="stat-card__label">Success</span>
-            <span className="stat-card__value text-green">{wd?.success?.count != null ? wd.success.count.toLocaleString() : '—'}</span>
-            <span className="stat-card__change up">₹{wd?.success?.total != null ? Number(wd.success.total).toLocaleString('en-IN') : '—'}</span>
-          </div>
-          <div className="stat-card">
-            <span className="stat-card__label">Pending</span>
-            <span className="stat-card__value text-orange">{wd?.pending?.count != null ? wd.pending.count.toLocaleString() : '—'}</span>
-            <span className="stat-card__change">₹{wd?.pending?.total != null ? Number(wd.pending.total).toLocaleString('en-IN') : '—'}</span>
-          </div>
-          <div className="stat-card">
-            <span className="stat-card__label">Failed</span>
-            <span className="stat-card__value text-red">{wd?.failed?.count != null ? wd.failed.count.toLocaleString() : '—'}</span>
-            <span className="stat-card__change down">₹{wd?.failed?.total != null ? Number(wd.failed.total).toLocaleString('en-IN') : '—'}</span>
-          </div>
+        <div style={{ display: 'flex', gap: 32, background: '#fff', border: '1px solid #d0d0d0', borderRadius: 4, padding: '12px 20px', boxShadow: '0 2px 8px rgba(0,0,0,0.08)', marginTop: 12 }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}><span style={{ fontSize: 10, color: '#000', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Total Requests</span><span style={{ fontSize: 20, fontWeight: 700, lineHeight: 1.2 }}>{wd?.count != null ? wd.count.toLocaleString() : '—'}</span></div>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}><span style={{ fontSize: 10, color: '#000', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Total Amount</span><span style={{ fontSize: 20, fontWeight: 700, color: '#f97316', lineHeight: 1.2 }}>{wd?.total != null ? `₹${Number(wd.total).toLocaleString('en-IN')}` : '—'}</span></div>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}><span style={{ fontSize: 10, color: '#000', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Success</span><span style={{ fontSize: 20, fontWeight: 700, color: '#22c55e', lineHeight: 1.2 }}>{wd?.success?.count != null ? wd.success.count.toLocaleString() : '—'}</span></div>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}><span style={{ fontSize: 10, color: '#000', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Pending</span><span style={{ fontSize: 20, fontWeight: 700, color: '#f97316', lineHeight: 1.2 }}>{wd?.pending?.count != null ? wd.pending.count.toLocaleString() : '—'}</span></div>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}><span style={{ fontSize: 10, color: '#000', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Failed</span><span style={{ fontSize: 20, fontWeight: 700, color: '#ef4444', lineHeight: 1.2 }}>{wd?.failed?.count != null ? wd.failed.count.toLocaleString() : '—'}</span></div>
         </div>
       </section>
 
-      <section aria-label="Agent commission">
+      <section aria-label="Agent commission" style={{ marginTop: 16 }}>
         <h2 className="section-title">Agent Commission</h2>
-        <div className="stat-cards" style={{ marginTop: 12 }}>
-          <div className="stat-card">
-            <span className="stat-card__label">Total Commission</span>
-            <span className="stat-card__value text-green">{ac?.total != null ? `₹${Number(ac.total).toLocaleString('en-IN')}` : '—'}</span>
-            <span className="stat-card__change up">{ac?.count ?? 0} payments</span>
-          </div>
+        <div style={{ display: 'flex', gap: 32, background: '#fff', border: '1px solid #d0d0d0', borderRadius: 4, padding: '12px 20px', boxShadow: '0 2px 8px rgba(0,0,0,0.08)', marginTop: 12 }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}><span style={{ fontSize: 10, color: '#000', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Total Commission</span><span style={{ fontSize: 20, fontWeight: 700, color: '#22c55e', lineHeight: 1.2 }}>{ac?.total != null ? `₹${Number(ac.total).toLocaleString('en-IN')}` : '—'}</span></div>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}><span style={{ fontSize: 10, color: '#000', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Payments</span><span style={{ fontSize: 20, fontWeight: 700, lineHeight: 1.2 }}>{ac?.count ?? 0}</span></div>
         </div>
       </section>
     </div>

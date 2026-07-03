@@ -207,68 +207,46 @@ export default function UserSearch() {
       </form>
 
       {user && (<>
-        <div className="stat-cards" style={{ marginTop: 'var(--space-3)' }}>
-          <div className="stat-card">
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%' }}>
-              <span className="stat-card__label">User ID</span>
-              <div style={{ display: 'flex', gap: 6, alignItems: 'center' }}>
-                <span className={`badge ${statusBadge(user.account.status)}`}>{user.account.status}</span>
-                <button className="btn-filled" style={{ fontSize: 10, padding: '2px 8px' }} onClick={() => { setNewStatus(user.account.status); setShowStatusDialog(true); /* */ }}>Change Status</button>
-              </div>
-            </div>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8, width: '100%', marginTop: 4 }}>
-              <div><div className="stat-card__value text-blue" style={{ fontSize: 16 }}>{user.user.userId}</div></div>
-              <div style={{ textAlign: 'right' }}><span className="stat-card__change">{user.account.vipLevel}</span></div>
-              <div><div className="stat-card__label">Mobile</div><div className="stat-card__value" style={{ fontSize: 14 }}>{user.user.mobile}</div></div>
-              <div style={{ textAlign: 'right' }}>{user.account.statusRemark && <div className="stat-card__change">Reason: {user.account.statusRemark}</div>}</div>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 12, marginTop: 12 }}>
+          <div style={{ display: 'flex', gap: 32, background: '#fff', border: '1px solid #d0d0d0', borderRadius: 4, padding: '12px 20px', boxShadow: '0 2px 8px rgba(0,0,0,0.08)', alignItems: 'center' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}><span style={{ fontSize: 10, color: '#000', textTransform: 'uppercase', letterSpacing: '0.5px' }}>User ID</span><span style={{ fontSize: 20, fontWeight: 700, color: '#409eff', lineHeight: 1.2 }}>{user.user.userId}</span></div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}><span style={{ fontSize: 10, color: '#000', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Status</span><span style={{ fontSize: 20, fontWeight: 700, lineHeight: 1.2 }}>{user.account.status}</span></div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}><span style={{ fontSize: 10, color: '#000', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Mobile</span><span style={{ fontSize: 20, fontWeight: 700, lineHeight: 1.2 }}>{user.user.mobile}</span></div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}><span style={{ fontSize: 10, color: '#000', textTransform: 'uppercase', letterSpacing: '0.5px' }}>VIP Level</span><span style={{ fontSize: 20, fontWeight: 700, lineHeight: 1.2 }}>{user.account.vipLevel}</span></div>
+            <div style={{ marginLeft: 'auto', display: 'flex', gap: 6, alignItems: 'center' }}>
+              <span className={`badge ${statusBadge(user.account.status)}`} style={{ fontSize: 10 }}>{user.account.status}</span>
+              <button className="btn-filled" style={{ fontSize: 10, padding: '2px 8px' }} onClick={() => { setNewStatus(user.account.status); setShowStatusDialog(true) }}>Change Status</button>
             </div>
           </div>
-          <div className="stat-card">
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 12, width: '100%' }}>
-              <div><div className="stat-card__label">Balance</div><div className="stat-card__value text-green">₹{user.account.balance.toLocaleString('en-IN')}</div></div>
-              <div><div className="stat-card__label">Withdrawable</div><div className="stat-card__value" style={{ fontSize: 16, color: '#409eff' }}>₹{user.account.withdrawable.toLocaleString('en-IN')}</div></div>
-              <div><div className="stat-card__label">Total Deposits</div><div className="stat-card__value text-orange" style={{ fontSize: 16 }}>₹{user.account.totalDeposits.toLocaleString('en-IN')}</div></div>
-            </div>
+          <div style={{ display: 'flex', gap: 32, background: '#fff', border: '1px solid #d0d0d0', borderRadius: 4, padding: '12px 20px', boxShadow: '0 2px 8px rgba(0,0,0,0.08)' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}><span style={{ fontSize: 10, color: '#000', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Balance</span><span style={{ fontSize: 20, fontWeight: 700, color: '#22c55e', lineHeight: 1.2 }}>₹{user.account.balance.toLocaleString('en-IN')}</span></div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}><span style={{ fontSize: 10, color: '#000', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Withdrawable</span><span style={{ fontSize: 20, fontWeight: 700, color: '#409eff', lineHeight: 1.2 }}>₹{user.account.withdrawable.toLocaleString('en-IN')}</span></div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}><span style={{ fontSize: 10, color: '#000', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Total Deposits</span><span style={{ fontSize: 20, fontWeight: 700, color: '#f97316', lineHeight: 1.2 }}>₹{user.account.totalDeposits.toLocaleString('en-IN')}</span></div>
           </div>
-          <div className="stat-card">
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%' }}>
-              <span className="stat-card__label">Payment Methods</span>
+          <div style={{ display: 'flex', gap: 32, background: '#fff', border: '1px solid #d0d0d0', borderRadius: 4, padding: '12px 20px', boxShadow: '0 2px 8px rgba(0,0,0,0.08)', alignItems: 'center' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}><span style={{ fontSize: 10, color: '#000', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Holder</span><span style={{ fontSize: 20, fontWeight: 700, lineHeight: 1.2 }}>{user.paymentMethods?.holderName || '-'}</span></div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}><span style={{ fontSize: 10, color: '#000', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Bank</span><span style={{ fontSize: 20, fontWeight: 700, lineHeight: 1.2 }}>{user.paymentMethods?.bank?.bankName || '-'}</span></div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}><span style={{ fontSize: 10, color: '#000', textTransform: 'uppercase', letterSpacing: '0.5px' }}>IFSC</span><span style={{ fontSize: 20, fontWeight: 700, lineHeight: 1.2 }}>{user.paymentMethods?.bank?.ifsc || '-'}</span></div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}><span style={{ fontSize: 10, color: '#000', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Account</span><span style={{ fontSize: 20, fontWeight: 700, lineHeight: 1.2 }}>{user.paymentMethods?.bank?.accountNo || '-'}</span></div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}><span style={{ fontSize: 10, color: '#000', textTransform: 'uppercase', letterSpacing: '0.5px' }}>UPI</span><span style={{ fontSize: 20, fontWeight: 700, lineHeight: 1.2 }}>{user.paymentMethods?.upi?.address || '-'}</span></div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}><span style={{ fontSize: 10, color: '#000', textTransform: 'uppercase', letterSpacing: '0.5px' }}>UPAY</span><span style={{ fontSize: 20, fontWeight: 700, lineHeight: 1.2 }}>{user.paymentMethods?.upay?.address || '-'}</span></div>
+            <div style={{ marginLeft: 'auto' }}>
               <button className="btn-filled" style={{ fontSize: 10, padding: '2px 8px' }} onClick={handleLoadPaymentMethods}>View</button>
             </div>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '4px 24px', width: '100%', marginTop: 4 }}>
-              <div style={{ fontSize: 12, lineHeight: 1.8 }}><strong>Holder Name:</strong> {user.paymentMethods?.holderName || '-'}</div>
-              <div style={{ fontSize: 12, lineHeight: 1.8 }}><strong>Bank Name:</strong> {user.paymentMethods?.bank?.bankName || '-'}</div>
-              <div style={{ fontSize: 12, lineHeight: 1.8 }}><strong>IFSC:</strong> {user.paymentMethods?.bank?.ifsc || '-'}</div>
-              <div style={{ fontSize: 12, lineHeight: 1.8 }}><strong>Account No:</strong> {user.paymentMethods?.bank?.accountNo || '-'}</div>
-              <div style={{ fontSize: 12, lineHeight: 1.8 }}><strong>UPI:</strong> {user.paymentMethods?.upi?.address || '-'}</div>
-              <div style={{ fontSize: 12, lineHeight: 1.8 }}><strong>UPAY:</strong> {user.paymentMethods?.upay?.address || '-'}</div>
-            </div>
           </div>
-          <div className="stat-card">
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%' }}>
-              <span className="stat-card__label">Location & IP</span>
+          <div style={{ display: 'flex', gap: 32, background: '#fff', border: '1px solid #d0d0d0', borderRadius: 4, padding: '12px 20px', boxShadow: '0 2px 8px rgba(0,0,0,0.08)', alignItems: 'center' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}><span style={{ fontSize: 10, color: '#000', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Last IP</span><span style={{ fontSize: 20, fontWeight: 700, lineHeight: 1.2 }}>{user.lastIp}</span></div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}><span style={{ fontSize: 10, color: '#000', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Location</span><span style={{ fontSize: 20, fontWeight: 700, lineHeight: 1.2 }}>{user.deviceInfo ? [user.deviceInfo.city, user.deviceInfo.region].filter(Boolean).join(', ') : '-'}</span></div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}><span style={{ fontSize: 10, color: '#000', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Created</span><span style={{ fontSize: 20, fontWeight: 700, lineHeight: 1.2 }}>{formatDateTime12(user.user.createdAt)}</span></div>
+            <div style={{ marginLeft: 'auto' }}>
               <button className="btn-filled" style={{ fontSize: 10, padding: '2px 8px' }} onClick={handleLoadSameIp} disabled={ipUsersLoading}>{ipUsersLoading ? <Spinner /> : 'Same IP Users'}</button>
             </div>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8, width: '100%', marginTop: 4 }}>
-              <div>
-                <div className="stat-card__label">Last IP</div>
-                <div className="stat-card__value" style={{ fontSize: 14 }}>{user.lastIp}</div>
-                {user.deviceInfo && <div className="stat-card__change">{user.deviceInfo.city ?? ''}{user.deviceInfo.city && user.deviceInfo.region ? ', ' : ''}{user.deviceInfo.region ?? ''}</div>}
-              </div>
-              <div style={{ textAlign: 'right' }}>
-                <div className="stat-card__label">Created</div>
-                <div className="stat-card__value" style={{ fontSize: 14 }}>{formatDateTime12(user.user.createdAt)}</div>
-              </div>
-            </div>
           </div>
-          <div className="stat-card">
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%' }}>
-              <span className="stat-card__label">Turnover</span>
-              <button className="btn-filled" style={{ fontSize: 10, padding: '2px 8px' }} onClick={() => { setShowTurnover(true); /* */ }}>View Batches</button>
-            </div>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, width: '100%', marginTop: 4 }}>
-              <div><div className="stat-card__label">Requirement</div><div className="stat-card__value text-orange">₹{user.account.turnover_requirement.toLocaleString('en-IN')}</div></div>
-              <div><div className="stat-card__label">Completed</div><div className="stat-card__value text-green">₹{user.account.total_turnover_completed.toLocaleString('en-IN')}</div></div>
+          <div style={{ display: 'flex', gap: 32, background: '#fff', border: '1px solid #d0d0d0', borderRadius: 4, padding: '12px 20px', boxShadow: '0 2px 8px rgba(0,0,0,0.08)', alignItems: 'center' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}><span style={{ fontSize: 10, color: '#000', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Requirement</span><span style={{ fontSize: 20, fontWeight: 700, color: '#f97316', lineHeight: 1.2 }}>₹{user.account.turnover_requirement.toLocaleString('en-IN')}</span></div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}><span style={{ fontSize: 10, color: '#000', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Completed</span><span style={{ fontSize: 20, fontWeight: 700, color: '#22c55e', lineHeight: 1.2 }}>₹{user.account.total_turnover_completed.toLocaleString('en-IN')}</span></div>
+            <div style={{ marginLeft: 'auto' }}>
+              <button className="btn-filled" style={{ fontSize: 10, padding: '2px 8px' }} onClick={() => { setShowTurnover(true) }}>View Batches</button>
             </div>
           </div>
         </div>

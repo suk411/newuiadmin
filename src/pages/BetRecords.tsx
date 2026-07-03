@@ -286,27 +286,21 @@ export default function BetRecords() {
                 dailyRecords.map((r, i) => (
                   <div key={i} style={{ marginTop: i === 0 ? 0 : 20 }}>
                     <h3 style={{ margin: '0 0 8px', fontSize: 14, fontWeight: 600, color: 'var(--text-color, #303133)' }}>{r.date}</h3>
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: 8, width: '100%' }}>
-                      <div className="stat-card" style={{ flexDirection: 'row', alignItems: 'center', gap: 12, padding: '12px 16px' }}>
-                        <span className="stat-card__label" style={{ whiteSpace: 'nowrap' }}>Wingo</span>
-                        <div style={{ display: 'flex', gap: 8, alignItems: 'center', flexWrap: 'wrap' }}>
-                          <div style={{ display: 'flex', gap: 3, alignItems: 'center', whiteSpace: 'nowrap' }}><span style={{ fontSize: 10, color: '#909399' }}>Bets:</span><span style={{ fontSize: 14, fontWeight: 700, color: '#409eff' }}>{r.wingo?.betCount ?? 0}</span></div>
-                          <div style={{ display: 'flex', gap: 3, alignItems: 'center', whiteSpace: 'nowrap' }}><span style={{ fontSize: 10, color: '#909399' }}>Total Amt:</span><span style={{ fontSize: 14, fontWeight: 700 }}>₹{(r.wingo?.totalBets ?? 0).toLocaleString('en-IN')}</span></div>
-                          <div style={{ display: 'flex', gap: 3, alignItems: 'center', whiteSpace: 'nowrap' }}><span style={{ fontSize: 10, color: '#909399' }}>Payout:</span><span style={{ fontSize: 14, fontWeight: 700 }}>₹{(r.wingo?.totalPayout ?? 0).toLocaleString('en-IN')}</span></div>
-                          <div style={{ display: 'flex', gap: 3, alignItems: 'center', whiteSpace: 'nowrap' }}><span style={{ fontSize: 10, color: '#909399' }}>Won:</span><span style={{ fontSize: 14, fontWeight: 700, color: '#22c55e' }}>{r.wingo?.wonCount ?? 0}</span></div>
-                          <div style={{ display: 'flex', gap: 3, alignItems: 'center', whiteSpace: 'nowrap' }}><span style={{ fontSize: 10, color: '#909399' }}>Lost:</span><span style={{ fontSize: 14, fontWeight: 700, color: '#ef4444' }}>{r.wingo?.lostCount ?? 0}</span></div>
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: 8, width: '100%' }}>
+                        <div style={{ display: 'flex', gap: 32, background: '#fff', border: '1px solid #d0d0d0', borderRadius: 4, padding: '12px 20px', boxShadow: '0 2px 8px rgba(0,0,0,0.08)' }}>
+                          <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}><span style={{ fontSize: 10, color: '#000', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Wingo Bets</span><span style={{ fontSize: 20, fontWeight: 700, color: '#409eff', lineHeight: 1.2 }}>{r.wingo?.betCount ?? 0}</span></div>
+                          <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}><span style={{ fontSize: 10, color: '#000', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Wingo Amt</span><span style={{ fontSize: 20, fontWeight: 700, lineHeight: 1.2 }}>₹{(r.wingo?.totalBets ?? 0).toLocaleString('en-IN')}</span></div>
+                          <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}><span style={{ fontSize: 10, color: '#000', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Wingo Payout</span><span style={{ fontSize: 20, fontWeight: 700, lineHeight: 1.2 }}>₹{(r.wingo?.totalPayout ?? 0).toLocaleString('en-IN')}</span></div>
+                          <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}><span style={{ fontSize: 10, color: '#000', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Wingo Won</span><span style={{ fontSize: 20, fontWeight: 700, color: '#22c55e', lineHeight: 1.2 }}>{r.wingo?.wonCount ?? 0}</span></div>
+                          <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}><span style={{ fontSize: 10, color: '#000', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Wingo Lost</span><span style={{ fontSize: 20, fontWeight: 700, color: '#ef4444', lineHeight: 1.2 }}>{r.wingo?.lostCount ?? 0}</span></div>
+                        </div>
+                        <div style={{ display: 'flex', gap: 32, background: '#fff', border: '1px solid #d0d0d0', borderRadius: 4, padding: '12px 20px', boxShadow: '0 2px 8px rgba(0,0,0,0.08)' }}>
+                          <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}><span style={{ fontSize: 10, color: '#000', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Provider Bets</span><span style={{ fontSize: 20, fontWeight: 700, color: '#409eff', lineHeight: 1.2 }}>{r.provider?.betCount ?? 0}</span></div>
+                          <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}><span style={{ fontSize: 10, color: '#000', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Provider Amt</span><span style={{ fontSize: 20, fontWeight: 700, lineHeight: 1.2 }}>₹{(r.provider?.totalBets ?? 0).toLocaleString('en-IN')}</span></div>
+                          <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}><span style={{ fontSize: 10, color: '#000', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Provider Payout</span><span style={{ fontSize: 20, fontWeight: 700, lineHeight: 1.2 }}>₹{(r.provider?.totalPayout ?? 0).toLocaleString('en-IN')}</span></div>
+                          <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}><span style={{ fontSize: 10, color: '#000', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Provider Net PL</span><span style={{ fontSize: 20, fontWeight: 700, lineHeight: 1.2, color: (r.provider?.netPL ?? 0) >= 0 ? '#22c55e' : '#ef4444' }}>{fmt(r.provider?.netPL ?? 0)}</span></div>
                         </div>
                       </div>
-                      <div className="stat-card" style={{ flexDirection: 'row', alignItems: 'center', gap: 12, padding: '12px 16px' }}>
-                        <span className="stat-card__label" style={{ whiteSpace: 'nowrap' }}>Provider</span>
-                        <div style={{ display: 'flex', gap: 8, alignItems: 'center', flexWrap: 'wrap' }}>
-                          <div style={{ display: 'flex', gap: 3, alignItems: 'center', whiteSpace: 'nowrap' }}><span style={{ fontSize: 10, color: '#909399' }}>Bets:</span><span style={{ fontSize: 14, fontWeight: 700, color: '#409eff' }}>{r.provider?.betCount ?? 0}</span></div>
-                          <div style={{ display: 'flex', gap: 3, alignItems: 'center', whiteSpace: 'nowrap' }}><span style={{ fontSize: 10, color: '#909399' }}>Total Amt:</span><span style={{ fontSize: 14, fontWeight: 700 }}>₹{(r.provider?.totalBets ?? 0).toLocaleString('en-IN')}</span></div>
-                          <div style={{ display: 'flex', gap: 3, alignItems: 'center', whiteSpace: 'nowrap' }}><span style={{ fontSize: 10, color: '#909399' }}>Payout:</span><span style={{ fontSize: 14, fontWeight: 700 }}>₹{(r.provider?.totalPayout ?? 0).toLocaleString('en-IN')}</span></div>
-                          <div style={{ display: 'flex', gap: 3, alignItems: 'center', whiteSpace: 'nowrap' }}><span style={{ fontSize: 10, color: '#909399' }}>Net PL:</span><span style={{ fontSize: 14, fontWeight: 700, color: (r.provider?.netPL ?? 0) >= 0 ? '#22c55e' : '#ef4444' }}>{fmt(r.provider?.netPL ?? 0)}</span></div>
-                        </div>
-                      </div>
-                    </div>
                   </div>
                 ))
               )}
