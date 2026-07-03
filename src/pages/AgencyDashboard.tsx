@@ -30,7 +30,7 @@ function extractError(err: unknown): string {
 
 function TierRow({ label, data, amountClass }: { label: string; data: TierAmount; amountClass: string }) {
   return (
-    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 10 }}>
+    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
       <span style={{ fontWeight: 600, minWidth: 30 }}>{label}</span>
       <span className={`stat-card__value ${amountClass}`}>₹{(data?.totalAmount ?? 0).toLocaleString('en-IN')}</span>
       <span className="stat-card__change up">{(data?.totalCount ?? 0).toLocaleString('en-IN')} orders</span>
@@ -40,7 +40,7 @@ function TierRow({ label, data, amountClass }: { label: string; data: TierAmount
 
 function TeamRow({ label, value }: { label: string; value: number }) {
   return (
-    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 10 }}>
+    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
       <span style={{ fontWeight: 600, minWidth: 30 }}>{label}</span>
       <span className="stat-card__value text-blue">{(value ?? 0).toLocaleString('en-IN')} members</span>
     </div>
@@ -189,27 +189,27 @@ export default function AgencyDashboard() {
         <>
           {statsLoading && <div style={{ padding: '48px 0', textAlign: 'center' }}><Spinner /></div>}
           {statsData && (
-            <div className="card" style={{ marginTop: 16, display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 0, overflow: 'hidden' }}>
-              <div style={{ borderRight: '1px solid #eee', borderBottom: '1px solid #eee', padding: 20 }}>
+            <div className="stat-cards" style={{ marginTop: 16 }}>
+              <div className="stat-card">
                 <span className="stat-card__label">Team</span>
                 <TeamRow label="L1" value={statsData.team.l1 ?? 0} />
                 <TeamRow label="L2" value={statsData.team.l2 ?? 0} />
                 <TeamRow label="L3" value={statsData.team.l3 ?? 0} />
                 <TeamRow label="Total" value={statsData.team.total ?? 0} />
               </div>
-              <div style={{ borderBottom: '1px solid #eee', padding: 20 }}>
+              <div className="stat-card">
                 <span className="stat-card__label">First Deposit</span>
                 {statsData.firstDeposit.l1 && <TierRow label="L1" data={statsData.firstDeposit.l1} amountClass="text-green" />}
                 {statsData.firstDeposit.l2 && <TierRow label="L2" data={statsData.firstDeposit.l2} amountClass="text-green" />}
                 {statsData.firstDeposit.l3 && <TierRow label="L3" data={statsData.firstDeposit.l3} amountClass="text-green" />}
               </div>
-              <div style={{ borderRight: '1px solid #eee', padding: 20 }}>
+              <div className="stat-card">
                 <span className="stat-card__label">Deposits</span>
                 {statsData.deposits.l1 && <TierRow label="L1" data={statsData.deposits.l1} amountClass="text-orange" />}
                 {statsData.deposits.l2 && <TierRow label="L2" data={statsData.deposits.l2} amountClass="text-orange" />}
                 {statsData.deposits.l3 && <TierRow label="L3" data={statsData.deposits.l3} amountClass="text-orange" />}
               </div>
-              <div style={{ padding: 20 }}>
+              <div className="stat-card">
                 <span className="stat-card__label">Withdrawals</span>
                 {statsData.withdrawals.l1 && <TierRow label="L1" data={statsData.withdrawals.l1} amountClass="text-orange" />}
                 {statsData.withdrawals.l2 && <TierRow label="L2" data={statsData.withdrawals.l2} amountClass="text-orange" />}

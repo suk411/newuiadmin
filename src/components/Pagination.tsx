@@ -37,7 +37,7 @@ export default function Pagination({ page, total, limit, onChange }: Props) {
   return (
     <div style={{ textAlign: 'right', padding: '20px 5px 2px' }}>
       <div className="el-pagination">
-        <span className="el-pagination__total">Total {total}</span>
+        <span className="el-pagination__total">Total {totalPages}</span>
         <button type="button" className="btn-prev" disabled={page <= 1} onClick={() => onChange(page - 1)}>
           <i className="el-icon-arrow-left"></i>
         </button>
