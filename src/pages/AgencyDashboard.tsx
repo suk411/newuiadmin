@@ -123,23 +123,23 @@ export default function AgencyDashboard() {
         <div style={{ display: 'flex', gap: 8 }}>
           <button type="button"
             style={{
-              padding: '8px 24px', fontSize: 14, fontWeight: 600,
+              padding: '6px 19px', fontSize: 11, fontWeight: 600,
               border: tab === 'stats' ? '1px solid #d0d0d0' : '1px solid transparent',
               borderRadius: 4,
-              background: tab === 'stats' ? '#fff' : '#f0f0f0',
-              boxShadow: tab === 'stats' ? '0 2px 8px rgba(0,0,0,0.1)' : 'none',
-              cursor: 'pointer', color: tab === 'stats' ? '#303133' : '#909399',
+              background: tab === 'stats' ? '#f97316' : '#f0f0f0',
+              boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+              cursor: 'pointer', color: tab === 'stats' ? '#fff' : '#909399',
               transition: 'all 0.15s',
             }}
             onClick={() => setTab('stats')}>Stats</button>
           <button type="button"
             style={{
-              padding: '8px 24px', fontSize: 14, fontWeight: 600,
+              padding: '6px 19px', fontSize: 11, fontWeight: 600,
               border: tab === 'members' ? '1px solid #d0d0d0' : '1px solid transparent',
               borderRadius: 4,
-              background: tab === 'members' ? '#fff' : '#f0f0f0',
-              boxShadow: tab === 'members' ? '0 2px 8px rgba(0,0,0,0.1)' : 'none',
-              cursor: 'pointer', color: tab === 'members' ? '#303133' : '#909399',
+              background: tab === 'members' ? '#f97316' : '#f0f0f0',
+              boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+              cursor: 'pointer', color: tab === 'members' ? '#fff' : '#909399',
               transition: 'all 0.15s',
             }}
             onClick={() => setTab('members')}>Members</button>

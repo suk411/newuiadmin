@@ -5,7 +5,6 @@ import type { DepositRecord, DepositFilters } from '../api/deposits'
 import RechargeFilters from '../components/RechargeFilters'
 import RechargeTable from '../components/RechargeTable'
 import ApproveDialog from '../components/ApproveDialog'
-import Pagination from '../components/Pagination'
 import ExportButton from '../components/ExportButton'
 import type { ExportColumn } from '../utils/export'
 import { useToast } from '../contexts/ToastContext'
@@ -109,14 +108,31 @@ export default function RechargeRecords() {
           loading={loading}
           onApprove={handleApproveClick}
         />
-        {total > 0 && (
-          <Pagination
-            page={page}
-            total={total}
-            limit={DEFAULT_LIMIT}
-            onChange={handlePageChange}
-          />
-        )}
+        {total > 0 && (() => {
+          const totalPages = Math.max(1, Math.ceil(total / DEFAULT_LIMIT))
+          const pages: (number | string)[] = []
+          const start = Math.max(1, page - 2)
+          const end = Math.min(totalPages, page + 2)
+          if (start > 1) pages.push(1)
+          if (start > 2) pages.push('...')
+          for (let i = start; i <= end; i++) pages.push(i)
+          if (end < totalPages - 1) pages.push('...')
+          if (end < totalPages) pages.push(totalPages)
+          return (
+            <div className="pagination">
+              <span>Page {page} of {totalPages}</span>
+              <button className="pagination__btn" disabled={page <= 1} onClick={() => handlePageChange(page - 1)}>‹</button>
+              {pages.map((p, i) =>
+                typeof p === 'string' ? (
+                  <span key={`e-${i}`}>...</span>
+                ) : (
+                  <button key={p} className={`pagination__btn ${p === page ? 'active' : ''}`} onClick={() => handlePageChange(p)}>{p}</button>
+                ),
+              )}
+              <button className="pagination__btn" disabled={page >= totalPages} onClick={() => handlePageChange(page + 1)}>›</button>
+            </div>
+          )
+        })()}
       </section>
 
       {approveTarget && (

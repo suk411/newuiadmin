@@ -307,6 +307,34 @@
 .badge--info { background: #e0e0e0; color: #000; }
 .badge--primary { background: #d9ecff; color: #000; }
 
+/* ── Pagination (old style) ── */
+
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--space-2, 4px);
+  padding: var(--space-4, 8px) var(--space-6, 10px);
+}
+.pagination__btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border: 1px solid #d0d0d0;
+  border-radius: 4px;
+  background: #fff;
+  color: #303133;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.pagination__btn:hover:not(:disabled) { color: #409eff; border-color: #c6e2ff; }
+.pagination__btn:disabled { opacity: 0.4; cursor: not-allowed; }
+.pagination__btn.active { background: #409eff; color: #fff; border-color: #409eff; }
+.pagination__btn:focus-visible { outline: 2px solid #a0c5fc; outline-offset: 2px; }
+
 /* ── Pagination (Element UI style) ── */
 
 .el-pagination {
@@ -1241,6 +1269,17 @@ html.dark .tags-view-item {
 
 html.dark .tags-view-item-close:hover {
   background: rgba(255, 255, 255, 0.15);
+}
+
+html.dark .pagination__btn {
+  background: #111;
+  border-color: #333;
+  color: #fff;
+}
+html.dark .pagination__btn.active {
+  background: #409eff;
+  border-color: #409eff;
+  color: #fff;
 }
 
 html.dark .btn-prev,

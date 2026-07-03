@@ -26,27 +26,6 @@ const statusMap: Record<string, { label: string; className: string }> = {
 }
 
 export default function RechargeTable({ records, loading, onApprove }: Props) {
-  if (loading) {
-    return (
-      <div className="table-wrap">
-        <div style={{ padding: '48px 0', textAlign: 'center' }}>
-          <Spinner />
-        </div>
-      </div>
-    )
-  }
-
-  if (records.length === 0) {
-    return (
-      <div className="table-wrap">
-        <div className="empty-state">
-          <div className="empty-state__icon">📋</div>
-          No recharge records found
-        </div>
-      </div>
-    )
-  }
-
   return (
     <div className="table-wrap">
       <table className="table">
@@ -62,8 +41,15 @@ export default function RechargeTable({ records, loading, onApprove }: Props) {
             <th>Actions</th>
           </tr>
         </thead>
-        <tbody>
-          {records.map((record) => {
+        {loading ? (
+          <tbody><tr><td colSpan={8} style={{ textAlign: 'center', padding: '48px 0' }}><Spinner /></td></tr></tbody>
+        ) : records.length === 0 ? (
+          <tbody><tr><td colSpan={8} style={{ textAlign: 'center', padding: '48px 0' }}>
+            <div className="empty-state"><div className="empty-state__icon">📋</div>No recharge records found</div>
+          </td></tr></tbody>
+        ) : (
+          <tbody>
+            {records.map((record) => {
             const st = statusMap[record.status] || { label: record.status, className: 'badge--info' }
             return (
               <tr key={record.orderId} tabIndex={0}>
@@ -87,7 +73,7 @@ export default function RechargeTable({ records, loading, onApprove }: Props) {
               </tr>
             )
           })}
-        </tbody>
+          </tbody>)}
       </table>
     </div>
   )
