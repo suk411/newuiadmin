@@ -64,15 +64,15 @@ export default function BetRecords() {
         ],
         data: dailyRecords.map((r) => ({
           date: r.date,
-          wingoBetCount: r.wingo.betCount,
-          wingoTotalBets: r.wingo.totalBets,
-          wingoPayout: r.wingo.totalPayout,
-          wingoWon: r.wingo.wonCount,
-          wingoLost: r.wingo.lostCount,
-          providerBetCount: r.provider.betCount,
-          providerTotalBets: r.provider.totalBets,
-          providerPayout: r.provider.totalPayout,
-          providerNetPL: r.provider.netPL,
+          wingoBetCount: r.wingo?.betCount ?? 0,
+          wingoTotalBets: r.wingo?.totalBets ?? 0,
+          wingoPayout: r.wingo?.totalPayout ?? 0,
+          wingoWon: r.wingo?.wonCount ?? 0,
+          wingoLost: r.wingo?.lostCount ?? 0,
+          providerBetCount: r.provider?.betCount ?? 0,
+          providerTotalBets: r.provider?.totalBets ?? 0,
+          providerPayout: r.provider?.totalPayout ?? 0,
+          providerNetPL: r.provider?.netPL ?? 0,
         })),
         filename: 'daily-stats',
       })
@@ -261,9 +261,9 @@ export default function BetRecords() {
       {(tab === 'provider' || tab === 'wingo') && summary && records.length > 0 && (
         <div className="stat-cards" style={{ margin: '12px 0' }}>
           <div className="stat-card" style={{ display: 'flex', gap: 32, padding: '12px 20px' }}>
-            <div><span className="stat-card__label">Total Amount</span><div className="stat-card__value text-orange">₹{summary.totalAmount.toLocaleString('en-IN')}</div></div>
-            <div><span className="stat-card__label">Total Payout</span><div className="stat-card__value text-green">₹{summary.totalPayout.toLocaleString('en-IN')}</div></div>
-            <div><span className="stat-card__label">Net P&L</span><div className={`stat-card__value ${summary.totalPayout - summary.totalAmount >= 0 ? 'text-green' : 'text-red'}`}>₹{(summary.totalPayout - summary.totalAmount).toLocaleString('en-IN')}</div></div>
+            <div><span className="stat-card__label">Total Amount</span><div className="stat-card__value text-orange">₹{(summary.totalAmount ?? 0).toLocaleString('en-IN')}</div></div>
+            <div><span className="stat-card__label">Total Payout</span><div className="stat-card__value text-green">₹{(summary.totalPayout ?? 0).toLocaleString('en-IN')}</div></div>
+            <div><span className="stat-card__label">Net P&L</span><div className={`stat-card__value ${(summary.totalPayout ?? 0) - (summary.totalAmount ?? 0) >= 0 ? 'text-green' : 'text-red'}`}>₹{((summary.totalPayout ?? 0) - (summary.totalAmount ?? 0)).toLocaleString('en-IN')}</div></div>
           </div>
         </div>
       )}
@@ -283,18 +283,18 @@ export default function BetRecords() {
                     <div className="stat-cards">
                       <div className="stat-card">
                         <span className="stat-card__label">Wingo</span>
-                        <div style={{ display: 'flex', justifyContent: 'space-between' }}><span>Bets</span><span className="stat-card__value text-blue">{r.wingo.betCount}</span></div>
-                        <div style={{ display: 'flex', justifyContent: 'space-between' }}><span>Total Amt</span><span className="stat-card__value">₹{r.wingo.totalBets.toLocaleString('en-IN')}</span></div>
-                        <div style={{ display: 'flex', justifyContent: 'space-between' }}><span>Payout</span><span className="stat-card__value">₹{r.wingo.totalPayout.toLocaleString('en-IN')}</span></div>
-                        <div style={{ display: 'flex', justifyContent: 'space-between' }}><span>Won</span><span className="stat-card__value text-green">{r.wingo.wonCount}</span></div>
-                        <div style={{ display: 'flex', justifyContent: 'space-between' }}><span>Lost</span><span className="stat-card__value text-red">{r.wingo.lostCount}</span></div>
+                        <div style={{ display: 'flex', justifyContent: 'space-between' }}><span>Bets</span><span className="stat-card__value text-blue">{r.wingo?.betCount ?? 0}</span></div>
+                        <div style={{ display: 'flex', justifyContent: 'space-between' }}><span>Total Amt</span><span className="stat-card__value">₹{(r.wingo?.totalBets ?? 0).toLocaleString('en-IN')}</span></div>
+                        <div style={{ display: 'flex', justifyContent: 'space-between' }}><span>Payout</span><span className="stat-card__value">₹{(r.wingo?.totalPayout ?? 0).toLocaleString('en-IN')}</span></div>
+                        <div style={{ display: 'flex', justifyContent: 'space-between' }}><span>Won</span><span className="stat-card__value text-green">{r.wingo?.wonCount ?? 0}</span></div>
+                        <div style={{ display: 'flex', justifyContent: 'space-between' }}><span>Lost</span><span className="stat-card__value text-red">{r.wingo?.lostCount ?? 0}</span></div>
                       </div>
                       <div className="stat-card">
                         <span className="stat-card__label">Provider</span>
-                        <div style={{ display: 'flex', justifyContent: 'space-between' }}><span>Bets</span><span className="stat-card__value text-blue">{r.provider.betCount}</span></div>
-                        <div style={{ display: 'flex', justifyContent: 'space-between' }}><span>Total Amt</span><span className="stat-card__value">₹{r.provider.totalBets.toLocaleString('en-IN')}</span></div>
-                        <div style={{ display: 'flex', justifyContent: 'space-between' }}><span>Payout</span><span className="stat-card__value">₹{r.provider.totalPayout.toLocaleString('en-IN')}</span></div>
-                        <div style={{ display: 'flex', justifyContent: 'space-between' }}><span>Net PL</span><span className={`stat-card__value ${r.provider.netPL >= 0 ? 'text-green' : 'text-red'}`}>₹{r.provider.netPL.toLocaleString('en-IN')}</span></div>
+                        <div style={{ display: 'flex', justifyContent: 'space-between' }}><span>Bets</span><span className="stat-card__value text-blue">{r.provider?.betCount ?? 0}</span></div>
+                        <div style={{ display: 'flex', justifyContent: 'space-between' }}><span>Total Amt</span><span className="stat-card__value">₹{(r.provider?.totalBets ?? 0).toLocaleString('en-IN')}</span></div>
+                        <div style={{ display: 'flex', justifyContent: 'space-between' }}><span>Payout</span><span className="stat-card__value">₹{(r.provider?.totalPayout ?? 0).toLocaleString('en-IN')}</span></div>
+                        <div style={{ display: 'flex', justifyContent: 'space-between' }}><span>Net PL</span><span className={`stat-card__value ${(r.provider?.netPL ?? 0) >= 0 ? 'text-green' : 'text-red'}`}>₹{(r.provider?.netPL ?? 0).toLocaleString('en-IN')}</span></div>
                       </div>
                     </div>
                   </div>
@@ -323,8 +323,8 @@ export default function BetRecords() {
                       {tab === 'provider' ? (
                         <><td>{r.userId}</td>
                           <td>{r.game}</td>
-                          <td>₹{Number(r.amount).toLocaleString('en-IN')}</td>
-                          <td>₹{Number(r.payout).toLocaleString('en-IN')}</td>
+                          <td>₹{Number(r.amount ?? 0).toLocaleString('en-IN')}</td>
+                          <td>₹{Number(r.payout ?? 0).toLocaleString('en-IN')}</td>
                           <td style={{ fontFamily: 'monospace', fontSize: 12 }}>{r.gameId}</td>
                           <td>{r.product}</td>
                           <td><span className={`badge ${r.status === 1 ? 'badge--success' : 'badge--warning'}`}>{r.status === 1 ? 'Valid' : r.status}</span></td>
@@ -333,10 +333,10 @@ export default function BetRecords() {
                       ) : (
                         <><td>{r.userId}</td>
                           <td>{r.gameMode}</td>
-                          <td>₹{Number(r.amount).toLocaleString('en-IN')}</td>
-                          <td>₹{Number(r.realAmount).toLocaleString('en-IN')}</td>
-                          <td>₹{Number(r.fee).toLocaleString('en-IN')}</td>
-                          <td>₹{Number(r.payout).toLocaleString('en-IN')}</td>
+                          <td>₹{Number(r.amount ?? 0).toLocaleString('en-IN')}</td>
+                          <td>₹{Number(r.realAmount ?? 0).toLocaleString('en-IN')}</td>
+                          <td>₹{Number(r.fee ?? 0).toLocaleString('en-IN')}</td>
+                          <td>₹{Number(r.payout ?? 0).toLocaleString('en-IN')}</td>
                           <td>{r.selectType}</td>
                           <td style={{ fontFamily: 'monospace', fontSize: 12 }}>{r.issueNumber}</td>
                           <td style={{ fontFamily: 'monospace', fontSize: 12 }}>{r.orderNumber}</td>
