@@ -175,6 +175,7 @@ export default function App() {
 
   const handleLogin = (newToken: string) => {
     setToken(newToken)
+    window.location.reload()
   }
 
   const handleLogout = () => {
