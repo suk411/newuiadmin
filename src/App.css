@@ -1430,6 +1430,14 @@ html.dark .spinner {
   }
 }
 
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.tab-fade-in {
+  animation: fadeIn 0.25s ease forwards;
+}
+
 @media (min-width: 769px) {
   .sidebar {
     width: 0;

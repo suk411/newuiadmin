@@ -30,7 +30,7 @@ function extractError(err: unknown): string {
 
 function TierRow({ label, data, amountClass }: { label: string; data: TierAmount; amountClass: string }) {
   return (
-    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 16px' }}>
+    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 10 }}>
       <span style={{ fontWeight: 600, minWidth: 30 }}>{label}</span>
       <span className={`stat-card__value ${amountClass}`}>₹{(data?.totalAmount ?? 0).toLocaleString('en-IN')}</span>
       <span className="stat-card__change up">{(data?.totalCount ?? 0).toLocaleString('en-IN')} orders</span>
@@ -40,7 +40,7 @@ function TierRow({ label, data, amountClass }: { label: string; data: TierAmount
 
 function TeamRow({ label, value }: { label: string; value: number }) {
   return (
-    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 16px' }}>
+    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 10 }}>
       <span style={{ fontWeight: 600, minWidth: 30 }}>{label}</span>
       <span className="stat-card__value text-blue">{(value ?? 0).toLocaleString('en-IN')} members</span>
     </div>
@@ -184,44 +184,37 @@ export default function AgencyDashboard() {
         </div>
       </form>
 
+      <div className="tab-fade-in" key={tab}>
       {tab === 'stats' && (
         <>
           {statsLoading && <div style={{ padding: '48px 0', textAlign: 'center' }}><Spinner /></div>}
           {statsData && (
             <div className="card" style={{ marginTop: 16, display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 0, overflow: 'hidden' }}>
-              <section aria-label="Team breakdown" style={{ borderRight: '1px solid #eee', borderBottom: '1px solid #eee' }}>
-                <h2 className="section-title" style={{ padding: '12px 16px', margin: 0 }}>Team</h2>
-                <div style={{ padding: 0 }}>
-                  <TeamRow label="L1" value={statsData.team.l1 ?? 0} />
-                  <TeamRow label="L2" value={statsData.team.l2 ?? 0} />
-                  <TeamRow label="L3" value={statsData.team.l3 ?? 0} />
-                  <TeamRow label="Total" value={statsData.team.total ?? 0} />
-                </div>
-              </section>
-              <section aria-label="First deposit" style={{ borderBottom: '1px solid #eee' }}>
-                <h2 className="section-title" style={{ padding: '12px 16px', margin: 0 }}>First Deposit</h2>
-                <div style={{ padding: 0 }}>
-                  {statsData.firstDeposit.l1 && <TierRow label="L1" data={statsData.firstDeposit.l1} amountClass="text-green" />}
-                  {statsData.firstDeposit.l2 && <TierRow label="L2" data={statsData.firstDeposit.l2} amountClass="text-green" />}
-                  {statsData.firstDeposit.l3 && <TierRow label="L3" data={statsData.firstDeposit.l3} amountClass="text-green" />}
-                </div>
-              </section>
-              <section aria-label="Deposits" style={{ borderRight: '1px solid #eee' }}>
-                <h2 className="section-title" style={{ padding: '12px 16px', margin: 0 }}>Deposits</h2>
-                <div style={{ padding: 0 }}>
-                  {statsData.deposits.l1 && <TierRow label="L1" data={statsData.deposits.l1} amountClass="text-orange" />}
-                  {statsData.deposits.l2 && <TierRow label="L2" data={statsData.deposits.l2} amountClass="text-orange" />}
-                  {statsData.deposits.l3 && <TierRow label="L3" data={statsData.deposits.l3} amountClass="text-orange" />}
-                </div>
-              </section>
-              <section aria-label="Withdrawals">
-                <h2 className="section-title" style={{ padding: '12px 16px', margin: 0 }}>Withdrawals</h2>
-                <div style={{ padding: 0 }}>
-                  {statsData.withdrawals.l1 && <TierRow label="L1" data={statsData.withdrawals.l1} amountClass="text-orange" />}
-                  {statsData.withdrawals.l2 && <TierRow label="L2" data={statsData.withdrawals.l2} amountClass="text-orange" />}
-                  {statsData.withdrawals.l3 && <TierRow label="L3" data={statsData.withdrawals.l3} amountClass="text-orange" />}
-                </div>
-              </section>
+              <div style={{ borderRight: '1px solid #eee', borderBottom: '1px solid #eee', padding: 20 }}>
+                <span className="stat-card__label">Team</span>
+                <TeamRow label="L1" value={statsData.team.l1 ?? 0} />
+                <TeamRow label="L2" value={statsData.team.l2 ?? 0} />
+                <TeamRow label="L3" value={statsData.team.l3 ?? 0} />
+                <TeamRow label="Total" value={statsData.team.total ?? 0} />
+              </div>
+              <div style={{ borderBottom: '1px solid #eee', padding: 20 }}>
+                <span className="stat-card__label">First Deposit</span>
+                {statsData.firstDeposit.l1 && <TierRow label="L1" data={statsData.firstDeposit.l1} amountClass="text-green" />}
+                {statsData.firstDeposit.l2 && <TierRow label="L2" data={statsData.firstDeposit.l2} amountClass="text-green" />}
+                {statsData.firstDeposit.l3 && <TierRow label="L3" data={statsData.firstDeposit.l3} amountClass="text-green" />}
+              </div>
+              <div style={{ borderRight: '1px solid #eee', padding: 20 }}>
+                <span className="stat-card__label">Deposits</span>
+                {statsData.deposits.l1 && <TierRow label="L1" data={statsData.deposits.l1} amountClass="text-orange" />}
+                {statsData.deposits.l2 && <TierRow label="L2" data={statsData.deposits.l2} amountClass="text-orange" />}
+                {statsData.deposits.l3 && <TierRow label="L3" data={statsData.deposits.l3} amountClass="text-orange" />}
+              </div>
+              <div style={{ padding: 20 }}>
+                <span className="stat-card__label">Withdrawals</span>
+                {statsData.withdrawals.l1 && <TierRow label="L1" data={statsData.withdrawals.l1} amountClass="text-orange" />}
+                {statsData.withdrawals.l2 && <TierRow label="L2" data={statsData.withdrawals.l2} amountClass="text-orange" />}
+                {statsData.withdrawals.l3 && <TierRow label="L3" data={statsData.withdrawals.l3} amountClass="text-orange" />}
+              </div>
             </div>
           )}
         </>
@@ -273,6 +266,7 @@ export default function AgencyDashboard() {
           <Pagination page={membersPage} total={membersTotal} limit={MEMBER_LIMIT} onChange={(p) => loadMembers(p)} />
         </section>
       )}
+      </div>
     </div>
   )
 }

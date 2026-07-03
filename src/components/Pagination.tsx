@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useToast } from '../contexts/ToastContext'
 
 interface Props {
   page: number
@@ -10,6 +11,7 @@ interface Props {
 export default function Pagination({ page, total, limit, onChange }: Props) {
   const totalPages = Math.max(1, Math.ceil(total / limit))
   const [jumpValue, setJumpValue] = useState('')
+  const { toast } = useToast()
 
   const pages: (number | string)[] = []
   const start = Math.max(1, page - 2)
@@ -21,12 +23,14 @@ export default function Pagination({ page, total, limit, onChange }: Props) {
   if (end < totalPages - 1) pages.push('...')
   if (end < totalPages) pages.push(totalPages)
 
-  const handleJump = (e: React.FormEvent) => {
+  const handleJump = (e: React.FormEvent | React.KeyboardEvent) => {
     e.preventDefault()
     const p = parseInt(jumpValue, 10)
     if (p >= 1 && p <= totalPages) {
       onChange(p)
       setJumpValue('')
+    } else {
+      toast('Page not found')
     }
   }
 
@@ -38,6 +42,7 @@ export default function Pagination({ page, total, limit, onChange }: Props) {
           <i className="el-icon-arrow-left"></i>
         </button>
         <ul className="el-pager">
+          {pages[0] !== 1 && <li className="el-pager__more" onClick={() => onChange(1)} style={{ cursor: 'pointer' }}>«</li>}
           {pages.map((p, i) =>
             typeof p === 'string' ? (
               <li key={`ellipsis-${i}`} className="el-pager__more">...</li>
@@ -51,6 +56,7 @@ export default function Pagination({ page, total, limit, onChange }: Props) {
               </li>
             )
           )}
+          {pages[pages.length - 1] !== totalPages && <li className="el-pager__more" onClick={() => onChange(totalPages)} style={{ cursor: 'pointer' }}>»</li>}
         </ul>
         <button type="button" className="btn-next" disabled={page >= totalPages} onClick={() => onChange(page + 1)}>
           <i className="el-icon-arrow-right"></i>
