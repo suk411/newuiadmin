@@ -22,6 +22,7 @@ import './App.css'
 function ProtectedLayoutContent({ onLogout }: { onLogout: () => void }) {
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const [darkMode, setDarkMode] = useState(() => localStorage.getItem('darkMode') === 'true')
+  const [autoFillOff, setAutoFillOff] = useState(() => localStorage.getItem('autoFillOff') === 'true')
   const location = useLocation()
   const navigate = useNavigate()
   const { toast } = useToast()
@@ -30,6 +31,14 @@ function ProtectedLayoutContent({ onLogout }: { onLogout: () => void }) {
     document.documentElement.classList.toggle('dark', darkMode)
     localStorage.setItem('darkMode', String(darkMode))
   }, [darkMode])
+
+  useEffect(() => {
+    localStorage.setItem('autoFillOff', String(autoFillOff))
+    document.querySelectorAll('input').forEach((el) => {
+      if (autoFillOff) el.setAttribute('autocomplete', 'off')
+      else el.removeAttribute('autocomplete')
+    })
+  }, [autoFillOff])
 
   const [tags, setTags] = useState<TagItem[]>(() => {
     try {
@@ -90,6 +99,14 @@ function ProtectedLayoutContent({ onLogout }: { onLogout: () => void }) {
             </div>
           </div>
           <div className="header-right">
+            <button className="header-btn-icon" onClick={() => setAutoFillOff((p) => !p)} aria-label="Toggle autocomplete suggestions" title={autoFillOff ? 'Autocomplete OFF' : 'Autocomplete ON'} style={{ position: 'relative' }}>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <rect x="2" y="4" width="20" height="16" rx="2" />
+                <path d="M8 12h8" />
+                <path d="M12 8v8" />
+              </svg>
+              {autoFillOff && <span style={{ position: 'absolute', top: 2, right: 2, width: 8, height: 8, borderRadius: '50%', background: '#22c55e' }} />}
+            </button>
             <button className="header-btn-icon" onClick={() => setDarkMode((p) => !p)} aria-label="Toggle dark mode" title="Toggle dark mode">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 {darkMode
