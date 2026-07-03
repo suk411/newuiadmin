@@ -137,42 +137,63 @@ export default function BetRecords() {
       <section className="card">
         <div className="table-wrap">
           {tab === 'daily' ? (
-            <table className="table">
-              <thead><tr>
-                <th>Date</th>
-                <th>Wingo Bets</th>
-                <th>Wingo Amt</th>
-                <th>Wingo Payout</th>
-                <th>Wingo Won</th>
-                <th>Wingo Lost</th>
-                <th>Prov Bets</th>
-                <th>Prov Amt</th>
-                <th>Prov Payout</th>
-                <th>Prov Net PL</th>
-              </tr></thead>
-              <tbody>
-                {dailyRecords.length === 0 ? (
-                  <tr><td colSpan={10} style={{ textAlign: 'center', padding: '48px 0' }}>
-                    {loading ? <Spinner /> : <div className="empty-state"><div className="empty-state__icon">📋</div>No stats found</div>}
-                  </td></tr>
-                ) : (
-                  dailyRecords.map((r, i) => (
-                    <tr key={i} tabIndex={0}>
-                      <td style={{ whiteSpace: 'nowrap' }}>{r.date}</td>
-                      <td>{r.wingo.betCount}</td>
-                      <td>₹{r.wingo.totalBets.toLocaleString('en-IN')}</td>
-                      <td>₹{r.wingo.totalPayout.toLocaleString('en-IN')}</td>
-                      <td>{r.wingo.wonCount}</td>
-                      <td>{r.wingo.lostCount}</td>
-                      <td>{r.provider.betCount}</td>
-                      <td>₹{r.provider.totalBets.toLocaleString('en-IN')}</td>
-                      <td>₹{r.provider.totalPayout.toLocaleString('en-IN')}</td>
-                      <td><span className={`badge ${r.provider.netPL >= 0 ? 'badge--success' : 'badge--danger'}`}>₹{r.provider.netPL.toLocaleString('en-IN')}</span></td>
-                    </tr>
-                  ))
-                )}
-              </tbody>
-            </table>
+            <div className="tab-fade-in" key="daily">
+              {loading && dailyRecords.length === 0 ? (
+                <div style={{ padding: '48px 0', textAlign: 'center' }}><Spinner /></div>
+              ) : dailyRecords.length === 0 ? (
+                <div className="empty-state" style={{ padding: '48px 0' }}><div className="empty-state__icon">📋</div>No stats found</div>
+              ) : (
+                dailyRecords.map((r, i) => (
+                  <div key={i} style={{ marginTop: i === 0 ? 0 : 20 }}>
+                    <h3 style={{ margin: '0 0 8px', fontSize: 14, fontWeight: 600, color: 'var(--text-color, #303133)' }}>{r.date}</h3>
+                    <div className="stat-cards">
+                      <div className="stat-card">
+                        <span className="stat-card__label">Wingo</span>
+                        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                          <span>Bets</span>
+                          <span className="stat-card__value text-blue">{r.wingo.betCount}</span>
+                        </div>
+                        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                          <span>Total Amt</span>
+                          <span className="stat-card__value">₹{r.wingo.totalBets.toLocaleString('en-IN')}</span>
+                        </div>
+                        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                          <span>Payout</span>
+                          <span className="stat-card__value">₹{r.wingo.totalPayout.toLocaleString('en-IN')}</span>
+                        </div>
+                        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                          <span>Won</span>
+                          <span className="stat-card__value text-green">{r.wingo.wonCount}</span>
+                        </div>
+                        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                          <span>Lost</span>
+                          <span className="stat-card__value text-red">{r.wingo.lostCount}</span>
+                        </div>
+                      </div>
+                      <div className="stat-card">
+                        <span className="stat-card__label">Provider</span>
+                        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                          <span>Bets</span>
+                          <span className="stat-card__value text-blue">{r.provider.betCount}</span>
+                        </div>
+                        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                          <span>Total Amt</span>
+                          <span className="stat-card__value">₹{r.provider.totalBets.toLocaleString('en-IN')}</span>
+                        </div>
+                        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                          <span>Payout</span>
+                          <span className="stat-card__value">₹{r.provider.totalPayout.toLocaleString('en-IN')}</span>
+                        </div>
+                        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                          <span>Net PL</span>
+                          <span className={`stat-card__value ${r.provider.netPL >= 0 ? 'text-green' : 'text-red'}`}>₹{r.provider.netPL.toLocaleString('en-IN')}</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                ))
+              )}
+            </div>
           ) : (
             <table className="table">
               <thead>

@@ -209,11 +209,17 @@
 }
 
 .btn-outline--orange {
-  color: #f97316 !important;
+  background: #f97316;
+  color: #fff !important;
   border-color: #f97316 !important;
+  box-shadow: 0 2px 8px rgba(249, 115, 22, 0.3);
+  height: 26px;
+  line-height: 26px;
+  padding: 0 10px;
+  font-size: 11px !important;
 }
 .btn-outline--orange:hover {
-  background: #fff7ed;
+  background: #ea580c;
 }
 
 .export-option {
@@ -1346,11 +1352,17 @@ html.dark .btn-outline:hover {
 }
 
 html.dark .btn-outline--orange {
-  color: #fb923c !important;
-  border-color: #fb923c !important;
+  background: #ea580c;
+  color: #fff !important;
+  border-color: #ea580c !important;
+  box-shadow: 0 2px 8px rgba(249, 115, 22, 0.3);
+  height: 26px;
+  line-height: 26px;
+  padding: 0 10px;
+  font-size: 11px !important;
 }
 html.dark .btn-outline--orange:hover {
-  background: #1c1206;
+  background: #c2410c;
 }
 
 html.dark .dialog {
