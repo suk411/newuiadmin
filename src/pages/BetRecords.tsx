@@ -259,8 +259,8 @@ export default function BetRecords() {
       </div>
 
       {(tab === 'provider' || tab === 'wingo') && summary && records.length > 0 && (
-        <div className="stat-cards" style={{ margin: '12px 0' }}>
-          <div className="stat-card" style={{ display: 'flex', gap: 32, padding: '12px 20px' }}>
+        <div style={{ display: 'flex', gap: 16, width: '100%', margin: '12px 0' }}>
+          <div className="stat-card" style={{ flex: 1, display: 'flex', gap: 32, padding: '12px 20px' }}>
             <div><span className="stat-card__label">Total Amount</span><div className="stat-card__value text-orange">₹{(summary.totalAmount ?? 0).toLocaleString('en-IN')}</div></div>
             <div><span className="stat-card__label">Total Payout</span><div className="stat-card__value text-green">₹{(summary.totalPayout ?? 0).toLocaleString('en-IN')}</div></div>
             <div><span className="stat-card__label">Net P&L</span><div className={`stat-card__value ${(summary.totalPayout ?? 0) - (summary.totalAmount ?? 0) >= 0 ? 'text-green' : 'text-red'}`}>₹{((summary.totalPayout ?? 0) - (summary.totalAmount ?? 0)).toLocaleString('en-IN')}</div></div>
@@ -280,8 +280,8 @@ export default function BetRecords() {
                 dailyRecords.map((r, i) => (
                   <div key={i} style={{ marginTop: i === 0 ? 0 : 20 }}>
                     <h3 style={{ margin: '0 0 8px', fontSize: 14, fontWeight: 600, color: 'var(--text-color, #303133)' }}>{r.date}</h3>
-                    <div className="stat-cards">
-                      <div className="stat-card">
+                    <div style={{ display: 'flex', gap: 16, width: '100%' }}>
+                      <div className="stat-card" style={{ flex: 1 }}>
                         <span className="stat-card__label">Wingo</span>
                         <div style={{ display: 'flex', justifyContent: 'space-between' }}><span>Bets</span><span className="stat-card__value text-blue">{r.wingo?.betCount ?? 0}</span></div>
                         <div style={{ display: 'flex', justifyContent: 'space-between' }}><span>Total Amt</span><span className="stat-card__value">₹{(r.wingo?.totalBets ?? 0).toLocaleString('en-IN')}</span></div>
@@ -289,7 +289,7 @@ export default function BetRecords() {
                         <div style={{ display: 'flex', justifyContent: 'space-between' }}><span>Won</span><span className="stat-card__value text-green">{r.wingo?.wonCount ?? 0}</span></div>
                         <div style={{ display: 'flex', justifyContent: 'space-between' }}><span>Lost</span><span className="stat-card__value text-red">{r.wingo?.lostCount ?? 0}</span></div>
                       </div>
-                      <div className="stat-card">
+                      <div className="stat-card" style={{ flex: 1 }}>
                         <span className="stat-card__label">Provider</span>
                         <div style={{ display: 'flex', justifyContent: 'space-between' }}><span>Bets</span><span className="stat-card__value text-blue">{r.provider?.betCount ?? 0}</span></div>
                         <div style={{ display: 'flex', justifyContent: 'space-between' }}><span>Total Amt</span><span className="stat-card__value">₹{(r.provider?.totalBets ?? 0).toLocaleString('en-IN')}</span></div>
