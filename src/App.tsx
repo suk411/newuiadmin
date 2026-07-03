@@ -176,7 +176,7 @@ export default function App() {
   }, [])
 
   useEffect(() => {
-    const handler = () => setShowSessionExpired(true)
+    const handler = () => { setToken(null); setShowSessionExpired(true) }
     window.addEventListener('session-expired', handler)
     return () => window.removeEventListener('session-expired', handler)
   }, [])
@@ -196,7 +196,7 @@ export default function App() {
 
   return (
     <>
-      <SessionExpiredDialog show={showSessionExpired} />
+      <SessionExpiredDialog show={showSessionExpired} onLogin={() => setShowSessionExpired(false)} />
       <Routes>
         <Route path="/login" element={token ? <Navigate to="/recharge" replace /> : <Login onLogin={handleLogin} />} />
         <Route path="/*" element={token ? <ProtectedLayout onLogout={handleLogout} /> : <Navigate to="/login" replace />} />

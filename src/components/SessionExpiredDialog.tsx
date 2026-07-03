@@ -1,8 +1,9 @@
 interface Props {
   show: boolean
+  onLogin: () => void
 }
 
-export default function SessionExpiredDialog({ show }: Props) {
+export default function SessionExpiredDialog({ show, onLogin }: Props) {
   if (!show) return null
 
   return (
@@ -23,7 +24,7 @@ export default function SessionExpiredDialog({ show }: Props) {
         <button
           className="btn-filled"
           style={{ width: '100%' }}
-          onClick={() => { window.location.href = '/#/login' }}
+          onClick={onLogin}
         >
           Login
         </button>
