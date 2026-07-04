@@ -6,6 +6,7 @@ import { formatDateTime12 } from '../utils/format'
 import { useToast } from '../contexts/ToastContext'
 import Spinner from '../components/Spinner'
 import Pagination from '../components/Pagination'
+import TabButton from '../components/TabButton'
 
 const LIMIT = 25
 
@@ -145,18 +146,18 @@ export default function WingoDashboard() {
 
   return (
     <div className="content content--table">
-      <div className="filters-bar">
-        <div className="filter-group" style={{ flexDirection: 'row', gap: 0 }}>
-          {(['current', 'history', 'resultMode'] as const).map(t => (
-            <button key={t} className={tab === t ? 'btn-filled' : 'btn-outline'}
-              style={{ borderRadius: t === 'current' ? '3px 0 0 3px' : t === 'resultMode' ? '0 3px 3px 0' : '0' }}
-              onClick={() => setTab(t)}>
-              {t === 'current' ? 'Current Round' : t === 'history' ? 'History' : 'Result Mode'}
-            </button>
-          ))}
+      <div className="filters-bar" style={{ borderBottom: 'none', paddingBottom: 0 }}>
+        <div style={{ display: 'flex', gap: 8 }}>
+          <TabButton active={tab === 'current'} onClick={() => setTab('current')}>Current Round</TabButton>
+          <TabButton active={tab === 'history'} onClick={() => setTab('history')}>History</TabButton>
+          <TabButton active={tab === 'resultMode'} onClick={() => setTab('resultMode')}>Result Mode</TabButton>
         </div>
-        {modeSelector}
       </div>
+      {tab !== 'resultMode' && (
+        <div className="filters-bar">
+          {modeSelector}
+        </div>
+      )}
 
       {tab === 'current' && (
         <>
