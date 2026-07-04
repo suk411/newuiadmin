@@ -98,3 +98,49 @@ export async function fetchTeamMembers(params: Record<string, string | number>):
   const res = await axiosInstance.get('/agent/team-members', { params })
   return res.data
 }
+
+/* ── Agent Commission ── */
+
+export interface AgentCommissionRecord {
+  userId: number
+  date: string
+  rebateLevel: number
+  l1Bets: number
+  l2Bets: number
+  l3Bets: number
+  l1Rate: number
+  l2Rate: number
+  l3Rate: number
+  l1Amount: number
+  l2Amount: number
+  l3Amount: number
+  totalAmount: number
+  status: string
+  creditedAt: string
+}
+
+export interface AgentCommissionResponse {
+  status: string
+  total: number
+  page: number
+  limit: number
+  data: AgentCommissionRecord[]
+}
+
+export async function fetchAgentCommission(params: Record<string, string | number>): Promise<AgentCommissionResponse> {
+  const res = await axiosInstance.get('/agent/agentcomm', { params })
+  return res.data
+}
+
+/* ── Midnight Calc ── */
+
+export interface MidnightCalcResponse {
+  status: string
+  processed: number
+  totalCommission: number
+}
+
+export async function runMidnightCalc(): Promise<MidnightCalcResponse> {
+  const res = await axiosInstance.post('/agent/runmidnightcalc')
+  return res.data
+}
