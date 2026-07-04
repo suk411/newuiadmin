@@ -208,7 +208,7 @@ export default function UserSearch() {
 
       {user && (<>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 12, marginTop: 12 }}>
-          <div style={{ display: 'flex', gap: 32, background: '#fff', border: '1px solid #d0d0d0', borderRadius: 4, padding: '12px 20px', boxShadow: '0 2px 8px rgba(0,0,0,0.08)', alignItems: 'center' }}>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 32, background: '#fff', border: '1px solid #d0d0d0', borderRadius: 4, padding: '12px 20px', boxShadow: '0 2px 8px rgba(0,0,0,0.08)', alignItems: 'center' }}>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}><span style={{ fontSize: 10, color: '#000', textTransform: 'uppercase', letterSpacing: '0.5px' }}>User ID</span><span style={{ fontSize: 20, fontWeight: 700, color: '#409eff', lineHeight: 1.2 }}>{user.user.userId}</span></div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}><span style={{ fontSize: 10, color: '#000', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Status</span><span style={{ fontSize: 20, fontWeight: 700, lineHeight: 1.2 }}>{user.account.status}</span></div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}><span style={{ fontSize: 10, color: '#000', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Mobile</span><span style={{ fontSize: 20, fontWeight: 700, lineHeight: 1.2 }}>{user.user.mobile}</span></div>
@@ -218,12 +218,12 @@ export default function UserSearch() {
               <button className="btn-filled" style={{ fontSize: 10, padding: '2px 8px' }} onClick={() => { setNewStatus(user.account.status); setShowStatusDialog(true) }}>Change Status</button>
             </div>
           </div>
-          <div style={{ display: 'flex', gap: 32, background: '#fff', border: '1px solid #d0d0d0', borderRadius: 4, padding: '12px 20px', boxShadow: '0 2px 8px rgba(0,0,0,0.08)' }}>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 32, background: '#fff', border: '1px solid #d0d0d0', borderRadius: 4, padding: '12px 20px', boxShadow: '0 2px 8px rgba(0,0,0,0.08)' }}>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}><span style={{ fontSize: 10, color: '#000', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Balance</span><span style={{ fontSize: 20, fontWeight: 700, color: '#22c55e', lineHeight: 1.2 }}>₹{user.account.balance.toLocaleString('en-IN')}</span></div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}><span style={{ fontSize: 10, color: '#000', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Withdrawable</span><span style={{ fontSize: 20, fontWeight: 700, color: '#409eff', lineHeight: 1.2 }}>₹{user.account.withdrawable.toLocaleString('en-IN')}</span></div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}><span style={{ fontSize: 10, color: '#000', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Total Deposits</span><span style={{ fontSize: 20, fontWeight: 700, color: '#f97316', lineHeight: 1.2 }}>₹{user.account.totalDeposits.toLocaleString('en-IN')}</span></div>
           </div>
-          <div style={{ display: 'flex', gap: 32, background: '#fff', border: '1px solid #d0d0d0', borderRadius: 4, padding: '12px 20px', boxShadow: '0 2px 8px rgba(0,0,0,0.08)', alignItems: 'center' }}>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 32, background: '#fff', border: '1px solid #d0d0d0', borderRadius: 4, padding: '12px 20px', boxShadow: '0 2px 8px rgba(0,0,0,0.08)', alignItems: 'center' }}>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}><span style={{ fontSize: 10, color: '#000', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Holder</span><span style={{ fontSize: 20, fontWeight: 700, lineHeight: 1.2 }}>{user.paymentMethods?.holderName || '-'}</span></div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}><span style={{ fontSize: 10, color: '#000', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Bank</span><span style={{ fontSize: 20, fontWeight: 700, lineHeight: 1.2 }}>{user.paymentMethods?.bank?.bankName || '-'}</span></div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}><span style={{ fontSize: 10, color: '#000', textTransform: 'uppercase', letterSpacing: '0.5px' }}>IFSC</span><span style={{ fontSize: 20, fontWeight: 700, lineHeight: 1.2 }}>{user.paymentMethods?.bank?.ifsc || '-'}</span></div>
@@ -234,7 +234,7 @@ export default function UserSearch() {
               <button className="btn-filled" style={{ fontSize: 10, padding: '2px 8px' }} onClick={handleLoadPaymentMethods}>View</button>
             </div>
           </div>
-          <div style={{ display: 'flex', gap: 32, background: '#fff', border: '1px solid #d0d0d0', borderRadius: 4, padding: '12px 20px', boxShadow: '0 2px 8px rgba(0,0,0,0.08)', alignItems: 'center' }}>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 32, background: '#fff', border: '1px solid #d0d0d0', borderRadius: 4, padding: '12px 20px', boxShadow: '0 2px 8px rgba(0,0,0,0.08)', alignItems: 'center' }}>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}><span style={{ fontSize: 10, color: '#000', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Last IP</span><span style={{ fontSize: 20, fontWeight: 700, lineHeight: 1.2 }}>{user.lastIp}</span></div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}><span style={{ fontSize: 10, color: '#000', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Location</span><span style={{ fontSize: 20, fontWeight: 700, lineHeight: 1.2 }}>{user.deviceInfo ? [user.deviceInfo.city, user.deviceInfo.region].filter(Boolean).join(', ') : '-'}</span></div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}><span style={{ fontSize: 10, color: '#000', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Created</span><span style={{ fontSize: 20, fontWeight: 700, lineHeight: 1.2 }}>{formatDateTime12(user.user.createdAt)}</span></div>
@@ -242,7 +242,7 @@ export default function UserSearch() {
               <button className="btn-filled" style={{ fontSize: 10, padding: '2px 8px' }} onClick={handleLoadSameIp} disabled={ipUsersLoading}>{ipUsersLoading ? <Spinner /> : 'Same IP Users'}</button>
             </div>
           </div>
-          <div style={{ display: 'flex', gap: 32, background: '#fff', border: '1px solid #d0d0d0', borderRadius: 4, padding: '12px 20px', boxShadow: '0 2px 8px rgba(0,0,0,0.08)', alignItems: 'center' }}>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 32, background: '#fff', border: '1px solid #d0d0d0', borderRadius: 4, padding: '12px 20px', boxShadow: '0 2px 8px rgba(0,0,0,0.08)', alignItems: 'center' }}>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}><span style={{ fontSize: 10, color: '#000', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Requirement</span><span style={{ fontSize: 20, fontWeight: 700, color: '#f97316', lineHeight: 1.2 }}>₹{user.account.turnover_requirement.toLocaleString('en-IN')}</span></div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}><span style={{ fontSize: 10, color: '#000', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Completed</span><span style={{ fontSize: 20, fontWeight: 700, color: '#22c55e', lineHeight: 1.2 }}>₹{user.account.total_turnover_completed.toLocaleString('en-IN')}</span></div>
             <div style={{ marginLeft: 'auto' }}>
@@ -271,7 +271,7 @@ export default function UserSearch() {
                 </div>
                 <div className="filter-group"><label>Remark *</label><input placeholder="Enter remark (required)" value={statusRemark} onChange={(e) => setStatusRemark(e.target.value)} /></div>
               </div>
-              <div style={{ padding: 'var(--space-6) var(--space-7)', borderTop: '1px solid var(--color-border, rgb(188,198,222))', display: 'flex', justifyContent: 'flex-end', gap: 'var(--space-3)', flexShrink: 0 }}>
+              <div style={{ padding: 'var(--space-6) var(--space-7)', borderTop: '1px solid var(--color-border, rgb(188,198,222))', display: 'flex', flexWrap: 'wrap', justifyContent: 'flex-end', gap: 'var(--space-3)', flexShrink: 0 }}>
                 <button className="btn-outline" onClick={() => { setShowStatusDialog(false); setStatusRemark('') }} disabled={updatingStatus}>Cancel</button>
                 <button className="btn-filled" onClick={handleStatusChange} disabled={updatingStatus || !statusRemark.trim()}>{updatingStatus ? <Spinner /> : 'Update'}</button>
               </div>
@@ -379,10 +379,10 @@ export default function UserSearch() {
                 </div>
               )}
               {showAddTurnover && (
-                <div style={{ padding: 'var(--space-4) var(--space-7)', borderBottom: '1px solid var(--color-border, rgb(188,198,222))', display: 'flex', gap: 8, alignItems: 'flex-end', flexShrink: 0 }}>
-                  <div className="filter-group"><label>Amount</label><input type="number" value={addTurnoverAmount} onChange={(e) => setAddTurnoverAmount(e.target.value)} style={{ width: 120 }} /></div>
-                  <div className="filter-group"><label>Type</label>
-                    <select value={addTurnoverType} onChange={(e) => setAddTurnoverType(e.target.value)} style={{ width: 150 }}>
+                <div style={{ padding: 'var(--space-4) var(--space-7)', borderBottom: '1px solid var(--color-border, rgb(188,198,222))', display: 'flex', flexWrap: 'wrap', gap: 8, alignItems: 'flex-end', flexShrink: 0 }}>
+                  <div className="filter-group" style={{ flex: '1 1 100px', minWidth: 0 }}><label>Amount</label><input type="number" value={addTurnoverAmount} onChange={(e) => setAddTurnoverAmount(e.target.value)} style={{ width: '100%' }} /></div>
+                  <div className="filter-group" style={{ flex: '1 1 140px', minWidth: 0 }}><label>Type</label>
+                    <select value={addTurnoverType} onChange={(e) => setAddTurnoverType(e.target.value)} style={{ width: '100%' }}>
                       <option value="ADMIN_BONUS">ADMIN_BONUS</option>
                       <option value="DEPOSIT">DEPOSIT</option>
                       <option value="BONUS">BONUS</option>
@@ -395,8 +395,8 @@ export default function UserSearch() {
                       <option value="DEPOSIT_BONUS">DEPOSIT_BONUS</option>
                     </select>
                   </div>
-                  <div className="filter-group"><label>Source Ref</label><input value={addTurnoverRef} onChange={(e) => setAddTurnoverRef(e.target.value)} placeholder="Optional" style={{ width: 120 }} /></div>
-                  <button className="btn btn--sm" style={{ background: '#22c55e', color: '#fff', border: 'none', height: 35 }} onClick={handleAddTurnover} disabled={addTurnoverSaving || !addTurnoverAmount}>{addTurnoverSaving ? <Spinner /> : 'Add'}</button>
+                  <div className="filter-group" style={{ flex: '1 1 100px', minWidth: 0 }}><label>Source Ref</label><input value={addTurnoverRef} onChange={(e) => setAddTurnoverRef(e.target.value)} placeholder="Optional" style={{ width: '100%' }} /></div>
+                  <button className="btn btn--sm" style={{ background: '#22c55e', color: '#fff', border: 'none', height: 44 }} onClick={handleAddTurnover} disabled={addTurnoverSaving || !addTurnoverAmount}>{addTurnoverSaving ? <Spinner /> : 'Add'}</button>
                 </div>
               )}
               <div className="table-wrap" style={{ padding: 'var(--space-6) var(--space-7)', flex: 1, overflow: 'auto' }}>

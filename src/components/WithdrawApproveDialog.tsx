@@ -35,7 +35,7 @@ export default function WithdrawApproveDialog({ orderId, userId, amount, channel
             </select>
           </div>
         </div>
-        <div style={{ padding: 'var(--space-6) var(--space-7)', borderTop: '1px solid var(--color-border, rgb(188,198,222))', display: 'flex', justifyContent: 'flex-end', gap: 'var(--space-3)', flexShrink: 0 }}>
+        <div style={{ padding: 'var(--space-6) var(--space-7)', borderTop: '1px solid var(--color-border, rgb(188,198,222))', display: 'flex', flexWrap: 'wrap', justifyContent: 'flex-end', gap: 'var(--space-3)', flexShrink: 0 }}>
           <button className="btn-outline" onClick={onCancel} disabled={loading}>Cancel</button>
           <button className="btn-filled" onClick={() => onConfirm(chargeFrom)} disabled={loading}>
             {loading ? <Spinner /> : null}

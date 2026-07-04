@@ -1475,6 +1475,116 @@ html.dark .spinner {
   }
 }
 
+@media (max-width: 600px) {
+  /* ── Larger touch targets ── */
+  .filter-group input,
+  .filter-group select {
+    height: 44px;
+    font-size: 16px;
+  }
+  .btn--sm { height: 32px; font-size: 12px; padding: 0 10px; }
+  .table .cell-actions .btn { height: 32px; font-size: 12px; padding: 0 10px; }
+  .pagination__btn,
+  .btn-prev,
+  .btn-next,
+  .el-pager .number {
+    min-width: 36px;
+    height: 36px;
+    font-size: 14px;
+  }
+  .el-pagination__jump .el-input__inner {
+    width: 60px;
+    height: 36px;
+    font-size: 14px;
+  }
+  .tags-view-item {
+    height: 32px;
+    padding: 0 6px;
+    font-size: 12px;
+  }
+  .btn-logout-header { height: 36px; }
+  .header-btn-icon { width: 36px; height: 36px; }
+
+  /* ── Smaller / responsive font sizes ── */
+  .stat-card__value {
+    font-size: 16px;
+  }
+  .page-header h2,
+  .section-title {
+    font-size: 14px;
+  }
+  .table { font-size: 13px; }
+  .table th { font-size: 12px; }
+  .breadcrumb { font-size: 12px; }
+
+  /* ── Header compact ── */
+  .user-name { display: none; }
+  .btn-logout-header span { display: none; }
+  .btn-logout-header { gap: 0; }
+  .header-right {
+    gap: 8px;
+    right: 8px;
+  }
+  .breadcrumb__item:first-child { display: none; }
+  .breadcrumb { margin-left: 4px; }
+  .breadcrumb__separator { display: none; }
+
+  /* ── TagsView compact ── */
+  .tags-view { height: 28px; }
+  .tags-view-item { height: 26px; padding: 0 5px; font-size: 11px; }
+  .tags-view-item.active { padding-left: 14px; }
+  .tags-view-item.active::before { width: 4px; height: 4px; left: 5px; }
+
+  /* ── Stat cards single column ── */
+  .stat-cards {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+  .stat-card { padding: 14px; }
+
+  /* ── Content padding ── */
+  .app-content .content {
+    padding: 10px;
+  }
+  .card__header {
+    padding: 8px 10px;
+  }
+  .page-header {
+    padding: 10px 12px;
+  }
+
+  /* ── Full-width dialog buttons ── */
+  .dialog .btn-filled,
+  .dialog .btn-success,
+  .dialog .btn--danger,
+  .dialog .btn-outline {
+    width: 100%;
+    justify-content: center;
+  }
+
+  /* ── Toast fits screen ── */
+  .toast-container {
+    right: 8px;
+    left: 8px;
+  }
+  .toast {
+    font-size: 12px;
+    padding: 8px 12px;
+  }
+
+  /* ── Filters tighter ── */
+  .filters-bar {
+    gap: 8px;
+    padding: 8px 10px;
+  }
+  .filter-group { width: 100%; flex: none; }
+  .filter-group input,
+  .filter-group select {
+    width: 100%;
+    min-width: unset;
+  }
+}
+
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(8px); }
   to   { opacity: 1; transform: translateY(0); }

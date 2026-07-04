@@ -22,7 +22,7 @@ export default function ApproveDialog({ record, loading, onConfirm, onCancel }: 
           <p><strong>Channel:</strong> {record.channelName}</p>
           <p><strong>Amount:</strong> ₹{Number(record.amount).toLocaleString('en-IN')}{record.bonusOptIn && record.bonusAmount > 0 && <span style={{ color: '#999' }}> +{Number(record.bonusAmount).toLocaleString('en-IN')}</span>}</p>
         </div>
-        <div style={{ padding: 'var(--space-6) var(--space-7)', borderTop: '1px solid var(--color-border, rgb(188,198,222))', display: 'flex', justifyContent: 'flex-end', gap: 'var(--space-3)', flexShrink: 0 }}>
+        <div style={{ padding: 'var(--space-6) var(--space-7)', borderTop: '1px solid var(--color-border, rgb(188,198,222))', display: 'flex', flexWrap: 'wrap', justifyContent: 'flex-end', gap: 'var(--space-3)', flexShrink: 0 }}>
           <button className="btn-outline" onClick={onCancel} disabled={loading}>Cancel</button>
           <button className="btn-filled" onClick={onConfirm} disabled={loading}>
             {loading ? <Spinner /> : null}
