@@ -283,7 +283,7 @@ export default function BetRecords() {
               ) : (
                 dailyRecords.map((r, i) => (
                   <div key={i} style={{ marginTop: i === 0 ? 0 : 20 }}>
-                    <h3 style={{ margin: '4px 0 8px', padding: '8px 12px', fontSize: 14, fontWeight: 600, color: 'var(--text-color, #303133)', background: '#f0f7ff', borderRadius: 4 }}>Data of {r.date}</h3>
+                    <h3 style={{ margin: '4px 0 8px', padding: '8px 12px', fontSize: 14, fontWeight: 600, color: 'var(--text-color, #303133)', background: '#f0f7ff', borderRadius: 4 }}>Data of {formatDateTime12(r.date)}</h3>
                       <section aria-label="Wingo">
                         <h2 className="section-title">Wingo</h2>
                         <div style={{ display: 'flex', flexWrap: 'wrap', gap: 32, background: '#fff', border: '1px solid #d0d0d0', borderRadius: 4, padding: '12px 20px', boxShadow: '0 2px 8px rgba(0,0,0,0.08)' }}>
