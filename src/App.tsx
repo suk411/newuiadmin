@@ -18,7 +18,6 @@ import type { TagItem } from './components/TagsView'
 import { ExportBarProvider } from './components/ExportBarContext'
 import { ToastProvider, useToast } from './contexts/ToastContext'
 import { watchAutoComplete, stopAutoComplete } from './utils/autocomplete'
-import SessionExpiredDialog from './components/SessionExpiredDialog'
 import './App.css'
 
 function ProtectedLayoutContent({ onLogout }: { onLogout: () => void }) {
@@ -166,7 +165,6 @@ function ProtectedLayout({ onLogout }: { onLogout: () => void }) {
 export default function App() {
   const [token, setToken] = useState<string | null>(null)
   const [checked, setChecked] = useState(false)
-  const [showSessionExpired, setShowSessionExpired] = useState(false)
   const navigate = useNavigate()
 
   useEffect(() => {
@@ -176,7 +174,7 @@ export default function App() {
   }, [])
 
   useEffect(() => {
-    const handler = () => { setToken(null); setShowSessionExpired(true) }
+    const handler = () => setToken(null)
     window.addEventListener('session-expired', handler)
     return () => window.removeEventListener('session-expired', handler)
   }, [])
@@ -196,7 +194,6 @@ export default function App() {
 
   return (
     <>
-      <SessionExpiredDialog show={showSessionExpired} onLogin={() => setShowSessionExpired(false)} />
       <Routes>
         <Route path="/login" element={token ? <Navigate to="/recharge" replace /> : <Login onLogin={handleLogin} />} />
         <Route path="/*" element={token ? <ProtectedLayout onLogout={handleLogout} /> : <Navigate to="/login" replace />} />
