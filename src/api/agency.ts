@@ -132,6 +132,39 @@ export async function fetchAgentCommission(params: Record<string, string | numbe
   return res.data
 }
 
+/* ── Commission Rank ── */
+
+export interface CommissionRankRecord {
+  rank: number
+  userId: number
+  date: string
+  rebateLevel: number
+  l1Bets: number
+  l2Bets: number
+  l3Bets: number
+  totalComm: number
+}
+
+export interface CommissionRankSummary {
+  totalComm: number
+  highestAmount: number
+  totalAgents: number
+}
+
+export interface CommissionRankResponse {
+  status: string
+  total: number
+  page: number
+  limit: number
+  data: CommissionRankRecord[]
+  summary: CommissionRankSummary
+}
+
+export async function fetchCommissionRanks(params: Record<string, string | number>): Promise<CommissionRankResponse> {
+  const res = await axiosInstance.get('/admin/agent/commision-records', { params })
+  return res.data
+}
+
 /* ── Midnight Calc ── */
 
 export interface MidnightCalcResponse {

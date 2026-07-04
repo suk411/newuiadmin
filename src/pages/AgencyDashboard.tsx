@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from 'react'
 import axios from 'axios'
-import { fetchTeamStats, fetchTeamMembers, fetchAgentCommission, runMidnightCalc } from '../api/agency'
-import type { TeamStats, TeamMember, AgentCommissionRecord } from '../api/agency'
+import { fetchTeamStats, fetchTeamMembers, fetchAgentCommission, runMidnightCalc, fetchCommissionRanks } from '../api/agency'
+import type { TeamStats, TeamMember, AgentCommissionRecord, CommissionRankRecord, CommissionRankSummary } from '../api/agency'
 import { useToast } from '../contexts/ToastContext'
 import Spinner from '../components/Spinner'
 import Pagination from '../components/Pagination'
@@ -42,6 +42,17 @@ const COMMISSION_COLUMNS: ExportColumn[] = [
   { key: 'creditedAt', label: 'Credited At' },
 ]
 
+const RANK_COLUMNS: ExportColumn[] = [
+  { key: 'rank', label: 'Rank' },
+  { key: 'userId', label: 'User ID' },
+  { key: 'date', label: 'Date' },
+  { key: 'rebateLevel', label: 'Rebate Level' },
+  { key: 'l1Bets', label: 'L1 Bets' },
+  { key: 'l2Bets', label: 'L2 Bets' },
+  { key: 'l3Bets', label: 'L3 Bets' },
+  { key: 'totalComm', label: 'Total Commission' },
+]
+
 function extractError(err: unknown): string {
   if (axios.isAxiosError(err) && err.response?.data?.msg) return err.response.data.msg
   if (err instanceof Error) return err.message
@@ -49,7 +60,7 @@ function extractError(err: unknown): string {
 }
 
 export default function AgencyDashboard() {
-  const [tab, setTab] = useState<'stats' | 'members' | 'commission' | 'calc'>('stats')
+  const [tab, setTab] = useState<'stats' | 'members' | 'commission' | 'calc' | 'rank'>('stats')
   const [userId, setUserId] = useState('')
   const [tier, setTier] = useState('')
   const [dateFrom, setDateFrom] = useState('')
@@ -76,14 +87,22 @@ export default function AgencyDashboard() {
   const [calcLoading, setCalcLoading] = useState(false)
   const [calcResult, setCalcResult] = useState<{ processed: number; totalCommission: number } | null>(null)
 
+  const [rankLoading, setRankLoading] = useState(false)
+  const [rankData, setRankData] = useState<CommissionRankRecord[]>([])
+  const [rankSummary, setRankSummary] = useState<CommissionRankSummary | null>(null)
+  const [rankTotal, setRankTotal] = useState(0)
+  const [rankPage, setRankPage] = useState(1)
+
   useEffect(() => {
     if (tab === 'members') {
       setExportProps({ columns: MEMBER_COLUMNS, data: members as unknown as Record<string, unknown>[], filename: 'team-members' })
     } else if (tab === 'commission') {
       setExportProps({ columns: COMMISSION_COLUMNS, data: commissionData as unknown as Record<string, unknown>[], filename: 'agent-commission' })
+    } else if (tab === 'rank') {
+      setExportProps({ columns: RANK_COLUMNS, data: rankData as unknown as Record<string, unknown>[], filename: 'commission-rank' })
     }
     return () => setExportProps(null)
-  }, [tab, members, commissionData, setExportProps])
+  }, [tab, members, commissionData, rankData, setExportProps])
 
   const buildParams = (extra: Record<string, string | number> = {}) => {
     const p: Record<string, string | number> = { userId: userId.trim(), ...extra }
@@ -146,6 +165,26 @@ export default function AgencyDashboard() {
     loadCommission(1)
   }
 
+  const loadRanks = async (page = 1) => {
+    setRankLoading(true)
+    try {
+      const params: Record<string, string | number> = { page, limit: 50 }
+      if (dateFrom) params.dateFrom = dateFrom
+      if (dateTo) params.dateTo = dateTo
+      const res = await fetchCommissionRanks(params)
+      setRankData(res.data ?? [])
+      setRankSummary(res.summary ?? null)
+      setRankTotal(res.total)
+      setRankPage(res.page)
+    } catch (err: unknown) { toast(extractError(err)) }
+    finally { setRankLoading(false) }
+  }
+
+  const handleSearchRanks = (e: React.FormEvent) => {
+    e.preventDefault()
+    loadRanks(1)
+  }
+
   const handleRunCalc = async () => {
     setCalcLoading(true)
     setCalcResult(null)
@@ -171,6 +210,9 @@ export default function AgencyDashboard() {
     setCommissionTotal(0)
     commissionFetched.current = false
     setCalcResult(null)
+    setRankData([])
+    setRankSummary(null)
+    setRankTotal(0)
   }
 
   return (
@@ -180,24 +222,29 @@ export default function AgencyDashboard() {
           <TabButton active={tab === 'stats'} onClick={() => setTab('stats')}>Stats</TabButton>
           <TabButton active={tab === 'members'} onClick={() => setTab('members')}>Members</TabButton>
           <TabButton active={tab === 'commission'} onClick={() => setTab('commission')}>Commission</TabButton>
+          <TabButton active={tab === 'rank'} onClick={() => setTab('rank')}>Rank</TabButton>
           <TabButton active={tab === 'calc'} onClick={() => setTab('calc')}>Midnight Calc</TabButton>
         </div>
       </div>
       {tab !== 'calc' && (
-        <form className="filters-bar" onSubmit={tab === 'stats' ? handleSearchStats : tab === 'members' ? handleSearchMembers : handleSearchCommission}>
-          <div className="filter-group">
-            <label>User ID</label>
-            <input placeholder="Enter User ID" value={userId} onChange={(e) => setUserId(e.target.value)} />
-          </div>
-          <div className="filter-group">
-            <label>Tier</label>
-            <select value={tier} onChange={(e) => setTier(e.target.value)}>
-              <option value="">All</option>
-              <option value="L1">L1</option>
-              <option value="L2">L2</option>
-              <option value="L3">L3</option>
-            </select>
-          </div>
+        <form className="filters-bar" onSubmit={tab === 'stats' ? handleSearchStats : tab === 'members' ? handleSearchMembers : tab === 'rank' ? handleSearchRanks : handleSearchCommission}>
+          {tab !== 'rank' && (
+            <div className="filter-group">
+              <label>User ID</label>
+              <input placeholder="Enter User ID" value={userId} onChange={(e) => setUserId(e.target.value)} />
+            </div>
+          )}
+          {tab !== 'rank' && (
+            <div className="filter-group">
+              <label>Tier</label>
+              <select value={tier} onChange={(e) => setTier(e.target.value)}>
+                <option value="">All</option>
+                <option value="L1">L1</option>
+                <option value="L2">L2</option>
+                <option value="L3">L3</option>
+              </select>
+            </div>
+          )}
           <div className="filter-group">
             <label>From</label>
             <input type="date" value={dateFrom} onChange={(e) => setDateFrom(e.target.value)} />
@@ -214,9 +261,9 @@ export default function AgencyDashboard() {
           )}
           <div className="filter-group" style={{ alignSelf: 'flex-end' }}>
             <div style={{ display: 'flex', gap: 'var(--space-3)' }}>
-              <button type="submit" className="btn-filled" disabled={!userId.trim()}
-                style={{ opacity: !userId.trim() ? 0.6 : 1 }}>
-                {(tab === 'stats' ? statsLoading : tab === 'members' ? membersLoading : commissionLoading) ? <Spinner /> : 'Search'}
+              <button type="submit" className="btn-filled" disabled={tab !== 'rank' && !userId.trim()}
+                style={{ opacity: tab !== 'rank' && !userId.trim() ? 0.6 : 1 }}>
+                {(tab === 'stats' ? statsLoading : tab === 'members' ? membersLoading : tab === 'rank' ? rankLoading : commissionLoading) ? <Spinner /> : 'Search'}
               </button>
               <button type="button" className="btn-outline" onClick={reset}>Reset</button>
             </div>
@@ -367,6 +414,62 @@ export default function AgencyDashboard() {
             </table>
           </div>
           <Pagination page={commissionPage} total={commissionTotal} limit={COMMISSION_LIMIT} loading={commissionLoading} onChange={(p) => loadCommission(p)} />
+        </section>
+      )}
+
+      {tab === 'rank' && (
+        <section className="card" style={{ flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
+          {rankSummary && (
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 24, padding: '12px 16px', background: '#f0f7ff', borderBottom: '1px solid #d0d0d0' }}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                <span style={{ fontSize: 10, color: '#666', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Total Commission</span>
+                <span style={{ fontSize: 18, fontWeight: 700, color: '#22c55e' }}>₹{rankSummary.totalComm.toLocaleString('en-IN')}</span>
+              </div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                <span style={{ fontSize: 10, color: '#666', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Highest Amount</span>
+                <span style={{ fontSize: 18, fontWeight: 700, color: '#f97316' }}>₹{rankSummary.highestAmount.toLocaleString('en-IN')}</span>
+              </div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                <span style={{ fontSize: 10, color: '#666', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Total Agents</span>
+                <span style={{ fontSize: 18, fontWeight: 700, color: '#409eff' }}>{rankSummary.totalAgents.toLocaleString('en-IN')}</span>
+              </div>
+            </div>
+          )}
+          <div className="table-wrap" style={{ flex: 1, minHeight: 0, overflow: 'auto' }}>
+            <table className="table">
+              <thead><tr>
+                <th>Rank</th>
+                <th>User ID</th>
+                <th>Date</th>
+                <th>Rebate Level</th>
+                <th>L1 Bets</th>
+                <th>L2 Bets</th>
+                <th>L3 Bets</th>
+                <th>Total Commission</th>
+              </tr></thead>
+              <tbody>
+                {rankData.length === 0 ? (
+                  <tr><td colSpan={8} style={{ textAlign: 'center', padding: '48px 0' }}>
+                    {rankLoading ? <Spinner /> : <div className="empty-state"><div className="empty-state__icon">📋</div>Select date range and search to view rankings</div>}
+                  </td></tr>
+                ) : (
+                  rankData.map((r) => (
+                    <tr key={r.rank} tabIndex={0}>
+                      <td style={{ fontWeight: 700, color: r.rank <= 3 ? '#f59e0b' : undefined }}>#{r.rank}</td>
+                      <td style={{ fontFamily: 'monospace', fontSize: 12 }}>{r.userId}</td>
+                      <td style={{ whiteSpace: 'nowrap' }}>{formatDateTime12(r.date)}</td>
+                      <td>{r.rebateLevel}</td>
+                      <td>₹{r.l1Bets.toLocaleString('en-IN')}</td>
+                      <td>₹{r.l2Bets.toLocaleString('en-IN')}</td>
+                      <td>₹{r.l3Bets.toLocaleString('en-IN')}</td>
+                      <td><strong>₹{r.totalComm.toLocaleString('en-IN')}</strong></td>
+                    </tr>
+                  ))
+                )}
+              </tbody>
+            </table>
+          </div>
+          <Pagination page={rankPage} total={rankTotal} limit={50} loading={rankLoading} onChange={(p) => loadRanks(p)} />
         </section>
       )}
 
