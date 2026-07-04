@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import axios from 'axios'
 import { fetchGiftCodes, createGiftCode, toggleGiftCode, deleteGiftCode } from '../api/giftCodes'
 import type { GiftCode } from '../api/giftCodes'
-import { formatDateTime } from '../utils/format'
+import { formatDateTime12 } from '../utils/format'
 import { useToast } from '../contexts/ToastContext'
 import Spinner from '../components/Spinner'
 import Pagination from '../components/Pagination'
@@ -116,10 +116,10 @@ export default function GiftCodes() {
                     <td>{r.turnoverMultiplier}x</td>
                     <td>{r.maxRedemptions}</td>
                     <td>{r.usedCount}</td>
-                    <td style={{ whiteSpace: 'nowrap' }}>{r.expiryDate ? formatDateTime(r.expiryDate) : '-'}</td>
+                    <td style={{ whiteSpace: 'nowrap' }}>{r.expiryDate ? formatDateTime12(r.expiryDate) : '-'}</td>
                     <td>₹{r.minDepositToday.toLocaleString('en-IN')}</td>
                     <td><span className={`badge ${r.isActive ? 'badge--success' : 'badge--danger'}`}>{r.isActive ? 'Active' : 'Inactive'}</span></td>
-                    <td style={{ whiteSpace: 'nowrap' }}>{formatDateTime(r.createdAt)}</td>
+                    <td style={{ whiteSpace: 'nowrap' }}>{formatDateTime12(r.createdAt)}</td>
                     <td>
                       <div className="cell-actions">
                         <button className="btn btn--sm" style={{ color: '#409eff' }} onClick={async () => { await toggleGiftCode(r.code); load() }}>

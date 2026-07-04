@@ -15,7 +15,7 @@ import type { AgencyLevelConfig } from '../api/agency'
 import { useToast } from '../contexts/ToastContext'
 import Spinner from '../components/Spinner'
 import Pagination from '../components/Pagination'
-import { formatDateTime } from '../utils/format'
+import { formatDateTime12 } from '../utils/format'
 
 function extractError(err: unknown): string {
   if (axios.isAxiosError(err) && err.response?.data?.msg) return err.response.data.msg
@@ -525,7 +525,7 @@ export default function Settings() {
                           <td>{g.turnoverMultiplier}x</td>
                           <td>{g.maxRedemptions}</td>
                           <td>{g.usedCount}</td>
-                          <td style={{ whiteSpace: 'nowrap' }}>{g.expiryDate ? formatDateTime(g.expiryDate) : '-'}</td>
+                          <td style={{ whiteSpace: 'nowrap' }}>{g.expiryDate ? formatDateTime12(g.expiryDate) : '-'}</td>
                           <td>{g.minDepositToday ? `₹${g.minDepositToday.toLocaleString('en-IN')}` : '-'}</td>
                           <td><span className={`badge ${g.isActive ? 'badge--success' : 'badge--danger'}`}>{g.isActive ? 'Active' : 'Inactive'}</span></td>
                           <td><div className="cell-actions">

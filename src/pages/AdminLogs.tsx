@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import axios from 'axios'
 import { fetchLogs } from '../api/logs'
 import type { LogEntry } from '../api/logs'
-import { formatDateTime } from '../utils/format'
+import { formatDateTime12 } from '../utils/format'
 import Spinner from '../components/Spinner'
 import { useExportBar } from '../components/ExportBarContext'
 import type { ExportColumn } from '../utils/export'
@@ -91,7 +91,7 @@ export default function AdminLogs() {
                 <tr key={i} tabIndex={0}>
                   <td><span className={`badge ${log.level === 'error' ? 'badge--danger' : 'badge--info'}`}>{log.level}</span></td>
                   <td style={{ fontFamily: 'monospace', fontSize: 12 }}>{log.message}</td>
-                  <td style={{ whiteSpace: 'nowrap' }}>{log.timestamp}</td>
+                  <td style={{ whiteSpace: 'nowrap' }}>{formatDateTime12(log.timestamp)}</td>
                 </tr>
               ))}
             </tbody>

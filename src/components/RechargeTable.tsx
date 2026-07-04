@@ -1,22 +1,11 @@
 import type { DepositRecord } from '../api/deposits'
 import Spinner from './Spinner'
+import { formatDateTime12 } from '../utils/format'
 
 interface Props {
   records: DepositRecord[]
   loading: boolean
   onApprove: (record: DepositRecord) => void
-}
-
-function formatDateTime(dateStr: string) {
-  const d = new Date(dateStr)
-  const y = d.getFullYear()
-  const mo = String(d.getMonth() + 1).padStart(2, '0')
-  const dd = String(d.getDate()).padStart(2, '0')
-  let hh = d.getHours()
-  const ampm = hh >= 12 ? 'PM' : 'AM'
-  hh = hh % 12 || 12
-  const mm = String(d.getMinutes()).padStart(2, '0')
-  return `${y}-${mo}-${dd} ${String(hh).padStart(2, '0')}:${mm} ${ampm}`
 }
 
 const statusMap: Record<string, { label: string; className: string }> = {
@@ -58,8 +47,8 @@ export default function RechargeTable({ records, loading, onApprove }: Props) {
                 <td>{record.currency === 'INR' ? '₹' : '$'}{Number(record.amount).toLocaleString('en-IN')}{record.bonusOptIn && record.bonusAmount > 0 && <span style={{ color: '#999' }}> +{Number(record.bonusAmount).toLocaleString('en-IN')}</span>}</td>
                 <td>{record.channelName}</td>
                 <td><span className={`badge ${st.className}`}>{st.label}</span></td>
-                <td style={{ whiteSpace: 'nowrap' }}>{formatDateTime(record.createdAt)}</td>
-                <td style={{ whiteSpace: 'nowrap' }}>{record.updatedAt ? formatDateTime(record.updatedAt) : '—'}</td>
+                <td style={{ whiteSpace: 'nowrap' }}>{formatDateTime12(record.createdAt)}</td>
+                <td style={{ whiteSpace: 'nowrap' }}>{record.updatedAt ? formatDateTime12(record.updatedAt) : '—'}</td>
                 <td>
                   <div className="cell-actions">
                     {record.status === 'PENDING' && (

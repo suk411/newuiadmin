@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import axios from 'axios'
 import { fetchProviderBets, fetchWingoBets, fetchDailyStats } from '../api/bets'
 import type { ProviderBet, WingoBet, DailyStat, BetSummary } from '../api/bets'
-import { formatDateTime } from '../utils/format'
+import { formatDateTime12 } from '../utils/format'
 import { useToast } from '../contexts/ToastContext'
 import Spinner from '../components/Spinner'
 import Pagination from '../components/Pagination'
@@ -335,8 +335,8 @@ export default function BetRecords() {
                           <td style={{ fontFamily: 'monospace', fontSize: 12 }}>{r.gameId}</td>
                           <td>{r.product}</td>
                           <td><span className={`badge ${r.status === 1 ? 'badge--success' : 'badge--warning'}`}>{r.status === 1 ? 'Valid' : r.status}</span></td>
-                          <td style={{ whiteSpace: 'nowrap' }}>{r.settleTime}</td>
-                          <td style={{ whiteSpace: 'nowrap' }}>{formatDateTime(r.createdAt)}</td></>
+                          <td style={{ whiteSpace: 'nowrap' }}>{r.settleTime ? formatDateTime12(r.settleTime) : '—'}</td>
+                          <td style={{ whiteSpace: 'nowrap' }}>{formatDateTime12(r.createdAt)}</td></>
                       ) : (
                         <><td>{r.userId}</td>
                           <td>{r.gameMode}</td>
@@ -348,8 +348,8 @@ export default function BetRecords() {
                           <td style={{ fontFamily: 'monospace', fontSize: 12 }}>{r.issueNumber}</td>
                           <td style={{ fontFamily: 'monospace', fontSize: 12 }}>{r.orderNumber}</td>
                           <td><span className={`badge ${r.status === 'won' ? 'badge--success' : r.status === 'lost' ? 'badge--danger' : 'badge--warning'}`}>{r.status}</span></td>
-                          <td style={{ whiteSpace: 'nowrap' }}>{r.settleTime}</td>
-                          <td style={{ whiteSpace: 'nowrap' }}>{formatDateTime(r.createdAt)}</td></>
+                          <td style={{ whiteSpace: 'nowrap' }}>{r.settleTime ? formatDateTime12(r.settleTime) : '—'}</td>
+                          <td style={{ whiteSpace: 'nowrap' }}>{formatDateTime12(r.createdAt)}</td></>
                       )}
                     </tr>
                   ))

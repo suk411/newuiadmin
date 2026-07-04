@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import axios from 'axios'
 import { fetchCurrentRound, fetchCurrentRoundBets, fetchSettledRounds, fetchRoundStats, fetchResultMode, setResultMode } from '../api/wingo'
 import type { CurrentRound, RoundStats, CurrentRoundBetsItem, SettledRound, RoundDetail } from '../api/wingo'
-import { formatDateTime } from '../utils/format'
+import { formatDateTime12 } from '../utils/format'
 import { useToast } from '../contexts/ToastContext'
 import Spinner from '../components/Spinner'
 import Pagination from '../components/Pagination'
@@ -174,8 +174,8 @@ export default function WingoDashboard() {
                     Result: {round.result?.number != null ? `${round.result.number} / ${round.result?.color ?? '—'} / ${round.result?.size ?? '—'}` : <span style={{ color: '#999' }}>— not yet</span>}
                   </div>
                   <div style={{ fontSize: 12, color: '#999', display: 'flex', gap: 16 }}>
-                    <span>Start: {new Date(round.startTime).toISOString().slice(0, 19).replace('T', ' ')}</span>
-                    <span>End: {new Date(round.endTime).toISOString().slice(0, 19).replace('T', ' ')}</span>
+                    <span>Start: {formatDateTime12(new Date(round.startTime).toISOString())}</span>
+                    <span>End: {formatDateTime12(new Date(round.endTime).toISOString())}</span>
                   </div>
                 </div>
                 <div style={{ textAlign: 'right' }}>
@@ -223,7 +223,7 @@ export default function WingoDashboard() {
                         <td><span className="badge badge--info">{b.selectType}</span></td>
                         <td>₹{b.betAmount.toLocaleString('en-IN')}</td>
                         <td><span className={`badge ${b.status === 'won' ? 'badge--success' : b.status === 'lost' ? 'badge--danger' : 'badge--warning'}`}>{b.status}</span></td>
-                        <td style={{ whiteSpace: 'nowrap' }}>{formatDateTime(b.createdAt)}</td>
+                        <td style={{ whiteSpace: 'nowrap' }}>{formatDateTime12(b.createdAt)}</td>
                       </tr>
                     ))
                   )}
@@ -256,7 +256,7 @@ export default function WingoDashboard() {
                         <td>{r.stats?.totalBets ?? '—'}</td>
                         <td>₹{r.stats?.totalBetAmount?.toLocaleString('en-IN') ?? '—'}</td>
                         <td><span className={`badge ${r.status === 'closed' ? 'badge--success' : 'badge--warning'}`}>{r.status}</span></td>
-                        <td style={{ whiteSpace: 'nowrap' }}>{new Date(r.createdAt).toISOString().slice(0, 19).replace('T', ' ')}</td>
+                        <td style={{ whiteSpace: 'nowrap' }}>{formatDateTime12(r.createdAt)}</td>
                         <td><div className="cell-actions"><button className="btn btn--primary btn--sm" onClick={() => viewDetail(r.issueNumber)}>View Stats</button></div></td>
                       </tr>
                     ))
