@@ -473,12 +473,12 @@ export default function Settings() {
         </div>
         <div className="table-wrap">
           <table className="table">
-            <thead><tr><th>Code</th><th>Reward</th><th>Multiplier</th><th>Max Redemptions</th><th>Used</th><th>Expires</th><th>Min Deposit</th><th>Active</th><th>Actions</th></tr></thead>
+            <thead><tr><th>Code</th><th>Reward</th><th>Multiplier</th><th>Max Redemptions</th><th>Used</th><th>Expires</th><th>Min Deposit</th><th>Description</th><th>Active</th><th>Actions</th></tr></thead>
             <tbody>
               {gcLoading ? (
-                <tr><td colSpan={9} style={{ textAlign: 'center', padding: '24px 0' }}><Spinner /></td></tr>
+                <tr><td colSpan={10} style={{ textAlign: 'center', padding: '24px 0' }}><Spinner /></td></tr>
               ) : gcRecords.length === 0 ? (
-                <tr><td colSpan={9} style={{ textAlign: 'center', padding: '24px 0' }}>
+                <tr><td colSpan={10} style={{ textAlign: 'center', padding: '24px 0' }}>
                   <div className="empty-state"><div className="empty-state__icon">📋</div>No gift codes</div>
                 </td></tr>
               ) : (
@@ -491,6 +491,7 @@ export default function Settings() {
                     <td>{g.usedCount}</td>
                     <td style={{ whiteSpace: 'nowrap' }}>{g.expiryDate ? formatDateTime12(g.expiryDate) : '-'}</td>
                     <td>{g.minDepositToday ? `₹${g.minDepositToday.toLocaleString('en-IN')}` : '-'}</td>
+                    <td style={{ maxWidth: 160, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{g.description || '-'}</td>
                     <td><span className={`badge ${g.isActive ? 'badge--success' : 'badge--danger'}`}>{g.isActive ? 'Active' : 'Inactive'}</span></td>
                     <td><div className="cell-actions">
                       <label className="toggle-switch" onClick={(e) => { e.preventDefault(); gcHandleToggle(g.code, !g.isActive) }}>
