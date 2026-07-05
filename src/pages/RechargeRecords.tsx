@@ -115,14 +115,13 @@ export default function RechargeRecords() {
         <Pagination page={page} total={total} limit={DEFAULT_LIMIT} loading={loading} onChange={handlePageChange} />
       </section>
 
-      {approveTarget && (
-        <ApproveDialog
-          record={approveTarget}
-          loading={approving}
-          onConfirm={handleApproveConfirm}
-          onCancel={handleApproveCancel}
-        />
-      )}
+      <ApproveDialog
+        open={!!approveTarget}
+        record={approveTarget}
+        loading={approving}
+        onConfirm={handleApproveConfirm}
+        onClose={handleApproveCancel}
+      />
 
     </div>
   )

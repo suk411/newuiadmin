@@ -7,6 +7,7 @@ import { useToast } from '../contexts/ToastContext'
 import Spinner from '../components/Spinner'
 import Pagination from '../components/Pagination'
 import TabButton from '../components/TabButton'
+import AnimatedDialog from '../components/AnimatedDialog'
 
 const LIMIT = 25
 
@@ -268,35 +269,25 @@ export default function WingoDashboard() {
             <Pagination page={settledPage} total={settledTotal} limit={LIMIT} onChange={(p) => loadSettled(gameMode, p)} />
           </section>
 
-          {roundDetail && (
-            <div className="dialog-overlay" onClick={() => setRoundDetail(null)}>
-              <div className="dialog" onClick={(e) => e.stopPropagation()} style={{ width: '70vw', height: '80vh', display: 'flex', flexDirection: 'column', padding: 0 }}>
-                <div style={{ padding: 'var(--space-6) var(--space-7)', borderBottom: '1px solid var(--color-border, rgb(188,198,222))', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexShrink: 0 }}>
-                  <h3 style={{ margin: 0, fontSize: 14 }}>Round Stats — {roundDetail.issue.issueNumber}</h3>
-                  <button className="btn-outline" style={{ fontSize: 11, padding: '2px 8px' }} onClick={() => setRoundDetail(null)}>✕</button>
-                </div>
-                <div style={{ padding: 'var(--space-6) var(--space-7)', flex: 1, overflow: 'auto', fontSize: 14 }}>
-                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: 32, background: '#fff', border: '1px solid #d0d0d0', borderRadius: 4, padding: '12px 20px', boxShadow: '0 2px 8px rgba(0,0,0,0.08)', marginBottom: 16 }}>
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}><span style={{ fontSize: 10, color: '#000', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Total Bets</span><span style={{ fontSize: 20, fontWeight: 700, lineHeight: 1.2 }}>{roundDetail.stats.totalBets}</span></div>
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}><span style={{ fontSize: 10, color: '#000', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Total Amount</span><span style={{ fontSize: 20, fontWeight: 700, color: '#f97316', lineHeight: 1.2 }}>₹{roundDetail.stats.totalBetAmount.toLocaleString('en-IN')}</span></div>
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}><span style={{ fontSize: 10, color: '#000', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Total Payout</span><span style={{ fontSize: 20, fontWeight: 700, color: '#22c55e', lineHeight: 1.2 }}>₹{roundDetail.stats.totalPayout.toLocaleString('en-IN')}</span></div>
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}><span style={{ fontSize: 10, color: '#000', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Profit/Loss</span><span style={{ fontSize: 20, fontWeight: 700, lineHeight: 1.2, color: roundDetail.stats.profitLoss >= 0 ? '#22c55e' : '#ef4444' }}>₹{roundDetail.stats.profitLoss.toLocaleString('en-IN')}</span></div>
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}><span style={{ fontSize: 10, color: '#000', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Won</span><span style={{ fontSize: 20, fontWeight: 700, color: '#22c55e', lineHeight: 1.2 }}>{roundDetail.stats.wonCount}</span></div>
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}><span style={{ fontSize: 10, color: '#000', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Lost</span><span style={{ fontSize: 20, fontWeight: 700, color: '#ef4444', lineHeight: 1.2 }}>{roundDetail.stats.lostCount}</span></div>
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}><span style={{ fontSize: 10, color: '#000', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Unique Users</span><span style={{ fontSize: 20, fontWeight: 700, lineHeight: 1.2 }}>{roundDetail.stats.uniqueUsers}</span></div>
-                  </div>
-                  <table className="table">
-                    <thead><tr><th>Selection</th><th>Count</th><th>Amount</th></tr></thead>
-                    <tbody>
-                      {Object.entries(roundDetail.stats.breakdown).map(([key, val]) => (
-                        <tr key={key}><td style={{ textTransform: 'capitalize' }}>{key}</td><td>{val.count}</td><td>₹{val.amount.toLocaleString('en-IN')}</td></tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              </div>
+          <AnimatedDialog open={!!roundDetail} onClose={() => setRoundDetail(null)} title={`Round Stats — ${roundDetail?.issue.issueNumber ?? ''}`}>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 32, background: '#fff', border: '1px solid #d0d0d0', borderRadius: 4, padding: '12px 20px', boxShadow: '0 2px 8px rgba(0,0,0,0.08)', marginBottom: 16 }}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}><span style={{ fontSize: 10, color: '#000', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Total Bets</span><span style={{ fontSize: 20, fontWeight: 700, lineHeight: 1.2 }}>{roundDetail?.stats.totalBets}</span></div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}><span style={{ fontSize: 10, color: '#000', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Total Amount</span><span style={{ fontSize: 20, fontWeight: 700, color: '#f97316', lineHeight: 1.2 }}>₹{roundDetail?.stats.totalBetAmount.toLocaleString('en-IN')}</span></div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}><span style={{ fontSize: 10, color: '#000', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Total Payout</span><span style={{ fontSize: 20, fontWeight: 700, color: '#22c55e', lineHeight: 1.2 }}>₹{roundDetail?.stats.totalPayout.toLocaleString('en-IN')}</span></div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}><span style={{ fontSize: 10, color: '#000', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Profit/Loss</span><span style={{ fontSize: 20, fontWeight: 700, lineHeight: 1.2, color: (roundDetail?.stats.profitLoss ?? 0) >= 0 ? '#22c55e' : '#ef4444' }}>₹{roundDetail?.stats.profitLoss.toLocaleString('en-IN')}</span></div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}><span style={{ fontSize: 10, color: '#000', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Won</span><span style={{ fontSize: 20, fontWeight: 700, color: '#22c55e', lineHeight: 1.2 }}>{roundDetail?.stats.wonCount}</span></div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}><span style={{ fontSize: 10, color: '#000', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Lost</span><span style={{ fontSize: 20, fontWeight: 700, color: '#ef4444', lineHeight: 1.2 }}>{roundDetail?.stats.lostCount}</span></div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}><span style={{ fontSize: 10, color: '#000', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Unique Users</span><span style={{ fontSize: 20, fontWeight: 700, lineHeight: 1.2 }}>{roundDetail?.stats.uniqueUsers}</span></div>
             </div>
-          )}
+            <table className="table">
+              <thead><tr><th>Selection</th><th>Count</th><th>Amount</th></tr></thead>
+              <tbody>
+                {roundDetail && Object.entries(roundDetail.stats.breakdown).map(([key, val]) => (
+                  <tr key={key}><td style={{ textTransform: 'capitalize' }}>{key}</td><td>{val.count}</td><td>₹{val.amount.toLocaleString('en-IN')}</td></tr>
+                ))}
+              </tbody>
+            </table>
+          </AnimatedDialog>
         </>
       )}
 

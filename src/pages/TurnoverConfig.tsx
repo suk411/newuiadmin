@@ -5,6 +5,7 @@ import type { TurnoverRule } from '../api/turnoverConfig'
 
 import { useToast } from '../contexts/ToastContext'
 import Spinner from '../components/Spinner'
+import AnimatedDialog from '../components/AnimatedDialog'
 
 function extractError(err: unknown): string {
   if (axios.isAxiosError(err) && err.response?.data?.msg) return err.response.data.msg
@@ -90,32 +91,28 @@ export default function TurnoverConfig() {
         )}
       </section>
 
-      {editIndex != null && form && (
-        <div className="dialog-overlay" onClick={closeEdit}>
-          <div className="dialog" onClick={(e) => e.stopPropagation()} style={{ width: '70vw', height: '80vh', display: 'flex', flexDirection: 'column', padding: 0 }}>
-            <div style={{ padding: 'var(--space-6) var(--space-7)', borderBottom: '1px solid var(--color-border, rgb(188,198,222))', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexShrink: 0 }}>
-              <h3 style={{ margin: 0 }}>Edit {form.type}</h3>
-              <button className="btn-outline" style={{ fontSize: 11, padding: '2px 8px' }} onClick={closeEdit}>✕</button>
-            </div>
-            <div style={{ padding: 'var(--space-6) var(--space-7)', flex: 1, overflow: 'auto', display: 'flex', flexDirection: 'column', gap: 'var(--space-3)', fontSize: 14 }}>
-              
-              <div className="filter-group"><label>Type</label><input value={form.type} onChange={(e) => setForm({ ...form, type: e.target.value })} /></div>
-              <div className="filter-group"><label>Description</label><input value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} /></div>
-              <div className="filter-group"><label>Multiplier</label><input type="number" step="0.1" value={form.multiplier} onChange={(e) => setForm({ ...form, multiplier: Number(e.target.value) })} /></div>
-              <div className="filter-group"><label>Active</label>
-                <button type="button" onClick={() => setForm({ ...form, active: !form.active })} style={{ width: 100, background: form.active ? '#22c55e' : '#ef4444', color: '#fff', border: 'none' }}>{form.active ? 'Active' : 'Inactive'}</button>
-              </div>
-            </div>
-            <div style={{ padding: 'var(--space-6) var(--space-7)', borderTop: '1px solid var(--color-border, rgb(188,198,222))', display: 'flex', justifyContent: 'flex-end', gap: 'var(--space-3)', flexShrink: 0 }}>
-              <button className="btn-outline" onClick={closeEdit} disabled={saving}>Cancel</button>
-              <button className="btn-filled" onClick={handleSave} disabled={saving}>
-                {saving ? <Spinner /> : null}
-                Save
-              </button>
+      <AnimatedDialog open={editIndex != null && !!form} onClose={closeEdit} title={`Edit ${form?.type ?? ''}`}
+        footer={
+          <>
+            <button className="btn-outline" onClick={closeEdit} disabled={saving}>Cancel</button>
+            <button className="btn-filled" onClick={handleSave} disabled={saving}>
+              {saving ? <Spinner /> : null}
+              Save
+            </button>
+          </>
+        }
+      >
+        {form && (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-3)', fontSize: 14 }}>
+            <div className="filter-group"><label>Type</label><input value={form.type} onChange={(e) => setForm({ ...form, type: e.target.value })} /></div>
+            <div className="filter-group"><label>Description</label><input value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} /></div>
+            <div className="filter-group"><label>Multiplier</label><input type="number" step="0.1" value={form.multiplier} onChange={(e) => setForm({ ...form, multiplier: Number(e.target.value) })} /></div>
+            <div className="filter-group"><label>Active</label>
+              <button type="button" onClick={() => setForm({ ...form, active: !form.active })} style={{ width: 100, background: form.active ? '#22c55e' : '#ef4444', color: '#fff', border: 'none' }}>{form.active ? 'Active' : 'Inactive'}</button>
             </div>
           </div>
-        </div>
-      )}
+        )}
+      </AnimatedDialog>
     </div>
   )
 }

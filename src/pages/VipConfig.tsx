@@ -5,6 +5,7 @@ import type { VipTier } from '../api/vipConfig'
 
 import { useToast } from '../contexts/ToastContext'
 import Spinner from '../components/Spinner'
+import AnimatedDialog from '../components/AnimatedDialog'
 
 function extractError(err: unknown): string {
   if (axios.isAxiosError(err) && err.response?.data?.msg) return err.response.data.msg
@@ -92,31 +93,27 @@ export default function VipConfig() {
         )}
       </section>
 
-      {editIndex != null && form && (
-        <div className="dialog-overlay" onClick={closeEdit}>
-          <div className="dialog" onClick={(e) => e.stopPropagation()} style={{ width: '70vw', height: '80vh', display: 'flex', flexDirection: 'column', padding: 0 }}>
-            <div style={{ padding: 'var(--space-6) var(--space-7)', borderBottom: '1px solid var(--color-border, rgb(188,198,222))', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexShrink: 0 }}>
-              <h3 style={{ margin: 0 }}>Edit VIP {editIndex + 1}</h3>
-              <button className="btn-outline" style={{ fontSize: 11, padding: '2px 8px' }} onClick={closeEdit}>✕</button>
-            </div>
-            <div style={{ padding: 'var(--space-6) var(--space-7)', flex: 1, overflow: 'auto', display: 'flex', flexDirection: 'column', gap: 'var(--space-3)', fontSize: 14 }}>
-              
-              <div className="filter-group"><label>Name</label><input value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} /></div>
-              <div className="filter-group"><label>Min Deposit (₹)</label><input type="number" value={form.minDeposit} onChange={(e) => setForm({ ...form, minDeposit: Number(e.target.value) })} /></div>
-              <div className="filter-group"><label>Weekly Bonus (₹)</label><input type="number" value={form.weeklyBonus} onChange={(e) => setForm({ ...form, weeklyBonus: Number(e.target.value) })} /></div>
-              <div className="filter-group"><label>Upgrade Bonus (₹)</label><input type="number" value={form.upgradeBonus} onChange={(e) => setForm({ ...form, upgradeBonus: Number(e.target.value) })} /></div>
-              <div className="filter-group"><label>Weekly Deposit Requirement (₹)</label><input type="number" value={form.weeklyDepositRequirement} onChange={(e) => setForm({ ...form, weeklyDepositRequirement: Number(e.target.value) })} /></div>
-            </div>
-            <div style={{ padding: 'var(--space-6) var(--space-7)', borderTop: '1px solid var(--color-border, rgb(188,198,222))', display: 'flex', justifyContent: 'flex-end', gap: 'var(--space-3)', flexShrink: 0 }}>
-              <button className="btn-outline" onClick={closeEdit} disabled={saving}>Cancel</button>
-              <button className="btn-filled" onClick={handleSave} disabled={saving}>
-                {saving ? <Spinner /> : null}
-                Save
-              </button>
-            </div>
+      <AnimatedDialog open={editIndex != null && !!form} onClose={closeEdit} title={`Edit VIP ${editIndex != null ? editIndex + 1 : ''}`}
+        footer={
+          <>
+            <button className="btn-outline" onClick={closeEdit} disabled={saving}>Cancel</button>
+            <button className="btn-filled" onClick={handleSave} disabled={saving}>
+              {saving ? <Spinner /> : null}
+              Save
+            </button>
+          </>
+        }
+      >
+        {form && (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-3)', fontSize: 14 }}>
+            <div className="filter-group"><label>Name</label><input value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} /></div>
+            <div className="filter-group"><label>Min Deposit (₹)</label><input type="number" value={form.minDeposit} onChange={(e) => setForm({ ...form, minDeposit: Number(e.target.value) })} /></div>
+            <div className="filter-group"><label>Weekly Bonus (₹)</label><input type="number" value={form.weeklyBonus} onChange={(e) => setForm({ ...form, weeklyBonus: Number(e.target.value) })} /></div>
+            <div className="filter-group"><label>Upgrade Bonus (₹)</label><input type="number" value={form.upgradeBonus} onChange={(e) => setForm({ ...form, upgradeBonus: Number(e.target.value) })} /></div>
+            <div className="filter-group"><label>Weekly Deposit Requirement (₹)</label><input type="number" value={form.weeklyDepositRequirement} onChange={(e) => setForm({ ...form, weeklyDepositRequirement: Number(e.target.value) })} /></div>
           </div>
-        </div>
-      )}
+        )}
+      </AnimatedDialog>
     </div>
   )
 }

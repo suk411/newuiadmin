@@ -197,18 +197,17 @@ export default function Withdrawals() {
         <Pagination page={page} total={total} limit={LIMIT} loading={loading} onChange={(p) => load(p)} />
       </section>
 
-      {approveTarget && (
-        <WithdrawApproveDialog
-          orderId={approveTarget.orderId}
-          userId={approveTarget.userId}
-          amount={approveTarget.amount}
-          channelName={approveTarget.channelName}
-          defaultChargeFrom={chargeFrom || 'platform'}
-          loading={actionLoading === approveTarget.orderId}
-          onConfirm={handleApproveConfirm}
-          onCancel={handleApproveCancel}
-        />
-      )}
+      <WithdrawApproveDialog
+        open={!!approveTarget}
+        orderId={approveTarget?.orderId ?? ''}
+        userId={approveTarget?.userId ?? 0}
+        amount={approveTarget?.amount ?? 0}
+        channelName={approveTarget?.channelName ?? ''}
+        defaultChargeFrom={chargeFrom || 'platform'}
+        loading={actionLoading === approveTarget?.orderId}
+        onConfirm={handleApproveConfirm}
+        onClose={handleApproveCancel}
+      />
 
     </div>
   )

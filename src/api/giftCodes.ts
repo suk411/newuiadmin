@@ -39,8 +39,8 @@ export async function updateGiftCode(code: string, data: Partial<GiftCode>): Pro
   await axiosInstance.put(`/gift-codes/${code}`, data)
 }
 
-export async function toggleGiftCode(code: string): Promise<void> {
-  await axiosInstance.patch(`/gift-codes/${code}/toggle`)
+export async function toggleGiftCode(code: string, isActive: boolean): Promise<void> {
+  await axiosInstance.patch(`/gift-codes/${code}/toggle`, { isActive })
 }
 
 export async function deleteGiftCode(code: string): Promise<void> {

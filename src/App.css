@@ -542,28 +542,63 @@
   z-index: 1000;
 }
 
+.dialog-overlay--enter { animation: overlayFadeIn 0.2s ease; }
+.dialog-overlay--exit  { animation: overlayFadeOut 0.2s ease forwards; }
+
 .dialog {
   background: #fff;
   border-radius: var(--radius-md);
   box-shadow: var(--shadow-dropdown);
-  width: 400px;
-  max-width: 90vw;
-  padding: var(--space-4);
+  width: 95vw;
+  height: 95vh;
+  max-width: 95vw;
+  display: flex;
+  flex-direction: column;
 }
 
-.dialog h3 {
+.dialog--enter { animation: dialogPopup 0.25s ease; }
+.dialog--exit  { animation: dialogPopout 0.2s ease forwards; }
+
+.dialog__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-shrink: 0;
+  padding: var(--space-6) var(--space-7);
+  border-bottom: 1px solid var(--color-border, rgb(188,198,222));
+}
+
+.dialog__title {
+  margin: 0;
+  font-size: 14px;
   font-family: var(--font-heading);
-  font-size: 16px;
-  margin-bottom: var(--space-7);
   color: #000;
 }
 
-.dialog .dialog-actions {
+.dialog__close {
+  font-size: 11px;
+  padding: 2px 8px;
+}
+
+.dialog__body {
+  flex: 1;
+  overflow: auto;
+  padding: var(--space-6) var(--space-7);
+}
+
+.dialog__footer {
   display: flex;
   justify-content: flex-end;
-  gap: var(--space-6);
-  margin-top: var(--space-7);
+  gap: var(--space-3);
+  flex-shrink: 0;
+  padding: var(--space-6) var(--space-7);
+  border-top: 1px solid var(--color-border, rgb(188,198,222));
 }
+
+@keyframes overlayFadeIn  { from { opacity: 0; } to { opacity: 1; } }
+@keyframes overlayFadeOut { from { opacity: 1; } to { opacity: 0; } }
+@keyframes dialogPopup    { from { opacity: 0; transform: scale(0.85); } to { opacity: 1; transform: scale(1); } }
+@keyframes dialogPopout   { from { opacity: 1; transform: scale(1); } to { opacity: 0; transform: scale(0.85); } }
 
 /* ── Misc ── */
 
@@ -806,6 +841,51 @@
   position: absolute;
   right: 35px;
   top: 0;
+}
+
+/* ── Toggle Switch ── */
+.toggle-switch {
+  position: relative;
+  display: inline-block;
+  width: 40px;
+  height: 22px;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+.toggle-switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+.toggle-switch .toggle-slider {
+  position: absolute;
+  inset: 0;
+  background: #bbb;
+  border-radius: 22px;
+  transition: background 0.2s;
+}
+.toggle-switch .toggle-slider::after {
+  content: '';
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  left: 2px;
+  bottom: 2px;
+  background: #fff;
+  border-radius: 50%;
+  transition: transform 0.2s;
+}
+.toggle-switch input:checked + .toggle-slider {
+  background: #22c55e;
+}
+.toggle-switch input:checked + .toggle-slider::after {
+  transform: translateX(18px);
+}
+html.dark .toggle-switch .toggle-slider {
+  background: #555;
+}
+html.dark .toggle-switch input:checked + .toggle-slider {
+  background: #22c55e;
 }
 
 /* ── Hamburger Toggle ── */
@@ -1369,7 +1449,7 @@ html.dark .dialog {
   background: #111;
 }
 
-html.dark .dialog h3 { color: #fff; }
+html.dark .dialog__title { color: #fff; }
 
 html.dark .btn-logout-header {
   border-color: rgba(255,255,255,0.3);

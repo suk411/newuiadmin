@@ -5,6 +5,7 @@ import type { UserSearchResponse, PaymentMethods, TurnoverStatusResponse } from 
 import { formatDateTime12 } from '../utils/format'
 import { useToast } from '../contexts/ToastContext'
 import Spinner from '../components/Spinner'
+import AnimatedDialog from '../components/AnimatedDialog'
 
 function extractError(err: unknown): string {
   if (axios.isAxiosError(err) && err.response?.data?.msg) return err.response.data.msg
@@ -251,175 +252,141 @@ export default function UserSearch() {
           </div>
         </div>
 
-        {showStatusDialog && user && (
-          <div className="dialog-overlay" onClick={() => { setShowStatusDialog(false); setStatusRemark('') }}>
-            <div className="dialog" onClick={(e) => e.stopPropagation()} style={{ width: '70vw', height: '80vh', display: 'flex', flexDirection: 'column', padding: 0 }}>
-              <div style={{ padding: 'var(--space-6) var(--space-7)', borderBottom: '1px solid var(--color-border, rgb(188,198,222))', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexShrink: 0 }}>
-                <h3 style={{ margin: 0, fontSize: 14 }}>Change Status — User #{user.user.userId}</h3>
-                <button className="btn-outline" style={{ fontSize: 11, padding: '2px 8px' }} onClick={() => { setShowStatusDialog(false); setStatusRemark('') }}>✕</button>
-              </div>
-              <div style={{ padding: 'var(--space-6) var(--space-7)', flex: 1, overflow: 'auto' }}>
-                
-                <div className="filter-group" style={{ marginBottom: 12 }}><label>Status</label>
-                  <select value={newStatus} onChange={(e) => setNewStatus(e.target.value)}>
-                    <option value="active">Active</option>
-                    <option value="suspended">Suspended</option>
-                    <option value="ban">Ban</option>
-                    <option value="banned">Banned</option>
-                    <option value="inactive">Inactive</option>
-                  </select>
-                </div>
-                <div className="filter-group"><label>Remark *</label><input placeholder="Enter remark (required)" value={statusRemark} onChange={(e) => setStatusRemark(e.target.value)} /></div>
-              </div>
-              <div style={{ padding: 'var(--space-6) var(--space-7)', borderTop: '1px solid var(--color-border, rgb(188,198,222))', display: 'flex', flexWrap: 'wrap', justifyContent: 'flex-end', gap: 'var(--space-3)', flexShrink: 0 }}>
-                <button className="btn-outline" onClick={() => { setShowStatusDialog(false); setStatusRemark('') }} disabled={updatingStatus}>Cancel</button>
-                <button className="btn-filled" onClick={handleStatusChange} disabled={updatingStatus || !statusRemark.trim()}>{updatingStatus ? <Spinner /> : 'Update'}</button>
-              </div>
-            </div>
+        <AnimatedDialog open={showStatusDialog && !!user} onClose={() => { setShowStatusDialog(false); setStatusRemark('') }} title={`Change Status — User #${user?.user.userId ?? ''}`}
+          footer={
+            <>
+              <button className="btn-outline" onClick={() => { setShowStatusDialog(false); setStatusRemark('') }} disabled={updatingStatus}>Cancel</button>
+              <button className="btn-filled" onClick={handleStatusChange} disabled={updatingStatus || !statusRemark.trim()}>{updatingStatus ? <Spinner /> : 'Update'}</button>
+            </>
+          }
+        >
+          <div className="filter-group" style={{ marginBottom: 12 }}><label>Status</label>
+            <select value={newStatus} onChange={(e) => setNewStatus(e.target.value)}>
+              <option value="active">Active</option>
+              <option value="suspended">Suspended</option>
+              <option value="ban">Ban</option>
+              <option value="banned">Banned</option>
+              <option value="inactive">Inactive</option>
+            </select>
           </div>
-        )}
-        {showIpUsers && (
-          <div className="dialog-overlay" onClick={() => { setShowIpUsers(false); setIpUsers([]) }}>
-            <div className="dialog" onClick={(e) => e.stopPropagation()} style={{ width: '70vw', height: '80vh', display: 'flex', flexDirection: 'column', padding: 0 }}>
-              <div style={{ padding: 'var(--space-6) var(--space-7)', borderBottom: '1px solid var(--color-border, rgb(188,198,222))', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexShrink: 0 }}>
-                <span style={{ fontWeight: 700 }}>Users with IP: {user?.lastIp}</span>
-                <button className="btn-outline" style={{ fontSize: 11, padding: '2px 8px' }} onClick={() => { setShowIpUsers(false); setIpUsers([]) }}>✕</button>
-              </div>
-              <div className="table-wrap" style={{ padding: 'var(--space-6) var(--space-7)', flex: 1, overflow: 'auto' }}>
-                
-                {ipUsers.length === 0 ? (
-                  <div className="empty-state"><div className="empty-state__icon">👥</div>No other users found</div>
-                ) : (
-                  <table className="table">
-                    <thead><tr><th>User ID</th><th>Mobile</th><th>Created</th></tr></thead>
-                    <tbody>
-                      {ipUsers.map((u) => (
-                        <tr key={u.userId} tabIndex={0}>
-                          <td>{u.userId}</td>
-                          <td>{u.mobile}</td>
-                          <td style={{ whiteSpace: 'nowrap' }}>{formatDateTime12(u.createdAt)}</td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                )}
-              </div>
+          <div className="filter-group"><label>Remark *</label><input placeholder="Enter remark (required)" value={statusRemark} onChange={(e) => setStatusRemark(e.target.value)} /></div>
+        </AnimatedDialog>
+        <AnimatedDialog open={showIpUsers} onClose={() => { setShowIpUsers(false); setIpUsers([]) }} title={`Users with IP: ${user?.lastIp ?? ''}`}>
+          {ipUsers.length === 0 ? (
+            <div className="empty-state"><div className="empty-state__icon">👥</div>No other users found</div>
+          ) : (
+            <div className="table-wrap">
+              <table className="table">
+                <thead><tr><th>User ID</th><th>Mobile</th><th>Created</th></tr></thead>
+                <tbody>
+                  {ipUsers.map((u) => (
+                    <tr key={u.userId} tabIndex={0}>
+                      <td>{u.userId}</td>
+                      <td>{u.mobile}</td>
+                      <td style={{ whiteSpace: 'nowrap' }}>{formatDateTime12(u.createdAt)}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             </div>
-          </div>
-        )}
-        {showPmDialog && user && (
-          <div className="dialog-overlay" onClick={() => setShowPmDialog(false)}>
-            <div className="dialog" onClick={(e) => e.stopPropagation()} style={{ width: '70vw', height: '80vh', display: 'flex', flexDirection: 'column', padding: 0 }}>
-              <div style={{ padding: 'var(--space-6) var(--space-7)', borderBottom: '1px solid var(--color-border, rgb(188,198,222))', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexShrink: 0 }}>
-                <span style={{ fontWeight: 700 }}>Payment Methods — User #{user.user.userId}</span>
-                <button className="btn-outline" style={{ fontSize: 11, padding: '2px 8px' }} onClick={() => setShowPmDialog(false)}>✕</button>
-              </div>
-              <div style={{ padding: 'var(--space-6) var(--space-7)', flex: 1, overflow: 'auto' }}>
-                
-                {pmData && (
-                  <div style={{ marginBottom: 'var(--space-6)', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'var(--space-3)', fontSize: 13 }}>
-                    <div><strong>Holder Name:</strong> {pmData.holderName || '-'}</div>
-                    <div><strong>Bank Name:</strong> {pmData.bank?.bankName || '-'}</div>
-                    <div><strong>IFSC:</strong> {pmData.bank?.ifsc || '-'}</div>
-                    <div><strong>Account No:</strong> {pmData.bank?.accountNo || '-'}</div>
-                    <div><strong>UPI:</strong> {pmData.upi?.address || '-'}</div>
-                    <div><strong>UPAY:</strong> {pmData.upay?.address || '-'}</div>
-                  </div>
-                )}
-                <hr style={{ margin: '12px 0', border: 'none', borderTop: '1px solid var(--color-border, rgb(188,198,222))' }} />
-                <div style={{ fontWeight: 600, marginBottom: 8, fontSize: 13 }}>Add / Update Payment</div>
-                <div className="filter-group" style={{ marginBottom: 10 }}><label>Type</label>
-                  <select value={pmType} onChange={(e) => { setPmType(e.target.value as any); setPmForm({}) }}>
-                    <option value="BANK">Bank</option>
-                    <option value="UPI">UPI</option>
-                    <option value="UPAY">UPAY</option>
-                  </select>
-                </div>
-                {pmType === 'BANK' && (<>
-                  <div className="filter-group"><label>Bank Name</label><input placeholder="e.g. SBI" value={pmForm.bankName ?? ''} onChange={(e) => setPmForm({ ...pmForm, bankName: e.target.value })} /></div>
-                  <div className="filter-group"><label>IFSC</label><input placeholder="e.g. SBIN0001234" value={pmForm.ifsc ?? ''} onChange={(e) => setPmForm({ ...pmForm, ifsc: e.target.value })} /></div>
-                  <div className="filter-group"><label>Account No</label><input placeholder="Account number" value={pmForm.accountNo ?? ''} onChange={(e) => setPmForm({ ...pmForm, accountNo: e.target.value })} /></div>
-                  <div className="filter-group"><label>Account Holder</label><input placeholder="Holder name" value={pmForm.accountHolder ?? ''} onChange={(e) => setPmForm({ ...pmForm, accountHolder: e.target.value })} /></div>
-                </>)}
-                {pmType === 'UPI' && (<>
-                  <div className="filter-group"><label>UPI ID</label><input placeholder="e.g. name@paytm" value={pmForm.upiId ?? ''} onChange={(e) => setPmForm({ ...pmForm, upiId: e.target.value })} /></div>
-                  <div className="filter-group"><label>Account Holder</label><input placeholder="Holder name" value={pmForm.accountHolder ?? ''} onChange={(e) => setPmForm({ ...pmForm, accountHolder: e.target.value })} /></div>
-                </>)}
-                {pmType === 'UPAY' && (<>
-                  <div className="filter-group"><label>RPL ID</label><input placeholder="e.g. RPL123456" value={pmForm.rplId ?? ''} onChange={(e) => setPmForm({ ...pmForm, rplId: e.target.value })} /></div>
-                  <div className="filter-group"><label>Account Holder</label><input placeholder="Holder name" value={pmForm.accountHolder ?? ''} onChange={(e) => setPmForm({ ...pmForm, accountHolder: e.target.value })} /></div>
-                </>)}
-              </div>
-              <div style={{ padding: 'var(--space-6) var(--space-7)', borderTop: '1px solid var(--color-border, rgb(188,198,222))', display: 'flex', justifyContent: 'flex-end', gap: 'var(--space-3)' }}>
-                <button className="btn-outline" onClick={() => setShowPmDialog(false)} disabled={pmUpdating}>Cancel</button>
-                <button className="btn-filled" onClick={handleUpdatePayment} disabled={pmUpdating || Object.keys(pmForm).length === 0}>{pmUpdating ? <Spinner /> : 'Save Payment'}</button>
-              </div>
+          )}
+        </AnimatedDialog>
+        <AnimatedDialog open={showPmDialog && !!user} onClose={() => setShowPmDialog(false)} title={`Payment Methods — User #${user?.user.userId ?? ''}`}
+          footer={
+            <>
+              <button className="btn-outline" onClick={() => setShowPmDialog(false)} disabled={pmUpdating}>Cancel</button>
+              <button className="btn-filled" onClick={handleUpdatePayment} disabled={pmUpdating || Object.keys(pmForm).length === 0}>{pmUpdating ? <Spinner /> : 'Save Payment'}</button>
+            </>
+          }
+        >
+          {pmData && (
+            <div style={{ marginBottom: 'var(--space-6)', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'var(--space-3)', fontSize: 13 }}>
+              <div><strong>Holder Name:</strong> {pmData.holderName || '-'}</div>
+              <div><strong>Bank Name:</strong> {pmData.bank?.bankName || '-'}</div>
+              <div><strong>IFSC:</strong> {pmData.bank?.ifsc || '-'}</div>
+              <div><strong>Account No:</strong> {pmData.bank?.accountNo || '-'}</div>
+              <div><strong>UPI:</strong> {pmData.upi?.address || '-'}</div>
+              <div><strong>UPAY:</strong> {pmData.upay?.address || '-'}</div>
             </div>
+          )}
+          <hr style={{ margin: '12px 0', border: 'none', borderTop: '1px solid var(--color-border, rgb(188,198,222))' }} />
+          <div style={{ fontWeight: 600, marginBottom: 8, fontSize: 13 }}>Add / Update Payment</div>
+          <div className="filter-group" style={{ marginBottom: 10 }}><label>Type</label>
+            <select value={pmType} onChange={(e) => { setPmType(e.target.value as any); setPmForm({}) }}>
+              <option value="BANK">Bank</option>
+              <option value="UPI">UPI</option>
+              <option value="UPAY">UPAY</option>
+            </select>
           </div>
-        )}
-        {showTurnover && (
-          <div className="dialog-overlay" onClick={() => { setShowTurnover(false); setShowAddTurnover(false); setTurnoverStatus(null) }}>
-            <div className="dialog" onClick={(e) => e.stopPropagation()} style={{ width: '70vw', height: '80vh', display: 'flex', flexDirection: 'column', padding: 0 }}>
-              <div style={{ padding: 'var(--space-6) var(--space-7)', borderBottom: '1px solid var(--color-border, rgb(188,198,222))', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexShrink: 0 }}>
-                <span style={{ fontWeight: 700 }}>Turnover — User #{user.user.userId}</span>
-                <button className="btn-outline" style={{ fontSize: 11, padding: '2px 8px' }} onClick={() => setShowTurnover(false)}>✕</button>
-              </div>
-              
-              <div style={{ padding: 'var(--space-6) var(--space-7)', borderBottom: '1px solid var(--color-border, rgb(188,198,222))', display: 'flex', gap: 8, flexShrink: 0 }}>
-                <button className="btn btn--primary btn--sm" onClick={handleCheckTurnover} disabled={turnoverLoading}>Check Status</button>
-                <button className="btn btn--sm" style={{ background: '#22c55e', color: '#fff', border: 'none' }} onClick={() => { setShowAddTurnover(true); handleCheckTurnover() }}>Add Turnover</button>
-                <button className="btn btn--danger btn--sm" onClick={handleClearTurnover} disabled={turnoverLoading}>Clear Turnover</button>
-              </div>
-              {turnoverStatus && (
-                <div style={{ padding: 'var(--space-4) var(--space-7)', background: '#f8f9fa', borderBottom: '1px solid var(--color-border, rgb(188,198,222))', display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 12, fontSize: 12, flexShrink: 0 }}>
-                  <div><span style={{ color: '#888' }}>Required</span><div style={{ fontWeight: 700, fontSize: 15 }}>₹{turnoverStatus.turnover_requirement.toLocaleString('en-IN')}</div></div>
-                  <div><span style={{ color: '#888' }}>Completed</span><div style={{ fontWeight: 700, fontSize: 15, color: '#22c55e' }}>₹{turnoverStatus.total_turnover_completed.toLocaleString('en-IN')}</div></div>
-                  <div><span style={{ color: '#888' }}>Progress</span><div style={{ fontWeight: 700, fontSize: 15 }}>{turnoverStatus.progress}%</div></div>
-                  <div><span style={{ color: '#888' }}>Can Withdraw</span><div style={{ fontWeight: 700, fontSize: 15, color: turnoverStatus.canWithdraw ? '#22c55e' : '#ef4444' }}>{turnoverStatus.canWithdraw ? 'Yes' : 'No'}</div></div>
-                </div>
-              )}
-              {showAddTurnover && (
-                <div style={{ padding: 'var(--space-4) var(--space-7)', borderBottom: '1px solid var(--color-border, rgb(188,198,222))', display: 'flex', flexWrap: 'wrap', gap: 8, alignItems: 'flex-end', flexShrink: 0 }}>
-                  <div className="filter-group" style={{ flex: '1 1 100px', minWidth: 0 }}><label>Amount</label><input type="number" value={addTurnoverAmount} onChange={(e) => setAddTurnoverAmount(e.target.value)} style={{ width: '100%' }} /></div>
-                  <div className="filter-group" style={{ flex: '1 1 140px', minWidth: 0 }}><label>Type</label>
-                    <select value={addTurnoverType} onChange={(e) => setAddTurnoverType(e.target.value)} style={{ width: '100%' }}>
-                      <option value="ADMIN_BONUS">ADMIN_BONUS</option>
-                      <option value="DEPOSIT">DEPOSIT</option>
-                      <option value="BONUS">BONUS</option>
-                      <option value="SIGNUP_BONUS">SIGNUP_BONUS</option>
-                      <option value="FIRST_DEPOSIT_BONUS">FIRST_DEPOSIT_BONUS</option>
-                      <option value="VIP_BONUS">VIP_BONUS</option>
-                      <option value="WEEKLY_BONUS">WEEKLY_BONUS</option>
-                      <option value="UPGRADE_BONUS">UPGRADE_BONUS</option>
-                      <option value="GIFT_CODE">GIFT_CODE</option>
-                      <option value="DEPOSIT_BONUS">DEPOSIT_BONUS</option>
-                    </select>
-                  </div>
-                  <div className="filter-group" style={{ flex: '1 1 100px', minWidth: 0 }}><label>Source Ref</label><input value={addTurnoverRef} onChange={(e) => setAddTurnoverRef(e.target.value)} placeholder="Optional" style={{ width: '100%' }} /></div>
-                  <button className="btn btn--sm" style={{ background: '#22c55e', color: '#fff', border: 'none', height: 44 }} onClick={handleAddTurnover} disabled={addTurnoverSaving || !addTurnoverAmount}>{addTurnoverSaving ? <Spinner /> : 'Add'}</button>
-                </div>
-              )}
-              <div className="table-wrap" style={{ padding: 'var(--space-6) var(--space-7)', flex: 1, overflow: 'auto' }}>
-                <table className="table">
-                  <thead><tr><th>Type</th><th>Amount</th><th>Multiplier</th><th>Required</th><th>Completed</th><th>Remaining</th><th>Created</th></tr></thead>
-                  <tbody>
-                    {(turnoverStatus?.batches ?? user.account.turnover_batches).map((b, i) => (
-                      <tr key={i} tabIndex={0}>
-                        <td>{b.type}</td>
-                        <td>₹{b.amount.toLocaleString('en-IN')}</td>
-                        <td>{b.multiplier}x</td>
-                        <td>₹{b.required.toLocaleString('en-IN')}</td>
-                        <td>₹{b.completed.toLocaleString('en-IN')}</td>
-                        <td>₹{(b.required - b.completed).toLocaleString('en-IN')}</td>
-                        <td style={{ whiteSpace: 'nowrap' }}>{formatDateTime12(b.createdAt)}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
+          {pmType === 'BANK' && (<>
+            <div className="filter-group"><label>Bank Name</label><input placeholder="e.g. SBI" value={pmForm.bankName ?? ''} onChange={(e) => setPmForm({ ...pmForm, bankName: e.target.value })} /></div>
+            <div className="filter-group"><label>IFSC</label><input placeholder="e.g. SBIN0001234" value={pmForm.ifsc ?? ''} onChange={(e) => setPmForm({ ...pmForm, ifsc: e.target.value })} /></div>
+            <div className="filter-group"><label>Account No</label><input placeholder="Account number" value={pmForm.accountNo ?? ''} onChange={(e) => setPmForm({ ...pmForm, accountNo: e.target.value })} /></div>
+            <div className="filter-group"><label>Account Holder</label><input placeholder="Holder name" value={pmForm.accountHolder ?? ''} onChange={(e) => setPmForm({ ...pmForm, accountHolder: e.target.value })} /></div>
+          </>)}
+          {pmType === 'UPI' && (<>
+            <div className="filter-group"><label>UPI ID</label><input placeholder="e.g. name@paytm" value={pmForm.upiId ?? ''} onChange={(e) => setPmForm({ ...pmForm, upiId: e.target.value })} /></div>
+            <div className="filter-group"><label>Account Holder</label><input placeholder="Holder name" value={pmForm.accountHolder ?? ''} onChange={(e) => setPmForm({ ...pmForm, accountHolder: e.target.value })} /></div>
+          </>)}
+          {pmType === 'UPAY' && (<>
+            <div className="filter-group"><label>RPL ID</label><input placeholder="e.g. RPL123456" value={pmForm.rplId ?? ''} onChange={(e) => setPmForm({ ...pmForm, rplId: e.target.value })} /></div>
+            <div className="filter-group"><label>Account Holder</label><input placeholder="Holder name" value={pmForm.accountHolder ?? ''} onChange={(e) => setPmForm({ ...pmForm, accountHolder: e.target.value })} /></div>
+          </>)}
+        </AnimatedDialog>
+        <AnimatedDialog open={showTurnover && !!user} onClose={() => { setShowTurnover(false); setShowAddTurnover(false); setTurnoverStatus(null) }} title={`Turnover — User #${user?.user.userId ?? ''}`}>
+          <div style={{ display: 'flex', gap: 8, marginBottom: 12, flexWrap: 'wrap' }}>
+            <button className="btn btn--primary btn--sm" onClick={handleCheckTurnover} disabled={turnoverLoading}>Check Status</button>
+            <button className="btn btn--sm" style={{ background: '#22c55e', color: '#fff', border: 'none' }} onClick={() => { setShowAddTurnover(true); handleCheckTurnover() }}>Add Turnover</button>
+            <button className="btn btn--danger btn--sm" onClick={handleClearTurnover} disabled={turnoverLoading}>Clear Turnover</button>
+          </div>
+          {turnoverStatus && (
+            <div style={{ marginBottom: 12, background: '#f8f9fa', border: '1px solid var(--color-border, rgb(188,198,222))', borderRadius: 4, padding: '12px 16px', display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 12, fontSize: 12 }}>
+              <div><span style={{ color: '#888' }}>Required</span><div style={{ fontWeight: 700, fontSize: 15 }}>₹{turnoverStatus.turnover_requirement.toLocaleString('en-IN')}</div></div>
+              <div><span style={{ color: '#888' }}>Completed</span><div style={{ fontWeight: 700, fontSize: 15, color: '#22c55e' }}>₹{turnoverStatus.total_turnover_completed.toLocaleString('en-IN')}</div></div>
+              <div><span style={{ color: '#888' }}>Progress</span><div style={{ fontWeight: 700, fontSize: 15 }}>{turnoverStatus.progress}%</div></div>
+              <div><span style={{ color: '#888' }}>Can Withdraw</span><div style={{ fontWeight: 700, fontSize: 15, color: turnoverStatus.canWithdraw ? '#22c55e' : '#ef4444' }}>{turnoverStatus.canWithdraw ? 'Yes' : 'No'}</div></div>
             </div>
+          )}
+          {showAddTurnover && (
+            <div style={{ marginBottom: 12, display: 'flex', flexWrap: 'wrap', gap: 8, alignItems: 'flex-end' }}>
+              <div className="filter-group" style={{ flex: '1 1 100px', minWidth: 0 }}><label>Amount</label><input type="number" value={addTurnoverAmount} onChange={(e) => setAddTurnoverAmount(e.target.value)} style={{ width: '100%' }} /></div>
+              <div className="filter-group" style={{ flex: '1 1 140px', minWidth: 0 }}><label>Type</label>
+                <select value={addTurnoverType} onChange={(e) => setAddTurnoverType(e.target.value)} style={{ width: '100%' }}>
+                  <option value="ADMIN_BONUS">ADMIN_BONUS</option>
+                  <option value="DEPOSIT">DEPOSIT</option>
+                  <option value="BONUS">BONUS</option>
+                  <option value="SIGNUP_BONUS">SIGNUP_BONUS</option>
+                  <option value="FIRST_DEPOSIT_BONUS">FIRST_DEPOSIT_BONUS</option>
+                  <option value="VIP_BONUS">VIP_BONUS</option>
+                  <option value="WEEKLY_BONUS">WEEKLY_BONUS</option>
+                  <option value="UPGRADE_BONUS">UPGRADE_BONUS</option>
+                  <option value="GIFT_CODE">GIFT_CODE</option>
+                  <option value="DEPOSIT_BONUS">DEPOSIT_BONUS</option>
+                </select>
+              </div>
+              <div className="filter-group" style={{ flex: '1 1 100px', minWidth: 0 }}><label>Source Ref</label><input value={addTurnoverRef} onChange={(e) => setAddTurnoverRef(e.target.value)} placeholder="Optional" style={{ width: '100%' }} /></div>
+              <button className="btn btn--sm" style={{ background: '#22c55e', color: '#fff', border: 'none', height: 44 }} onClick={handleAddTurnover} disabled={addTurnoverSaving || !addTurnoverAmount}>{addTurnoverSaving ? <Spinner /> : 'Add'}</button>
+            </div>
+          )}
+          <div className="table-wrap">
+            <table className="table">
+              <thead><tr><th>Type</th><th>Amount</th><th>Multiplier</th><th>Required</th><th>Completed</th><th>Remaining</th><th>Created</th></tr></thead>
+              <tbody>
+                {(turnoverStatus?.batches ?? user?.account?.turnover_batches ?? []).map((b, i) => (
+                  <tr key={i} tabIndex={0}>
+                    <td>{b.type}</td>
+                    <td>₹{b.amount.toLocaleString('en-IN')}</td>
+                    <td>{b.multiplier}x</td>
+                    <td>₹{b.required.toLocaleString('en-IN')}</td>
+                    <td>₹{b.completed.toLocaleString('en-IN')}</td>
+                    <td>₹{(b.required - b.completed).toLocaleString('en-IN')}</td>
+                    <td style={{ whiteSpace: 'nowrap' }}>{formatDateTime12(b.createdAt)}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
-        )}
+        </AnimatedDialog>
       </>)}
     </div>
   )
