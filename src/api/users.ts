@@ -118,25 +118,25 @@ export interface TurnoverClearResponse {
 
 export interface TurnoverStatusResponse {
   status: string
-  userId: number
-  turnover_requirement: number
-  total_turnover_completed: number
+  total_required: number
+  requirement: number
+  completed: number
   progress: number
   canWithdraw: boolean
   batches: TurnoverBatch[]
 }
 
-export async function addTurnover(data: { userId: number; amount: number; type?: string; sourceRef?: string }): Promise<TurnoverAddResponse> {
-  const res = await axiosInstance.post('/admin/turnover/add', data)
+export async function addTurnover(data: { userId: number; amount: number; type?: string }): Promise<TurnoverAddResponse> {
+  const res = await axiosInstance.post('/turnover/add', data)
   return res.data
 }
 
 export async function clearTurnover(data: { userId: number; reason?: string }): Promise<TurnoverClearResponse> {
-  const res = await axiosInstance.post('/admin/turnover/clear', data)
+  const res = await axiosInstance.post('/turnover/clear', data)
   return res.data
 }
 
 export async function checkTurnoverStatus(userId: number): Promise<TurnoverStatusResponse> {
-  const res = await axiosInstance.get('/admin/turnover-status', { params: { userId } })
+  const res = await axiosInstance.get('/turnover-status', { params: { userId } })
   return res.data
 }

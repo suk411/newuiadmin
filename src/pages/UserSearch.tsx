@@ -37,7 +37,6 @@ export default function UserSearch() {
   const [showAddTurnover, setShowAddTurnover] = useState(false)
   const [addTurnoverAmount, setAddTurnoverAmount] = useState('')
   const [addTurnoverType, setAddTurnoverType] = useState('ADMIN_BONUS')
-  const [addTurnoverRef, setAddTurnoverRef] = useState('')
   const [addTurnoverSaving, setAddTurnoverSaving] = useState(false)
   const [showStatusDialog, setShowStatusDialog] = useState(false)
   const [newStatus, setNewStatus] = useState<string>('active')
@@ -136,10 +135,9 @@ export default function UserSearch() {
     if (!user || !addTurnoverAmount) return
     setAddTurnoverSaving(true)
     try {
-      const res = await addTurnover({ userId: user.user.userId, amount: Number(addTurnoverAmount), type: addTurnoverType, sourceRef: addTurnoverRef || undefined })
-      setTurnoverStatus(prev => prev ? { ...prev, turnover_requirement: prev.turnover_requirement + res.required, total_turnover_completed: prev.total_turnover_completed, progress: Math.round((prev.total_turnover_completed / (prev.turnover_requirement + res.required)) * 100), batches: [...prev.batches, { type: res.type, amount: res.amount, multiplier: res.multiplier, required: res.required, completed: 0, createdAt: new Date().toISOString() }] } : null)
+      const res = await addTurnover({ userId: user.user.userId, amount: Number(addTurnoverAmount), type: addTurnoverType })
+      setTurnoverStatus(prev => prev ? { ...prev, total_required: prev.total_required + res.required, completed: prev.completed, progress: Math.round((prev.completed / (prev.total_required + res.required)) * 100), batches: [...prev.batches, { type: res.type, amount: res.amount, multiplier: res.multiplier, required: res.required, completed: 0, createdAt: new Date().toISOString() }] } : null)
       setAddTurnoverAmount('')
-      setAddTurnoverRef('')
       setShowAddTurnover(false)
     } catch (err: unknown) { toast(extractError(err)) }
     finally { setAddTurnoverSaving(false) }
@@ -216,7 +214,7 @@ export default function UserSearch() {
             <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}><span style={{ fontSize: 10, color: '#000', textTransform: 'uppercase', letterSpacing: '0.5px' }}>VIP Level</span><span style={{ fontSize: 20, fontWeight: 700, lineHeight: 1.2 }}>{user.account.vipLevel}</span></div>
             <div style={{ marginLeft: 'auto', display: 'flex', gap: 6, alignItems: 'center' }}>
               <span className={`badge ${statusBadge(user.account.status)}`} style={{ fontSize: 10 }}>{user.account.status}</span>
-              <button className="btn-filled" style={{ fontSize: 10, padding: '2px 8px' }} onClick={() => { setNewStatus(user.account.status); setShowStatusDialog(true) }}>Change Status</button>
+              <button className="btn-filled" style={{ fontSize: 11, padding: '4px 12px', minWidth: 110, textAlign: 'center' }} onClick={() => { setNewStatus(user.account.status); setShowStatusDialog(true) }}>Change Status</button>
             </div>
           </div>
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: 32, background: '#fff', border: '1px solid #d0d0d0', borderRadius: 4, padding: '12px 20px', boxShadow: '0 2px 8px rgba(0,0,0,0.08)' }}>
@@ -232,7 +230,7 @@ export default function UserSearch() {
             <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}><span style={{ fontSize: 10, color: '#000', textTransform: 'uppercase', letterSpacing: '0.5px' }}>UPI</span><span style={{ fontSize: 20, fontWeight: 700, lineHeight: 1.2 }}>{user.paymentMethods?.upi?.address || '-'}</span></div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}><span style={{ fontSize: 10, color: '#000', textTransform: 'uppercase', letterSpacing: '0.5px' }}>UPAY</span><span style={{ fontSize: 20, fontWeight: 700, lineHeight: 1.2 }}>{user.paymentMethods?.upay?.address || '-'}</span></div>
             <div style={{ marginLeft: 'auto' }}>
-              <button className="btn-filled" style={{ fontSize: 10, padding: '2px 8px' }} onClick={handleLoadPaymentMethods}>View</button>
+              <button className="btn-filled" style={{ fontSize: 11, padding: '4px 12px', minWidth: 110, textAlign: 'center' }} onClick={handleLoadPaymentMethods}>View</button>
             </div>
           </div>
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: 32, background: '#fff', border: '1px solid #d0d0d0', borderRadius: 4, padding: '12px 20px', boxShadow: '0 2px 8px rgba(0,0,0,0.08)', alignItems: 'center' }}>
@@ -240,14 +238,14 @@ export default function UserSearch() {
             <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}><span style={{ fontSize: 10, color: '#000', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Location</span><span style={{ fontSize: 20, fontWeight: 700, lineHeight: 1.2 }}>{user.deviceInfo ? [user.deviceInfo.city, user.deviceInfo.region].filter(Boolean).join(', ') : '-'}</span></div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}><span style={{ fontSize: 10, color: '#000', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Created</span><span style={{ fontSize: 20, fontWeight: 700, lineHeight: 1.2 }}>{formatDateTime12(user.user.createdAt)}</span></div>
             <div style={{ marginLeft: 'auto' }}>
-              <button className="btn-filled" style={{ fontSize: 10, padding: '2px 8px' }} onClick={handleLoadSameIp} disabled={ipUsersLoading}>{ipUsersLoading ? <Spinner /> : 'Same IP Users'}</button>
+              <button className="btn-filled" style={{ fontSize: 11, padding: '4px 12px', minWidth: 110, textAlign: 'center' }} onClick={handleLoadSameIp} disabled={ipUsersLoading}>{ipUsersLoading ? <Spinner /> : 'Same IP Users'}</button>
             </div>
           </div>
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: 32, background: '#fff', border: '1px solid #d0d0d0', borderRadius: 4, padding: '12px 20px', boxShadow: '0 2px 8px rgba(0,0,0,0.08)', alignItems: 'center' }}>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}><span style={{ fontSize: 10, color: '#000', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Requirement</span><span style={{ fontSize: 20, fontWeight: 700, color: '#f97316', lineHeight: 1.2 }}>₹{user.account.turnover_requirement.toLocaleString('en-IN')}</span></div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}><span style={{ fontSize: 10, color: '#000', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Completed</span><span style={{ fontSize: 20, fontWeight: 700, color: '#22c55e', lineHeight: 1.2 }}>₹{user.account.total_turnover_completed.toLocaleString('en-IN')}</span></div>
             <div style={{ marginLeft: 'auto' }}>
-              <button className="btn-filled" style={{ fontSize: 10, padding: '2px 8px' }} onClick={() => { setShowTurnover(true) }}>View Batches</button>
+              <button className="btn-filled" style={{ fontSize: 11, padding: '4px 12px', minWidth: 110, textAlign: 'center' }} onClick={() => { setShowTurnover(true) }}>View Batches</button>
             </div>
           </div>
         </div>
@@ -333,16 +331,20 @@ export default function UserSearch() {
             <div className="filter-group"><label>Account Holder</label><input placeholder="Holder name" value={pmForm.accountHolder ?? ''} onChange={(e) => setPmForm({ ...pmForm, accountHolder: e.target.value })} /></div>
           </>)}
         </AnimatedDialog>
-        <AnimatedDialog open={showTurnover && !!user} onClose={() => { setShowTurnover(false); setShowAddTurnover(false); setTurnoverStatus(null) }} title={`Turnover — User #${user?.user.userId ?? ''}`}>
-          <div style={{ display: 'flex', gap: 8, marginBottom: 12, flexWrap: 'wrap' }}>
-            <button className="btn btn--primary btn--sm" onClick={handleCheckTurnover} disabled={turnoverLoading}>Check Status</button>
-            <button className="btn btn--sm" style={{ background: '#22c55e', color: '#fff', border: 'none' }} onClick={() => { setShowAddTurnover(true); handleCheckTurnover() }}>Add Turnover</button>
-            <button className="btn btn--danger btn--sm" onClick={handleClearTurnover} disabled={turnoverLoading}>Clear Turnover</button>
-          </div>
+        <AnimatedDialog open={showTurnover && !!user} onClose={() => { setShowTurnover(false); setShowAddTurnover(false); setTurnoverStatus(null) }} title={`Turnover — User #${user?.user.userId ?? ''}`}
+          footer={
+            <>
+              <button className="btn btn--primary btn--sm" onClick={handleCheckTurnover} disabled={turnoverLoading}>Check Status</button>
+              <button className="btn btn--sm" style={{ background: '#22c55e', color: '#fff', border: 'none' }} onClick={() => { setShowAddTurnover(true); handleCheckTurnover() }}>Add Turnover</button>
+              <button className="btn btn--danger btn--sm" onClick={handleClearTurnover} disabled={turnoverLoading}>Clear Turnover</button>
+            </>
+          }
+        >
           {turnoverStatus && (
             <div style={{ marginBottom: 12, background: '#f8f9fa', border: '1px solid var(--color-border, rgb(188,198,222))', borderRadius: 4, padding: '12px 16px', display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 12, fontSize: 12 }}>
-              <div><span style={{ color: '#888' }}>Required</span><div style={{ fontWeight: 700, fontSize: 15 }}>₹{turnoverStatus.turnover_requirement.toLocaleString('en-IN')}</div></div>
-              <div><span style={{ color: '#888' }}>Completed</span><div style={{ fontWeight: 700, fontSize: 15, color: '#22c55e' }}>₹{turnoverStatus.total_turnover_completed.toLocaleString('en-IN')}</div></div>
+              <div><span style={{ color: '#888' }}>Total Required</span><div style={{ fontWeight: 700, fontSize: 15 }}>₹{turnoverStatus.total_required.toLocaleString('en-IN')}</div></div>
+              <div><span style={{ color: '#888' }}>Completed</span><div style={{ fontWeight: 700, fontSize: 15, color: '#22c55e' }}>₹{turnoverStatus.completed.toLocaleString('en-IN')}</div></div>
+              <div><span style={{ color: '#888' }}>Remaining</span><div style={{ fontWeight: 700, fontSize: 15, color: '#f97316' }}>₹{turnoverStatus.requirement.toLocaleString('en-IN')}</div></div>
               <div><span style={{ color: '#888' }}>Progress</span><div style={{ fontWeight: 700, fontSize: 15 }}>{turnoverStatus.progress}%</div></div>
               <div><span style={{ color: '#888' }}>Can Withdraw</span><div style={{ fontWeight: 700, fontSize: 15, color: turnoverStatus.canWithdraw ? '#22c55e' : '#ef4444' }}>{turnoverStatus.canWithdraw ? 'Yes' : 'No'}</div></div>
             </div>
@@ -364,7 +366,6 @@ export default function UserSearch() {
                   <option value="DEPOSIT_BONUS">DEPOSIT_BONUS</option>
                 </select>
               </div>
-              <div className="filter-group" style={{ flex: '1 1 100px', minWidth: 0 }}><label>Source Ref</label><input value={addTurnoverRef} onChange={(e) => setAddTurnoverRef(e.target.value)} placeholder="Optional" style={{ width: '100%' }} /></div>
               <button className="btn btn--sm" style={{ background: '#22c55e', color: '#fff', border: 'none', height: 44 }} onClick={handleAddTurnover} disabled={addTurnoverSaving || !addTurnoverAmount}>{addTurnoverSaving ? <Spinner /> : 'Add'}</button>
             </div>
           )}
