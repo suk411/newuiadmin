@@ -214,7 +214,7 @@ export default function UserSearch() {
             <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}><span style={{ fontSize: 10, color: '#000', textTransform: 'uppercase', letterSpacing: '0.5px' }}>VIP Level</span><span style={{ fontSize: 20, fontWeight: 700, lineHeight: 1.2 }}>{user.account.vipLevel}</span></div>
             <div style={{ marginLeft: 'auto', display: 'flex', gap: 6, alignItems: 'center' }}>
               <span className={`badge ${statusBadge(user.account.status)}`} style={{ fontSize: 10 }}>{user.account.status}</span>
-              <button className="btn-filled" style={{ fontSize: 11, padding: '4px 12px', minWidth: 110, textAlign: 'center' }} onClick={() => { setNewStatus(user.account.status); setShowStatusDialog(true) }}>Change Status</button>
+              <button className="btn-filled" style={{ minWidth: 110, textAlign: 'center' }} onClick={() => { setNewStatus(user.account.status); setShowStatusDialog(true) }}>Change Status</button>
             </div>
           </div>
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: 32, background: '#fff', border: '1px solid #d0d0d0', borderRadius: 4, padding: '12px 20px', boxShadow: '0 2px 8px rgba(0,0,0,0.08)' }}>
@@ -230,7 +230,7 @@ export default function UserSearch() {
             <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}><span style={{ fontSize: 10, color: '#000', textTransform: 'uppercase', letterSpacing: '0.5px' }}>UPI</span><span style={{ fontSize: 20, fontWeight: 700, lineHeight: 1.2 }}>{user.paymentMethods?.upi?.address || '-'}</span></div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}><span style={{ fontSize: 10, color: '#000', textTransform: 'uppercase', letterSpacing: '0.5px' }}>UPAY</span><span style={{ fontSize: 20, fontWeight: 700, lineHeight: 1.2 }}>{user.paymentMethods?.upay?.address || '-'}</span></div>
             <div style={{ marginLeft: 'auto' }}>
-              <button className="btn-filled" style={{ fontSize: 11, padding: '4px 12px', minWidth: 110, textAlign: 'center' }} onClick={handleLoadPaymentMethods}>View</button>
+              <button className="btn-filled" style={{ minWidth: 110, textAlign: 'center' }} onClick={handleLoadPaymentMethods}>View</button>
             </div>
           </div>
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: 32, background: '#fff', border: '1px solid #d0d0d0', borderRadius: 4, padding: '12px 20px', boxShadow: '0 2px 8px rgba(0,0,0,0.08)', alignItems: 'center' }}>
@@ -238,14 +238,14 @@ export default function UserSearch() {
             <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}><span style={{ fontSize: 10, color: '#000', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Location</span><span style={{ fontSize: 20, fontWeight: 700, lineHeight: 1.2 }}>{user.deviceInfo ? [user.deviceInfo.city, user.deviceInfo.region].filter(Boolean).join(', ') : '-'}</span></div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}><span style={{ fontSize: 10, color: '#000', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Created</span><span style={{ fontSize: 20, fontWeight: 700, lineHeight: 1.2 }}>{formatDateTime12(user.user.createdAt)}</span></div>
             <div style={{ marginLeft: 'auto' }}>
-              <button className="btn-filled" style={{ fontSize: 11, padding: '4px 12px', minWidth: 110, textAlign: 'center' }} onClick={handleLoadSameIp} disabled={ipUsersLoading}>{ipUsersLoading ? <Spinner /> : 'Same IP Users'}</button>
+              <button className="btn-filled" style={{ minWidth: 110, textAlign: 'center' }} onClick={handleLoadSameIp} disabled={ipUsersLoading}>{ipUsersLoading ? <Spinner /> : 'Same IP Users'}</button>
             </div>
           </div>
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: 32, background: '#fff', border: '1px solid #d0d0d0', borderRadius: 4, padding: '12px 20px', boxShadow: '0 2px 8px rgba(0,0,0,0.08)', alignItems: 'center' }}>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}><span style={{ fontSize: 10, color: '#000', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Requirement</span><span style={{ fontSize: 20, fontWeight: 700, color: '#f97316', lineHeight: 1.2 }}>₹{user.account.turnover_requirement.toLocaleString('en-IN')}</span></div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}><span style={{ fontSize: 10, color: '#000', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Completed</span><span style={{ fontSize: 20, fontWeight: 700, color: '#22c55e', lineHeight: 1.2 }}>₹{user.account.total_turnover_completed.toLocaleString('en-IN')}</span></div>
             <div style={{ marginLeft: 'auto' }}>
-              <button className="btn-filled" style={{ fontSize: 11, padding: '4px 12px', minWidth: 110, textAlign: 'center' }} onClick={() => { setShowTurnover(true) }}>View Batches</button>
+              <button className="btn-filled" style={{ minWidth: 110, textAlign: 'center' }} onClick={() => { setShowTurnover(true) }}>View Batches</button>
             </div>
           </div>
         </div>
