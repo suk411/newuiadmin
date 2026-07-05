@@ -161,7 +161,7 @@ export interface CommissionRankResponse {
 }
 
 export async function fetchCommissionRanks(params: Record<string, string | number>): Promise<CommissionRankResponse> {
-  const res = await axiosInstance.get('/admin/agent/commision-records', { params })
+  const res = await axiosInstance.get('/agent/commision-records', { params })
   return res.data
 }
 
