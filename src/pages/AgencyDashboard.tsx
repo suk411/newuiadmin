@@ -65,6 +65,7 @@ export default function AgencyDashboard() {
   const [tier, setTier] = useState('')
   const [dateFrom, setDateFrom] = useState('')
   const [dateTo, setDateTo] = useState('')
+  const [rankDate, setRankDate] = useState('')
   const [search, setSearch] = useState('')
   const { toast } = useToast()
 
@@ -169,8 +170,7 @@ export default function AgencyDashboard() {
     setRankLoading(true)
     try {
       const params: Record<string, string | number> = { page, limit: 50 }
-      if (dateFrom) params.dateFrom = dateFrom
-      if (dateTo) params.dateTo = dateTo
+      if (rankDate) params.date = rankDate
       const res = await fetchCommissionRanks(params)
       setRankData(res.data ?? [])
       setRankSummary(res.summary ?? null)
@@ -201,6 +201,7 @@ export default function AgencyDashboard() {
     setTier('')
     setDateFrom('')
     setDateTo('')
+    setRankDate('')
     setSearch('')
     setStatsData(null)
     setMembers([])
@@ -245,14 +246,23 @@ export default function AgencyDashboard() {
               </select>
             </div>
           )}
-          <div className="filter-group">
-            <label>From</label>
-            <input type="date" value={dateFrom} onChange={(e) => setDateFrom(e.target.value)} />
-          </div>
-          <div className="filter-group">
-            <label>To</label>
-            <input type="date" value={dateTo} onChange={(e) => setDateTo(e.target.value)} />
-          </div>
+          {tab === 'rank' ? (
+            <div className="filter-group">
+              <label>Date</label>
+              <input type="date" value={rankDate} onChange={(e) => setRankDate(e.target.value)} />
+            </div>
+          ) : (
+            <>
+              <div className="filter-group">
+                <label>From</label>
+                <input type="date" value={dateFrom} onChange={(e) => setDateFrom(e.target.value)} />
+              </div>
+              <div className="filter-group">
+                <label>To</label>
+                <input type="date" value={dateTo} onChange={(e) => setDateTo(e.target.value)} />
+              </div>
+            </>
+          )}
           {tab === 'members' && (
             <div className="filter-group">
               <label>Search UserId</label>
@@ -261,8 +271,8 @@ export default function AgencyDashboard() {
           )}
           <div className="filter-group" style={{ alignSelf: 'flex-end' }}>
             <div style={{ display: 'flex', gap: 'var(--space-3)' }}>
-              <button type="submit" className="btn-filled" disabled={tab !== 'rank' && !userId.trim()}
-                style={{ opacity: tab !== 'rank' && !userId.trim() ? 0.6 : 1 }}>
+              <button type="submit" className="btn-filled" disabled={tab === 'rank' ? !rankDate.trim() : !userId.trim()}
+                style={{ opacity: tab === 'rank' ? (!rankDate.trim() ? 0.6 : 1) : (!userId.trim() ? 0.6 : 1) }}>
                 {(tab === 'stats' ? statsLoading : tab === 'members' ? membersLoading : tab === 'rank' ? rankLoading : commissionLoading) ? <Spinner /> : 'Search'}
               </button>
               <button type="button" className="btn-outline" onClick={reset}>Reset</button>
