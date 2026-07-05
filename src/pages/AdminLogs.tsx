@@ -3,6 +3,7 @@ import axios from 'axios'
 import { fetchLogs } from '../api/logs'
 import type { LogEntry } from '../api/logs'
 import { formatDateTime12 } from '../utils/format'
+import { useToast } from '../contexts/ToastContext'
 import Spinner from '../components/Spinner'
 import { useExportBar } from '../components/ExportBarContext'
 import type { ExportColumn } from '../utils/export'
@@ -24,6 +25,7 @@ export default function AdminLogs() {
   const [level, setLevel] = useState('')
   const [since, setSince] = useState('')
   const [loading, setLoading] = useState(false)
+  const { toast } = useToast()
   const { setExportProps } = useExportBar()
 
   useEffect(() => {
@@ -47,7 +49,7 @@ export default function AdminLogs() {
 
   return (
     <div className="content content--table">
-      <form className="filters-bar" onSubmit={(e) => { e.preventDefault(); load() }}>
+      <form className="filters-bar" onSubmit={(e) => { e.preventDefault(); if (!level && !since) { toast('Please select a level or date'); return }; load() }}>
         <div className="filter-group">
           <label>Level</label>
           <select value={level} onChange={(e) => setLevel(e.target.value)}>
@@ -62,8 +64,8 @@ export default function AdminLogs() {
         </div>
         <div className="filter-group" style={{ alignSelf: 'flex-end' }}>
           <div style={{ display: 'flex', gap: 'var(--space-3)' }}>
-            <button type="submit" className="btn-filled" disabled={loading}
-              style={{ opacity: loading ? 0.6 : 1 }}>Apply</button>
+            <button type="submit" className="btn-filled" disabled={loading || (!level && !since)}
+              style={{ opacity: loading || (!level && !since) ? 0.6 : 1 }}>Apply</button>
             <button type="button" className="btn-outline" onClick={() => { setLevel(''); setSince('') }}>Reset</button>
           </div>
         </div>

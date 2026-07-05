@@ -52,12 +52,15 @@ export default function Withdrawals() {
     return () => setExportProps(null)
   }, [records, setExportProps])
 
+  const hasAnyFilter = userId || orderId || status || chargeFrom || dateFrom || dateTo
+
   const handleUserId = (v: string) => { setUserId(v); if (v) setOrderId('') }
   const handleOrderId = (v: string) => { setOrderId(v); if (v) setUserId('') }
   const [actionLoading, setActionLoading] = useState<string | null>(null)
   const [approveTarget, setApproveTarget] = useState<any | null>(null)
 
   const load = async (p = 1) => {
+    if (!hasAnyFilter) { toast('Please apply at least one filter'); return }
     setLoading(true)
     try {
       const params: Record<string, string | number> = { page: p, limit: LIMIT }
@@ -138,8 +141,8 @@ export default function Withdrawals() {
         <div className="filter-group"><label>To</label><input type="date" value={dateTo} onChange={(e) => setDateTo(e.target.value)} /></div>
         <div className="filter-group" style={{ alignSelf: 'flex-end' }}>
           <div style={{ display: 'flex', gap: 'var(--space-3)' }}>
-            <button type="submit" className="btn-filled" disabled={loading}
-              style={{ opacity: loading ? 0.6 : 1 }}>Search</button>
+            <button type="submit" className="btn-filled" disabled={loading || !hasAnyFilter}
+              style={{ opacity: loading || !hasAnyFilter ? 0.6 : 1 }}>Search</button>
             <button type="button" className="btn-outline" onClick={() => { setUserId(''); setOrderId(''); setStatus(''); setChargeFrom(''); setDateFrom(''); setDateTo(''); setRecords([]); setTotal(0) }}>Reset</button>
           </div>
         </div>

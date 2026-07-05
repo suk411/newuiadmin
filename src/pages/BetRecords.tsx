@@ -47,6 +47,10 @@ export default function BetRecords() {
   const [dailyDateFrom, setDailyDateFrom] = useState('')
   const [dailyDateTo, setDailyDateTo] = useState('')
 
+  const canSearch = tab === 'provider' ? (member || site || provStatus || provDateFrom || provDateTo) :
+    tab === 'wingo' ? (wingoUserId || gameMode || wingoStatus || wingoDateFrom || wingoDateTo) :
+    (dailyUserId || dailyDateFrom || dailyDateTo)
+
   const { setExportProps } = useExportBar()
   const memberSuggest = useSearchSuggest('member')
   const wingoSuggest = useSearchSuggest('wingoUserId')
@@ -142,6 +146,7 @@ export default function BetRecords() {
   }, [tab, records, dailyRecords, setExportProps])
 
   const load = async (p = 1) => {
+    if (!canSearch) { toast('Please apply at least one filter'); return }
     setLoading(true)
     setSummary(null)
     try {
@@ -257,8 +262,8 @@ export default function BetRecords() {
         )}
         <div className="filter-group" style={{ alignSelf: 'flex-end' }}>
           <div style={{ display: 'flex', gap: 'var(--space-3)' }}>
-            <button type="submit" className="btn-filled" disabled={loading}
-              style={{ opacity: loading ? 0.6 : 1 }}>Search</button>
+            <button type="submit" className="btn-filled" disabled={loading || !canSearch}
+              style={{ opacity: loading || !canSearch ? 0.6 : 1 }}>Search</button>
             <button type="button" className="btn-outline" onClick={reset}>Reset</button>
           </div>
         </div>
