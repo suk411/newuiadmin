@@ -5,6 +5,7 @@ export interface ToastMsg {
   id: number
   text: string
   type?: 'error' | 'success'
+  action?: { label: string; onClick: () => void }
 }
 
 interface Props {
@@ -50,7 +51,10 @@ function ToastItem({ toast, onRemove }: { toast: ToastMsg; onRemove: (id: number
           <path d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm165.4 618.2l-47.2 47.2L512 611.2 393.8 729.4l-47.2-47.2L464.8 564 346.6 445.8l47.2-47.2L512 516.8l118.2-118.2 47.2 47.2L559.2 564l118.2 118.2z" />
         </svg>
       )}
-      {toast.text}
+      <span className="toast-text">{toast.text}</span>
+      {toast.action && (
+        <button className="toast-action" onClick={() => { toast.action!.onClick(); onRemove(toast.id) }}>{toast.action.label}</button>
+      )}
     </div>
   )
 }

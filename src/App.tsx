@@ -13,6 +13,7 @@ import AgencyDashboard from './pages/AgencyDashboard'
 import WingoDashboard from './pages/WingoDashboard'
 import TelegramBot from './pages/TelegramBot'
 import Sidebar from './components/Sidebar'
+import VersionCheck from './components/VersionCheck'
 import TagsView from './components/TagsView'
 import { titleMap } from './components/TagsView'
 import type { TagItem } from './components/TagsView'
@@ -127,6 +128,7 @@ function ProtectedLayoutContent({ onLogout }: { onLogout: () => void }) {
             </button>
           </div>
         </header>
+          <VersionCheck />
           <TagsView tags={tags} onClose={handleTagClose} />
           <main className="app-content" id="main-content">
             <div key={location.pathname} className="route-transition">
