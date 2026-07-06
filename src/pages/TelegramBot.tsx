@@ -82,25 +82,26 @@ export default function TelegramBot() {
     <div className="content content--table">
       <div className="filters-bar">
         <div className="filter-group" style={{ alignSelf: 'flex-end' }}>
-          <div style={{ display: 'flex', gap: 'var(--space-3)' }}>
-            <button className="btn-filled" onClick={load} disabled={loading || saving}
-              style={{ opacity: loading || saving ? 0.6 : 1 }}>Refresh</button>
+          <div className="btn-row">
+            <button className="btn-filled" onClick={load} disabled={loading || saving} aria-label="Refresh bot config">
+              Refresh
+            </button>
           </div>
         </div>
       </div>
 
       {loading ? (
-        <section className="card"><div style={{ padding: '48px 0', textAlign: 'center' }}><Spinner /></div></section>
+        <section className="card"><div className="spinner-wrap"><Spinner /></div></section>
       ) : !config ? (
-        <section className="card"><div className="empty-state" style={{ padding: '48px 0' }}><div className="empty-state__icon">📋</div>Failed to load config</div></section>
+        <section className="card"><div className="empty-state spinner-wrap"><div className="empty-state__icon">📋</div>Failed to load config</div></section>
       ) : (
         <>
-          <section className="card">
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 }}>
-              <h3 style={{ margin: 0, fontSize: 14 }}>Owner IDs</h3>
-              <div style={{ display: 'flex', gap: 8 }}>
-                <input value={ownerInput} onChange={(e) => setOwnerInput(e.target.value)} placeholder="Enter Telegram user ID" style={{ width: 200, height: 35, padding: '0 12px', border: '1px solid var(--color-border)', borderRadius: 'var(--radius-md)', fontSize: 13 }} />
-                <button className="btn-filled" onClick={addOwner} disabled={!ownerInput.trim() || isSaving} style={{ height: 35, padding: '0 12px' }}>{isSaving ? <Spinner /> : 'Add'}</button>
+          <section className="card bot-section">
+            <div className="bot-section__header">
+              <h3 className="bot-section__title">Owner IDs</h3>
+              <div className="input-addon">
+                <input className="bot-input" value={ownerInput} onChange={(e) => setOwnerInput(e.target.value)} placeholder="Enter Telegram user ID" aria-label="Add owner ID" />
+                <button className="btn-filled bot-add-btn" onClick={addOwner} disabled={!ownerInput.trim() || isSaving} aria-label="Add owner">{isSaving ? <Spinner size={12} /> : 'Add'}</button>
               </div>
             </div>
             <div className="table-wrap">
@@ -108,12 +109,12 @@ export default function TelegramBot() {
                 <thead><tr><th>#</th><th>Owner ID</th><th>Action</th></tr></thead>
                 <tbody>
                   {config.ownerIds.length === 0 ? (
-                    <tr><td colSpan={3} style={{ textAlign: 'center', padding: '24px 0' }}><div className="empty-state"><div className="empty-state__icon">📋</div>No owners</div></td></tr>
+                    <tr><td colSpan={3} className="empty-cell"><div className="empty-state"><div className="empty-state__icon">📋</div>No owners</div></td></tr>
                   ) : (
                     config.ownerIds.map((id, i) => (
-                      <tr key={i} tabIndex={0}>
+                      <tr key={i}>
                         <td>{i + 1}</td>
-                        <td style={{ fontFamily: 'monospace', fontSize: 12 }}>{id}</td>
+                        <td className="cell-mono">{id}</td>
                         <td><button className="btn btn--danger btn--sm" onClick={() => removeOwner(i)} disabled={isSaving}>Remove</button></td>
                       </tr>
                     ))
@@ -123,12 +124,12 @@ export default function TelegramBot() {
             </div>
           </section>
 
-          <section className="card" style={{ marginTop: 12 }}>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 }}>
-              <h3 style={{ margin: 0, fontSize: 14 }}>Allowed User IDs</h3>
-              <div style={{ display: 'flex', gap: 8 }}>
-                <input value={userInput} onChange={(e) => setUserInput(e.target.value)} placeholder="Enter Telegram user ID" style={{ width: 200, height: 35, padding: '0 12px', border: '1px solid var(--color-border)', borderRadius: 'var(--radius-md)', fontSize: 13 }} />
-                <button className="btn-filled" onClick={addUser} disabled={!userInput.trim() || isSaving} style={{ height: 35, padding: '0 12px' }}>{isSaving ? <Spinner /> : 'Add'}</button>
+          <section className="card bot-section">
+            <div className="bot-section__header">
+              <h3 className="bot-section__title">Allowed User IDs</h3>
+              <div className="input-addon">
+                <input className="bot-input" value={userInput} onChange={(e) => setUserInput(e.target.value)} placeholder="Enter Telegram user ID" aria-label="Add allowed user ID" />
+                <button className="btn-filled bot-add-btn" onClick={addUser} disabled={!userInput.trim() || isSaving} aria-label="Add user">{isSaving ? <Spinner size={12} /> : 'Add'}</button>
               </div>
             </div>
             <div className="table-wrap">
@@ -136,12 +137,12 @@ export default function TelegramBot() {
                 <thead><tr><th>#</th><th>User ID</th><th>Action</th></tr></thead>
                 <tbody>
                   {config.allowedUserIds.length === 0 ? (
-                    <tr><td colSpan={3} style={{ textAlign: 'center', padding: '24px 0' }}><div className="empty-state"><div className="empty-state__icon">📋</div>No allowed users</div></td></tr>
+                    <tr><td colSpan={3} className="empty-cell"><div className="empty-state"><div className="empty-state__icon">📋</div>No allowed users</div></td></tr>
                   ) : (
                     config.allowedUserIds.map((id, i) => (
-                      <tr key={i} tabIndex={0}>
+                      <tr key={i}>
                         <td>{i + 1}</td>
-                        <td style={{ fontFamily: 'monospace', fontSize: 12 }}>{id}</td>
+                        <td className="cell-mono">{id}</td>
                         <td><button className="btn btn--danger btn--sm" onClick={() => removeUser(i)} disabled={isSaving}>Remove</button></td>
                       </tr>
                     ))
@@ -151,12 +152,12 @@ export default function TelegramBot() {
             </div>
           </section>
 
-          <section className="card" style={{ marginTop: 12 }}>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 }}>
-              <h3 style={{ margin: 0, fontSize: 14 }}>Allowed Group IDs</h3>
-              <div style={{ display: 'flex', gap: 8 }}>
-                <input value={groupInput} onChange={(e) => setGroupInput(e.target.value)} placeholder="Enter Telegram group ID (e.g. -100...)" style={{ width: 200, height: 35, padding: '0 12px', border: '1px solid var(--color-border)', borderRadius: 'var(--radius-md)', fontSize: 13 }} />
-                <button className="btn-filled" onClick={addGroup} disabled={!groupInput.trim() || isSaving} style={{ height: 35, padding: '0 12px' }}>{isSaving ? <Spinner /> : 'Add'}</button>
+          <section className="card bot-section">
+            <div className="bot-section__header">
+              <h3 className="bot-section__title">Allowed Group IDs</h3>
+              <div className="input-addon">
+                <input className="bot-input" value={groupInput} onChange={(e) => setGroupInput(e.target.value)} placeholder="Enter Telegram group ID (e.g. -100...)" aria-label="Add group ID" />
+                <button className="btn-filled bot-add-btn" onClick={addGroup} disabled={!groupInput.trim() || isSaving} aria-label="Add group">{isSaving ? <Spinner size={12} /> : 'Add'}</button>
               </div>
             </div>
             <div className="table-wrap">
@@ -164,12 +165,12 @@ export default function TelegramBot() {
                 <thead><tr><th>#</th><th>Group ID</th><th>Action</th></tr></thead>
                 <tbody>
                   {config.allowedGroupIds.length === 0 ? (
-                    <tr><td colSpan={3} style={{ textAlign: 'center', padding: '24px 0' }}><div className="empty-state"><div className="empty-state__icon">📋</div>No allowed groups</div></td></tr>
+                    <tr><td colSpan={3} className="empty-cell"><div className="empty-state"><div className="empty-state__icon">📋</div>No allowed groups</div></td></tr>
                   ) : (
                     config.allowedGroupIds.map((id, i) => (
-                      <tr key={i} tabIndex={0}>
+                      <tr key={i}>
                         <td>{i + 1}</td>
-                        <td style={{ fontFamily: 'monospace', fontSize: 12 }}>{id}</td>
+                        <td className="cell-mono">{id}</td>
                         <td><button className="btn btn--danger btn--sm" onClick={() => removeGroup(i)} disabled={isSaving}>Remove</button></td>
                       </tr>
                     ))

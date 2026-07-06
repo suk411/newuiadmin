@@ -44,13 +44,15 @@ export default function TagsView({ tags, onClose }: Props) {
   }, [location.pathname])
 
   return (
-    <div className="tags-view">
+    <div className="tags-view" role="tablist" aria-label="Page tabs">
       <div className="tags-view__scroll" ref={scrollRef}>
         {tags.map((tag) => {
           const isActive = location.pathname === tag.path
           return (
-            <span
+            <button
               key={tag.path}
+              role="tab"
+              aria-selected={isActive}
               className={`tags-view-item ${isActive ? 'active' : ''}`}
               onClick={() => navigate(tag.path)}
             >
@@ -58,20 +60,30 @@ export default function TagsView({ tags, onClose }: Props) {
               {tags.length > 1 && (
                 <span
                   className="tags-view-item-close"
+                  role="button"
+                  tabIndex={0}
+                  aria-label={`Close ${tag.title} tab`}
                   onClick={(e) => {
                     e.stopPropagation()
                     onClose(tag.path)
+                  }}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                      e.preventDefault()
+                      e.stopPropagation()
+                      onClose(tag.path)
+                    }
                   }}
                 >
                   ✕
                 </span>
               )}
-            </span>
+            </button>
           )
         })}
       </div>
       {exportProps && (
-        <div style={{ marginLeft: 'auto', flexShrink: 0, padding: '0 8px' }}>
+        <div className="tags-view__export">
           <ExportButton columns={exportProps.columns} data={exportProps.data} filename={exportProps.filename} />
         </div>
       )}

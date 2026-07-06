@@ -32,6 +32,7 @@ function ToastItem({ toast, onRemove }: { toast: ToastMsg; onRemove: (id: number
   return (
     <div
       className={cls}
+      role="alert"
       style={{
         maxHeight: collapsing ? 0 : 120,
         marginBottom: collapsing ? 0 : 10,

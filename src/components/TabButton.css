@@ -16,6 +16,11 @@
   color: #fff;
 }
 
+.tab-btn:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
 :root.dark .tab-btn {
   background: #1a1a2e;
   border-color: #333;

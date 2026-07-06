@@ -204,8 +204,8 @@ export default function BetRecords() {
 
   return (
     <div className="content content--table">
-      <div className="filters-bar" style={{ borderBottom: 'none', paddingBottom: 0 }}>
-        <div style={{ display: 'flex', gap: 8 }}>
+      <div className="filters-bar filters-bar--tabs">
+        <div className="btn-row">
           <TabButton active={tab === 'provider'} onClick={() => { setTab('provider'); reset() }}>Provider</TabButton>
           <TabButton active={tab === 'wingo'} onClick={() => { setTab('wingo'); reset() }}>Wingo</TabButton>
           <TabButton active={tab === 'daily'} onClick={() => { setTab('daily'); reset() }}>Daily Stats</TabButton>

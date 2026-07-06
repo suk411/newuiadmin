@@ -9,7 +9,7 @@ interface Props {
 
 export default function TabButton({ active, onClick, children }: Props) {
   return (
-    <button type="button" className={`tab-btn ${active ? 'tab-btn--active' : ''}`} onClick={onClick}>
+    <button type="button" role="tab" aria-selected={active} className={`tab-btn ${active ? 'tab-btn--active' : ''}`} onClick={onClick}>
       {children}
     </button>
   )

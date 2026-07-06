@@ -36,39 +36,43 @@ export default function Login({ onLogin }: Props) {
     <div
       className="login-page"
       style={{
-        background: `var(--color-bg) url(${bgLogo}) center / cover no-repeat`,
+        background: `#000 url(${bgLogo}) center / cover no-repeat`,
       }}
     >
       <form className="login-card" onSubmit={handleSubmit}>
         <h1>Admin Login</h1>
 
         <div className="login-field">
-          <label>Mobile</label>
+          <label htmlFor="login-mobile">Mobile</label>
           <input
+            id="login-mobile"
             type="text"
             placeholder="Enter your mobile number"
             value={mobile}
             onChange={(e) => setMobile(e.target.value)}
             autoComplete="username"
+            aria-required="true"
           />
         </div>
 
         <div className="login-field">
-          <label>Password</label>
+          <label htmlFor="login-password">Password</label>
           <input
+            id="login-password"
             type="password"
             placeholder="Enter your password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             autoComplete="current-password"
+            aria-required="true"
           />
         </div>
 
-        <button type="submit" className="btn-filled" style={{ width: '100%', marginTop: 'var(--space-5)' }} disabled={loading}>
+        <button type="submit" className="btn-filled btn--full" disabled={loading} aria-busy={loading}>
           {loading ? <Spinner /> : 'Sign In'}
         </button>
 
-        {error && <div className="login-error">{error}</div>}
+        {error && <div className="login-error" role="alert">{error}</div>}
       </form>
     </div>
   )

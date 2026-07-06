@@ -73,6 +73,7 @@ function ProtectedLayoutContent({ onLogout }: { onLogout: () => void }) {
     <div className="app-layout">
       <Sidebar open={sidebarOpen} onClose={() => setSidebarOpen(false)} onNavigate={() => setSidebarOpen(false)} />
       <div className="main-area">
+        <a href="#main-content" className="skip-link">Skip to main content</a>
         <header className="app-header">
           <div className="header-left">
             <button
@@ -91,18 +92,18 @@ function ProtectedLayoutContent({ onLogout }: { onLogout: () => void }) {
                 <span className="breadcrumb__separator">/</span>
               </span>
               <span className="breadcrumb__item breadcrumb__item--active">
-                <span className="breadcrumb__text">{titleMap[location.pathname] || 'Dashboard'}</span>
+                <span className="breadcrumb__text" aria-current="page">{titleMap[location.pathname] || 'Dashboard'}</span>
               </span>
             </div>
           </div>
           <div className="header-right">
-            <button className="header-btn-icon" onClick={() => setAutoFillOff((p) => !p)} aria-label="Toggle autocomplete suggestions" title={autoFillOff ? 'Autocomplete OFF' : 'Autocomplete ON'} style={{ position: 'relative' }}>
+            <button className="header-btn-icon" onClick={() => setAutoFillOff((p) => !p)} aria-label="Toggle autocomplete suggestions" title={autoFillOff ? 'Autocomplete OFF' : 'Autocomplete ON'}>
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <rect x="2" y="4" width="20" height="16" rx="2" />
                 <path d="M8 12h8" />
                 <path d="M12 8v8" />
               </svg>
-              {autoFillOff && <span style={{ position: 'absolute', top: 2, right: 2, width: 8, height: 8, borderRadius: '50%', background: '#22c55e' }} />}
+              {autoFillOff && <span className="autofill-indicator" />}
             </button>
             <button className="header-btn-icon" onClick={toggleDark} aria-label="Toggle dark mode" title="Toggle dark mode">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -113,10 +114,10 @@ function ProtectedLayoutContent({ onLogout }: { onLogout: () => void }) {
               </svg>
             </button>
             <div className="avatar-container">
-              <span className="user-icon">👤</span>
+              <span className="user-icon" aria-hidden="true">👤</span>
               <span className="user-name">GM12</span>
             </div>
-            <button className="btn-logout-header" onClick={onLogout} title="Logout">
+            <button className="btn-logout-header" onClick={onLogout} aria-label="Logout">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
                 <polyline points="16 17 21 12 16 7" />
@@ -127,7 +128,7 @@ function ProtectedLayoutContent({ onLogout }: { onLogout: () => void }) {
           </div>
         </header>
           <TagsView tags={tags} onClose={handleTagClose} />
-          <main className="app-content">
+          <main className="app-content" id="main-content">
             <div key={location.pathname} className="route-transition">
               <Routes>
                 <Route path="/" element={<Navigate to="/dashboard" replace />} />
