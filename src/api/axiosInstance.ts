@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 const axiosInstance = axios.create({
-  baseURL: 'https://admin-backend-7lwn.onrender.com/api/admin',
+  baseURL: 'https://admin-backend-silk.vercel.app/api/admin',
   timeout: 15000,
   headers: { 'Content-Type': 'application/json' },
 })
