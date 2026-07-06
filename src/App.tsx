@@ -18,21 +18,17 @@ import { titleMap } from './components/TagsView'
 import type { TagItem } from './components/TagsView'
 import { ExportBarProvider } from './components/ExportBarContext'
 import { ToastProvider, useToast } from './contexts/ToastContext'
+import { ThemeProvider, useTheme } from './contexts/ThemeContext'
 import { watchAutoComplete, stopAutoComplete } from './utils/autocomplete'
 import './App.css'
 
 function ProtectedLayoutContent({ onLogout }: { onLogout: () => void }) {
   const [sidebarOpen, setSidebarOpen] = useState(false)
-  const [darkMode, setDarkMode] = useState(() => localStorage.getItem('darkMode') === 'true')
+  const { theme, toggle: toggleDark } = useTheme()
   const [autoFillOff, setAutoFillOff] = useState(() => localStorage.getItem('autoFillOff') === 'true')
   const location = useLocation()
   const navigate = useNavigate()
   const { toast } = useToast()
-
-  useEffect(() => {
-    document.documentElement.classList.toggle('dark', darkMode)
-    localStorage.setItem('darkMode', String(darkMode))
-  }, [darkMode])
 
   useEffect(() => {
     localStorage.setItem('autoFillOff', String(autoFillOff))
@@ -108,9 +104,9 @@ function ProtectedLayoutContent({ onLogout }: { onLogout: () => void }) {
               </svg>
               {autoFillOff && <span style={{ position: 'absolute', top: 2, right: 2, width: 8, height: 8, borderRadius: '50%', background: '#22c55e' }} />}
             </button>
-            <button className="header-btn-icon" onClick={() => setDarkMode((p) => !p)} aria-label="Toggle dark mode" title="Toggle dark mode">
+            <button className="header-btn-icon" onClick={toggleDark} aria-label="Toggle dark mode" title="Toggle dark mode">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                {darkMode
+                {theme === 'dark'
                   ? <path d="M12 3a9 9 0 109 9c0-.46-.04-.92-.1-1.36a5.389 5.389 0 01-4.4 2.26 5.403 5.403 0 01-3.14-9.8c-.44-.06-.9-.1-1.36-.1z" />
                   : <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z" />
                 }
@@ -156,11 +152,13 @@ function ProtectedLayoutContent({ onLogout }: { onLogout: () => void }) {
 
 function ProtectedLayout({ onLogout }: { onLogout: () => void }) {
   return (
-    <ToastProvider>
-      <ExportBarProvider>
-        <ProtectedLayoutContent onLogout={onLogout} />
-      </ExportBarProvider>
-    </ToastProvider>
+    <ThemeProvider>
+      <ToastProvider>
+        <ExportBarProvider>
+          <ProtectedLayoutContent onLogout={onLogout} />
+        </ExportBarProvider>
+      </ToastProvider>
+    </ThemeProvider>
   )
 }
 

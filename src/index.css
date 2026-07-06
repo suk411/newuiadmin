@@ -1,4 +1,5 @@
-:root {
+:root,
+:root.light {
   --color-primary: #208fff;
   --color-secondary: #409eff;
   --color-bg: #ffffff;
@@ -9,6 +10,9 @@
   --color-surface-muted: #eaeaea;
   --color-surface-raised: #ecf5ff;
   --color-success: #42b983;
+
+  --color-danger: #ef4444;
+  --color-warning: #f59e0b;
 
   --font-heading: 'Inter', 'Noto Sans JP', 'Hiragino Kaku Gothic ProN', 'Yu Gothic', sans-serif;
   --font-body: 'Helvetica Neue', Helvetica, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', Arial, sans-serif;
@@ -36,9 +40,12 @@
   --motion-normal: 250ms;
   --motion-slow: 300ms;
 
+  --font-weight-body: 400;
+  --font-weight-heading: 600;
+
   font-family: var(--font-body);
   font-size: 13px;
-  font-weight: 400;
+  font-weight: var(--font-weight-body);
   line-height: 1.15;
   color: var(--color-text);
   background-color: var(--color-bg);
@@ -46,14 +53,28 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+:root.dark,
 html.dark {
-  --color-bg: #1a1a2e;
-  --color-text: #e0e0e0;
-  --color-text-secondary: #a0a0a0;
-  --color-border: #2d2d44;
-  --color-surface-muted: #2d2d44;
-  --color-surface-raised: #16213e;
-  --color-surface-strong: #1a1a2e;
+  --color-bg: #101018;
+  --color-text: #e2e2ea;
+  --color-text-secondary: #8888a0;
+  --color-border: #22223a;
+  --color-surface-muted: #1a1a2e;
+  --color-surface-raised: #1a1a30;
+  --color-surface-strong: #101018;
+
+  --color-primary: #60a5fa;
+  --color-secondary: #3b82f6;
+  --color-success: #4ade80;
+  --color-danger: #f87171;
+  --color-warning: #fbbf24;
+
+  --shadow-card: rgba(0, 0, 0, 0.5) 0px 1px 1px 0px, rgba(0, 0, 0, 0.4) 0px 0px 1px 0px;
+  --shadow-dropdown: rgba(0, 0, 0, 0.6) 0px 2px 12px 0px;
+  --shadow-subtle: rgba(0, 0, 0, 0.4) 0px 0px 1px 0px, rgba(0, 0, 0, 0.2) 0px 0px 0px 0px;
+
+  --font-weight-body: 350;
+  --font-weight-heading: 600;
 }
 
 *,
@@ -70,10 +91,20 @@ body {
 
 h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-heading);
-  font-weight: 600;
+  font-weight: var(--font-weight-heading);
 }
 
 input, select, textarea, button {
   font-family: inherit;
   font-size: inherit;
+}
+
+:root.theme-loading * {
+  transition: none !important;
+}
+
+:root.dark *,
+:root.dark *::before,
+:root.dark *::after {
+  transition: background-color 200ms ease-out, border-color 200ms ease-out, box-shadow 200ms ease-out;
 }

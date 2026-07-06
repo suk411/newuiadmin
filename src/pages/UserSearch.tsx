@@ -207,43 +207,43 @@ export default function UserSearch() {
 
       {user && (<>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 12, marginTop: 12 }}>
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 32, background: '#fff', border: '1px solid #d0d0d0', borderRadius: 4, padding: '12px 20px', boxShadow: '0 2px 8px rgba(0,0,0,0.08)', alignItems: 'center' }}>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}><span style={{ fontSize: 10, color: '#000', textTransform: 'uppercase', letterSpacing: '0.5px' }}>User ID</span><span style={{ fontSize: 20, fontWeight: 700, color: '#409eff', lineHeight: 1.2 }}>{user.user.userId}</span></div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}><span style={{ fontSize: 10, color: '#000', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Status</span><span style={{ fontSize: 20, fontWeight: 700, lineHeight: 1.2 }}>{user.account.status}</span></div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}><span style={{ fontSize: 10, color: '#000', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Mobile</span><span style={{ fontSize: 20, fontWeight: 700, lineHeight: 1.2 }}>{user.user.mobile}</span></div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}><span style={{ fontSize: 10, color: '#000', textTransform: 'uppercase', letterSpacing: '0.5px' }}>VIP Level</span><span style={{ fontSize: 20, fontWeight: 700, lineHeight: 1.2 }}>{user.account.vipLevel}</span></div>
+          <div className="dashboard-card" style={{ alignItems: 'center' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}><span className="stat-label">User ID</span><span style={{ fontSize: 20, fontWeight: 700, color: '#409eff', lineHeight: 1.2 }}>{user.user.userId}</span></div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}><span className="stat-label">Status</span><span style={{ fontSize: 20, fontWeight: 700, lineHeight: 1.2 }}>{user.account.status}</span></div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}><span className="stat-label">Mobile</span><span style={{ fontSize: 20, fontWeight: 700, lineHeight: 1.2 }}>{user.user.mobile}</span></div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}><span className="stat-label">VIP Level</span><span style={{ fontSize: 20, fontWeight: 700, lineHeight: 1.2 }}>{user.account.vipLevel}</span></div>
             <div style={{ marginLeft: 'auto', display: 'flex', gap: 6, alignItems: 'center' }}>
               <span className={`badge ${statusBadge(user.account.status)}`} style={{ fontSize: 10 }}>{user.account.status}</span>
               <button className="btn-filled" style={{ minWidth: 110, textAlign: 'center' }} onClick={() => { setNewStatus(user.account.status); setShowStatusDialog(true) }}>Change Status</button>
             </div>
           </div>
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 32, background: '#fff', border: '1px solid #d0d0d0', borderRadius: 4, padding: '12px 20px', boxShadow: '0 2px 8px rgba(0,0,0,0.08)' }}>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}><span style={{ fontSize: 10, color: '#000', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Balance</span><span style={{ fontSize: 20, fontWeight: 700, color: '#22c55e', lineHeight: 1.2 }}>₹{user.account.balance.toLocaleString('en-IN')}</span></div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}><span style={{ fontSize: 10, color: '#000', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Withdrawable</span><span style={{ fontSize: 20, fontWeight: 700, color: '#409eff', lineHeight: 1.2 }}>₹{user.account.withdrawable.toLocaleString('en-IN')}</span></div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}><span style={{ fontSize: 10, color: '#000', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Total Deposits</span><span style={{ fontSize: 20, fontWeight: 700, color: '#f97316', lineHeight: 1.2 }}>₹{user.account.totalDeposits.toLocaleString('en-IN')}</span></div>
+          <div className="dashboard-card">
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}><span className="stat-label">Balance</span><span style={{ fontSize: 20, fontWeight: 700, color: '#22c55e', lineHeight: 1.2 }}>₹{user.account.balance.toLocaleString('en-IN')}</span></div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}><span className="stat-label">Withdrawable</span><span style={{ fontSize: 20, fontWeight: 700, color: '#409eff', lineHeight: 1.2 }}>₹{user.account.withdrawable.toLocaleString('en-IN')}</span></div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}><span className="stat-label">Total Deposits</span><span style={{ fontSize: 20, fontWeight: 700, color: '#f97316', lineHeight: 1.2 }}>₹{user.account.totalDeposits.toLocaleString('en-IN')}</span></div>
           </div>
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 32, background: '#fff', border: '1px solid #d0d0d0', borderRadius: 4, padding: '12px 20px', boxShadow: '0 2px 8px rgba(0,0,0,0.08)', alignItems: 'center' }}>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}><span style={{ fontSize: 10, color: '#000', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Holder</span><span style={{ fontSize: 20, fontWeight: 700, lineHeight: 1.2 }}>{user.paymentMethods?.holderName || '-'}</span></div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}><span style={{ fontSize: 10, color: '#000', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Bank</span><span style={{ fontSize: 20, fontWeight: 700, lineHeight: 1.2 }}>{user.paymentMethods?.bank?.bankName || '-'}</span></div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}><span style={{ fontSize: 10, color: '#000', textTransform: 'uppercase', letterSpacing: '0.5px' }}>IFSC</span><span style={{ fontSize: 20, fontWeight: 700, lineHeight: 1.2 }}>{user.paymentMethods?.bank?.ifsc || '-'}</span></div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}><span style={{ fontSize: 10, color: '#000', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Account</span><span style={{ fontSize: 20, fontWeight: 700, lineHeight: 1.2 }}>{user.paymentMethods?.bank?.accountNo || '-'}</span></div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}><span style={{ fontSize: 10, color: '#000', textTransform: 'uppercase', letterSpacing: '0.5px' }}>UPI</span><span style={{ fontSize: 20, fontWeight: 700, lineHeight: 1.2 }}>{user.paymentMethods?.upi?.address || '-'}</span></div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}><span style={{ fontSize: 10, color: '#000', textTransform: 'uppercase', letterSpacing: '0.5px' }}>UPAY</span><span style={{ fontSize: 20, fontWeight: 700, lineHeight: 1.2 }}>{user.paymentMethods?.upay?.address || '-'}</span></div>
+          <div className="dashboard-card" style={{ alignItems: 'center' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}><span className="stat-label">Holder</span><span style={{ fontSize: 20, fontWeight: 700, lineHeight: 1.2 }}>{user.paymentMethods?.holderName || '-'}</span></div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}><span className="stat-label">Bank</span><span style={{ fontSize: 20, fontWeight: 700, lineHeight: 1.2 }}>{user.paymentMethods?.bank?.bankName || '-'}</span></div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}><span className="stat-label">IFSC</span><span style={{ fontSize: 20, fontWeight: 700, lineHeight: 1.2 }}>{user.paymentMethods?.bank?.ifsc || '-'}</span></div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}><span className="stat-label">Account</span><span style={{ fontSize: 20, fontWeight: 700, lineHeight: 1.2 }}>{user.paymentMethods?.bank?.accountNo || '-'}</span></div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}><span className="stat-label">UPI</span><span style={{ fontSize: 20, fontWeight: 700, lineHeight: 1.2 }}>{user.paymentMethods?.upi?.address || '-'}</span></div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}><span className="stat-label">UPAY</span><span style={{ fontSize: 20, fontWeight: 700, lineHeight: 1.2 }}>{user.paymentMethods?.upay?.address || '-'}</span></div>
             <div style={{ marginLeft: 'auto' }}>
               <button className="btn-filled" style={{ minWidth: 110, textAlign: 'center' }} onClick={handleLoadPaymentMethods}>View</button>
             </div>
           </div>
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 32, background: '#fff', border: '1px solid #d0d0d0', borderRadius: 4, padding: '12px 20px', boxShadow: '0 2px 8px rgba(0,0,0,0.08)', alignItems: 'center' }}>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}><span style={{ fontSize: 10, color: '#000', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Last IP</span><span style={{ fontSize: 20, fontWeight: 700, lineHeight: 1.2 }}>{user.lastIp}</span></div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}><span style={{ fontSize: 10, color: '#000', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Location</span><span style={{ fontSize: 20, fontWeight: 700, lineHeight: 1.2 }}>{user.deviceInfo ? [user.deviceInfo.city, user.deviceInfo.region].filter(Boolean).join(', ') : '-'}</span></div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}><span style={{ fontSize: 10, color: '#000', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Created</span><span style={{ fontSize: 20, fontWeight: 700, lineHeight: 1.2 }}>{formatDateTime12(user.user.createdAt)}</span></div>
+          <div className="dashboard-card" style={{ alignItems: 'center' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}><span className="stat-label">Last IP</span><span style={{ fontSize: 20, fontWeight: 700, lineHeight: 1.2 }}>{user.lastIp}</span></div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}><span className="stat-label">Location</span><span style={{ fontSize: 20, fontWeight: 700, lineHeight: 1.2 }}>{user.deviceInfo ? [user.deviceInfo.city, user.deviceInfo.region].filter(Boolean).join(', ') : '-'}</span></div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}><span className="stat-label">Created</span><span style={{ fontSize: 20, fontWeight: 700, lineHeight: 1.2 }}>{formatDateTime12(user.user.createdAt)}</span></div>
             <div style={{ marginLeft: 'auto' }}>
               <button className="btn-filled" style={{ minWidth: 110, textAlign: 'center' }} onClick={handleLoadSameIp} disabled={ipUsersLoading}>{ipUsersLoading ? <Spinner /> : 'Same IP Users'}</button>
             </div>
           </div>
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 32, background: '#fff', border: '1px solid #d0d0d0', borderRadius: 4, padding: '12px 20px', boxShadow: '0 2px 8px rgba(0,0,0,0.08)', alignItems: 'center' }}>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}><span style={{ fontSize: 10, color: '#000', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Requirement</span><span style={{ fontSize: 20, fontWeight: 700, color: '#f97316', lineHeight: 1.2 }}>₹{user.account.turnover_requirement.toLocaleString('en-IN')}</span></div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}><span style={{ fontSize: 10, color: '#000', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Completed</span><span style={{ fontSize: 20, fontWeight: 700, color: '#22c55e', lineHeight: 1.2 }}>₹{user.account.total_turnover_completed.toLocaleString('en-IN')}</span></div>
+          <div className="dashboard-card" style={{ alignItems: 'center' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}><span className="stat-label">Requirement</span><span style={{ fontSize: 20, fontWeight: 700, color: '#f97316', lineHeight: 1.2 }}>₹{user.account.turnover_requirement.toLocaleString('en-IN')}</span></div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}><span className="stat-label">Completed</span><span style={{ fontSize: 20, fontWeight: 700, color: '#22c55e', lineHeight: 1.2 }}>₹{user.account.total_turnover_completed.toLocaleString('en-IN')}</span></div>
             <div style={{ marginLeft: 'auto' }}>
               <button className="btn-filled" style={{ minWidth: 110, textAlign: 'center' }} onClick={() => { setShowTurnover(true) }}>View Batches</button>
             </div>
@@ -341,12 +341,12 @@ export default function UserSearch() {
           }
         >
           {turnoverStatus && (
-            <div style={{ marginBottom: 12, background: '#f8f9fa', border: '1px solid var(--color-border, rgb(188,198,222))', borderRadius: 4, padding: '12px 16px', display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 12, fontSize: 12 }}>
-              <div><span style={{ color: '#888' }}>Total Required</span><div style={{ fontWeight: 700, fontSize: 15 }}>₹{turnoverStatus.total_required.toLocaleString('en-IN')}</div></div>
-              <div><span style={{ color: '#888' }}>Completed</span><div style={{ fontWeight: 700, fontSize: 15, color: '#22c55e' }}>₹{turnoverStatus.completed.toLocaleString('en-IN')}</div></div>
-              <div><span style={{ color: '#888' }}>Remaining</span><div style={{ fontWeight: 700, fontSize: 15, color: '#f97316' }}>₹{turnoverStatus.requirement.toLocaleString('en-IN')}</div></div>
-              <div><span style={{ color: '#888' }}>Progress</span><div style={{ fontWeight: 700, fontSize: 15 }}>{turnoverStatus.progress}%</div></div>
-              <div><span style={{ color: '#888' }}>Can Withdraw</span><div style={{ fontWeight: 700, fontSize: 15, color: turnoverStatus.canWithdraw ? '#22c55e' : '#ef4444' }}>{turnoverStatus.canWithdraw ? 'Yes' : 'No'}</div></div>
+            <div className="turnover-status-card">
+              <div><span className="turnover-label">Total Required</span><div style={{ fontWeight: 700, fontSize: 15 }}>₹{turnoverStatus.total_required.toLocaleString('en-IN')}</div></div>
+              <div><span className="turnover-label">Completed</span><div style={{ fontWeight: 700, fontSize: 15, color: '#22c55e' }}>₹{turnoverStatus.completed.toLocaleString('en-IN')}</div></div>
+              <div><span className="turnover-label">Remaining</span><div style={{ fontWeight: 700, fontSize: 15, color: '#f97316' }}>₹{turnoverStatus.requirement.toLocaleString('en-IN')}</div></div>
+              <div><span className="turnover-label">Progress</span><div style={{ fontWeight: 700, fontSize: 15 }}>{turnoverStatus.progress}%</div></div>
+              <div><span className="turnover-label">Can Withdraw</span><div style={{ fontWeight: 700, fontSize: 15, color: turnoverStatus.canWithdraw ? '#22c55e' : '#ef4444' }}>{turnoverStatus.canWithdraw ? 'Yes' : 'No'}</div></div>
             </div>
           )}
           {showAddTurnover && (

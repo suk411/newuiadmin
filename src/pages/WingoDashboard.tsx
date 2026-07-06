@@ -166,16 +166,16 @@ export default function WingoDashboard() {
             <section className="card" style={{ marginBottom: 16 }}>
               <div style={{ padding: 'var(--space-5) var(--space-7)', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: 12 }}>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
-                  <div style={{ fontSize: 13, color: '#888' }}>Issue #{round.issueNumber}</div>
+                  <div className="text-muted" style={{ fontSize: 13 }}>Issue #{round.issueNumber}</div>
                   <div style={{ display: 'flex', gap: 16, alignItems: 'center' }}>
                     <span className={`badge ${round.status === 'open' ? 'badge--warning' : 'badge--success'}`} style={{ fontSize: 13, padding: '4px 12px' }}>{(round.status || '').toUpperCase()}</span>
-                    <span style={{ fontSize: 13, color: '#666' }}>Mode: <strong>{round.gameMode}</strong></span>
-                    <span style={{ fontSize: 13, color: '#666' }}>Result Mode: <strong>{round.resultMode}</strong></span>
+                    <span className="text-muted" style={{ fontSize: 13 }}>Mode: <strong>{round.gameMode}</strong></span>
+                    <span className="text-muted" style={{ fontSize: 13 }}>Result Mode: <strong>{round.resultMode}</strong></span>
                   </div>
-                  <div style={{ fontSize: 13, color: '#666' }}>
-                    Result: {round.result?.number != null ? `${round.result.number} / ${round.result?.color ?? '—'} / ${round.result?.size ?? '—'}` : <span style={{ color: '#999' }}>— not yet</span>}
+                  <div className="text-muted" style={{ fontSize: 13 }}>
+                    Result: {round.result?.number != null ? `${round.result.number} / ${round.result?.color ?? '—'} / ${round.result?.size ?? '—'}` : <span className="text-muted">— not yet</span>}
                   </div>
-                  <div style={{ fontSize: 12, color: '#999', display: 'flex', gap: 16 }}>
+                  <div className="text-muted" style={{ fontSize: 12, display: 'flex', gap: 16 }}>
                     <span>Start: {formatDateTime12(new Date(round.startTime).toISOString())}</span>
                     <span>End: {formatDateTime12(new Date(round.endTime).toISOString())}</span>
                   </div>
@@ -184,7 +184,7 @@ export default function WingoDashboard() {
                   <div style={{ fontSize: 32, fontWeight: 700, fontVariantNumeric: 'tabular-nums', color: timeLeft <= 5 ? '#ef4444' : '#333' }}>
                     {Math.floor(timeLeft / 60)}:{String(timeLeft % 60).padStart(2, '0')}
                   </div>
-                  <div style={{ fontSize: 11, color: '#888' }}>remaining</div>
+                  <div className="text-muted" style={{ fontSize: 11 }}>remaining</div>
                 </div>
               </div>
               <div style={{ padding: '0 var(--space-7) var(--space-5)', display: 'flex', gap: 24, flexWrap: 'wrap', fontSize: 13 }}>
@@ -194,7 +194,7 @@ export default function WingoDashboard() {
               </div>
               <div style={{ padding: '0 var(--space-7) var(--space-5)', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(100px, 1fr))', gap: 8, fontSize: 12 }}>
                 {Object.entries(stats.breakdown).map(([key, val]) => (
-                  <div key={key} style={{ background: '#f8f9fa', padding: '6px 10px', borderRadius: 4, textAlign: 'center' }}>
+                  <div key={key} className="stat-box">
                     <div style={{ fontWeight: 700, textTransform: 'capitalize' }}>{key}</div>
                     <div>₹{Number(val).toLocaleString('en-IN')}</div>
                   </div>
@@ -270,14 +270,14 @@ export default function WingoDashboard() {
           </section>
 
           <AnimatedDialog open={!!roundDetail} onClose={() => setRoundDetail(null)} title={`Round Stats — ${roundDetail?.issue.issueNumber ?? ''}`}>
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 32, background: '#fff', border: '1px solid #d0d0d0', borderRadius: 4, padding: '12px 20px', boxShadow: '0 2px 8px rgba(0,0,0,0.08)', marginBottom: 16 }}>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}><span style={{ fontSize: 10, color: '#000', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Total Bets</span><span style={{ fontSize: 20, fontWeight: 700, lineHeight: 1.2 }}>{roundDetail?.stats.totalBets}</span></div>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}><span style={{ fontSize: 10, color: '#000', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Total Amount</span><span style={{ fontSize: 20, fontWeight: 700, color: '#f97316', lineHeight: 1.2 }}>₹{roundDetail?.stats.totalBetAmount.toLocaleString('en-IN')}</span></div>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}><span style={{ fontSize: 10, color: '#000', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Total Payout</span><span style={{ fontSize: 20, fontWeight: 700, color: '#22c55e', lineHeight: 1.2 }}>₹{roundDetail?.stats.totalPayout.toLocaleString('en-IN')}</span></div>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}><span style={{ fontSize: 10, color: '#000', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Profit/Loss</span><span style={{ fontSize: 20, fontWeight: 700, lineHeight: 1.2, color: (roundDetail?.stats.profitLoss ?? 0) >= 0 ? '#22c55e' : '#ef4444' }}>₹{roundDetail?.stats.profitLoss.toLocaleString('en-IN')}</span></div>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}><span style={{ fontSize: 10, color: '#000', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Won</span><span style={{ fontSize: 20, fontWeight: 700, color: '#22c55e', lineHeight: 1.2 }}>{roundDetail?.stats.wonCount}</span></div>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}><span style={{ fontSize: 10, color: '#000', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Lost</span><span style={{ fontSize: 20, fontWeight: 700, color: '#ef4444', lineHeight: 1.2 }}>{roundDetail?.stats.lostCount}</span></div>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}><span style={{ fontSize: 10, color: '#000', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Unique Users</span><span style={{ fontSize: 20, fontWeight: 700, lineHeight: 1.2 }}>{roundDetail?.stats.uniqueUsers}</span></div>
+            <div className="dashboard-card" style={{ marginBottom: 16 }}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}><span className="stat-label">Total Bets</span><span style={{ fontSize: 20, fontWeight: 700, lineHeight: 1.2 }}>{roundDetail?.stats.totalBets}</span></div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}><span className="stat-label">Total Amount</span><span style={{ fontSize: 20, fontWeight: 700, color: '#f97316', lineHeight: 1.2 }}>₹{roundDetail?.stats.totalBetAmount.toLocaleString('en-IN')}</span></div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}><span className="stat-label">Total Payout</span><span style={{ fontSize: 20, fontWeight: 700, color: '#22c55e', lineHeight: 1.2 }}>₹{roundDetail?.stats.totalPayout.toLocaleString('en-IN')}</span></div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}><span className="stat-label">Profit/Loss</span><span style={{ fontSize: 20, fontWeight: 700, lineHeight: 1.2, color: (roundDetail?.stats.profitLoss ?? 0) >= 0 ? '#22c55e' : '#ef4444' }}>₹{roundDetail?.stats.profitLoss.toLocaleString('en-IN')}</span></div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}><span className="stat-label">Won</span><span style={{ fontSize: 20, fontWeight: 700, color: '#22c55e', lineHeight: 1.2 }}>{roundDetail?.stats.wonCount}</span></div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}><span className="stat-label">Lost</span><span style={{ fontSize: 20, fontWeight: 700, color: '#ef4444', lineHeight: 1.2 }}>{roundDetail?.stats.lostCount}</span></div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}><span className="stat-label">Unique Users</span><span style={{ fontSize: 20, fontWeight: 700, lineHeight: 1.2 }}>{roundDetail?.stats.uniqueUsers}</span></div>
             </div>
             <table className="table">
               <thead><tr><th>Selection</th><th>Count</th><th>Amount</th></tr></thead>
@@ -310,11 +310,11 @@ export default function WingoDashboard() {
             <button className="btn-filled" onClick={handleSetMode} disabled={saving || !resultMode}>
               {saving ? <Spinner /> : 'Apply Mode'}
             </button>
-            {modeApplyInfo && (
-              <div style={{ marginTop: 16, padding: '12px 16px', background: '#f0f9eb', borderRadius: 4, fontSize: 13 }}>
+              {modeApplyInfo && (
+              <div className="info-box" style={{ marginTop: 16 }}>
                 Mode will apply from issue <strong>#{modeApplyInfo.applyIssue}</strong>
                 <br />
-                <span style={{ color: '#888' }}>Current issue: #{modeApplyInfo.currentIssue}</span>
+                <span className="text-muted">Current issue: #{modeApplyInfo.currentIssue}</span>
               </div>
             )}
           </div>

@@ -371,7 +371,7 @@ export default function Settings() {
       <section className="card" style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
         <div style={{ padding: 'var(--space-5) var(--space-7)', flex: 1 }}>
           <h3 style={{ margin: '0 0 4px', fontSize: 14, fontWeight: 600 }}>{title}</h3>
-          <p style={{ margin: 0, fontSize: 12, color: '#888' }}>{desc}</p>
+           <p style={{ margin: 0, fontSize: 12, color: 'var(--color-text-secondary, #888)' }}>{desc}</p>
         </div>
         <div style={{ padding: '0 var(--space-7) var(--space-5)' }}>
           <button className="btn-filled" onClick={onClick}>Edit</button>
