@@ -45,7 +45,22 @@ export default function Transactions() {
   const { setExportProps } = useExportBar()
 
   useEffect(() => {
-    setExportProps({ columns: TRANSACTION_COLUMNS, data: records as unknown as Record<string, unknown>[], filename: 'transactions' })
+    setExportProps({
+      columns: TRANSACTION_COLUMNS,
+      data: records.map((r) => ({
+        userId: r.userId,
+        orderId: r.orderId,
+        type: r.type,
+        amount: `₹${r.amount.toLocaleString('en-IN')}`,
+        charge: `₹${r.charge.toLocaleString('en-IN')}`,
+        balanceAfter: `₹${r.balanceAfter.toLocaleString('en-IN')}`,
+        status: r.status,
+        remark: r.remark || '-',
+        createdAt: formatDateTime12(r.createdAt),
+        updatedAt: formatDateTime12(r.updatedAt),
+      })),
+      filename: 'transactions',
+    })
     return () => setExportProps(null)
   }, [records, setExportProps])
 

@@ -29,7 +29,15 @@ export default function AdminLogs() {
   const { setExportProps } = useExportBar()
 
   useEffect(() => {
-    setExportProps({ columns: LOG_COLUMNS, data: logs as unknown as Record<string, unknown>[], filename: 'admin-logs' })
+    setExportProps({
+      columns: LOG_COLUMNS,
+      data: logs.map((log) => ({
+        level: log.level,
+        message: log.message,
+        timestamp: formatDateTime12(log.timestamp),
+      })),
+      filename: 'admin-logs',
+    })
     return () => setExportProps(null)
   }, [logs, setExportProps])
 

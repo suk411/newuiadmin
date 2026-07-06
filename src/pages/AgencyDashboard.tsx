@@ -96,11 +96,57 @@ export default function AgencyDashboard() {
 
   useEffect(() => {
     if (tab === 'members') {
-      setExportProps({ columns: MEMBER_COLUMNS, data: members as unknown as Record<string, unknown>[], filename: 'team-members' })
+      setExportProps({
+        columns: MEMBER_COLUMNS,
+        data: members.map((m) => ({
+          userId: m.userId,
+          level: m.level,
+          registeredAt: formatDateTime12(m.registeredAt),
+          totalDeposit: `₹${m.totalDeposit.toLocaleString('en-IN')}`,
+          totalWithdrawal: `₹${m.totalWithdrawal.toLocaleString('en-IN')}`,
+          balance: `₹${m.balance.toLocaleString('en-IN')}`,
+          bindBank: m.bindBank ? 'Yes' : 'No',
+          multipleIp: m.multipleIp ? 'Yes' : 'No',
+        })),
+        filename: 'team-members',
+      })
     } else if (tab === 'commission') {
-      setExportProps({ columns: COMMISSION_COLUMNS, data: commissionData as unknown as Record<string, unknown>[], filename: 'agent-commission' })
+      setExportProps({
+        columns: COMMISSION_COLUMNS,
+        data: commissionData.map((r) => ({
+          userId: r.userId,
+          date: formatDateTime12(r.date),
+          rebateLevel: r.rebateLevel,
+          l1Bets: `₹${r.l1Bets.toLocaleString('en-IN')}`,
+          l2Bets: `₹${r.l2Bets.toLocaleString('en-IN')}`,
+          l3Bets: `₹${r.l3Bets.toLocaleString('en-IN')}`,
+          l1Rate: `${(r.l1Rate * 100).toFixed(2)}%`,
+          l2Rate: `${(r.l2Rate * 100).toFixed(2)}%`,
+          l3Rate: `${(r.l3Rate * 100).toFixed(2)}%`,
+          l1Amount: `₹${r.l1Amount.toLocaleString('en-IN')}`,
+          l2Amount: `₹${r.l2Amount.toLocaleString('en-IN')}`,
+          l3Amount: `₹${r.l3Amount.toLocaleString('en-IN')}`,
+          totalAmount: `₹${r.totalAmount.toLocaleString('en-IN')}`,
+          status: r.status,
+          creditedAt: formatDateTime12(r.creditedAt),
+        })),
+        filename: 'agent-commission',
+      })
     } else if (tab === 'rank') {
-      setExportProps({ columns: RANK_COLUMNS, data: rankData as unknown as Record<string, unknown>[], filename: 'commission-rank' })
+      setExportProps({
+        columns: RANK_COLUMNS,
+        data: rankData.map((r) => ({
+          rank: `#${r.rank}`,
+          userId: r.userId,
+          date: formatDateTime12(r.date),
+          rebateLevel: r.rebateLevel,
+          l1Bets: `₹${r.l1Bets.toLocaleString('en-IN')}`,
+          l2Bets: `₹${r.l2Bets.toLocaleString('en-IN')}`,
+          l3Bets: `₹${r.l3Bets.toLocaleString('en-IN')}`,
+          totalComm: `₹${r.totalComm.toLocaleString('en-IN')}`,
+        })),
+        filename: 'commission-rank',
+      })
     }
     return () => setExportProps(null)
   }, [tab, members, commissionData, rankData, setExportProps])

@@ -56,6 +56,9 @@ export default function BetRecords() {
   const wingoSuggest = useSearchSuggest('wingoUserId')
   const dailySuggest = useSearchSuggest('dailyUserId')
 
+  const fmtAmt = (v: number) => `₹${v.toLocaleString('en-IN')}`
+  const fmtTime = (v: string | undefined | null) => v ? formatDateTime12(v) : '—'
+
   useEffect(() => {
     if (tab === 'daily') {
       setExportProps({
@@ -71,15 +74,15 @@ export default function BetRecords() {
           { key: 'providerPayout', label: 'Prov Payout' },
         ],
         data: dailyRecords.map((r) => ({
-          date: r.date,
+          date: formatDateTime12(r.date),
           wingoBetCount: r.wingo?.betCount ?? 0,
-          wingoTotalAmt: r.wingo?.totalAmount ?? 0,
-          wingoPayout: r.wingo?.totalPayout ?? 0,
+          wingoTotalAmt: fmtAmt(r.wingo?.totalAmount ?? 0),
+          wingoPayout: fmtAmt(r.wingo?.totalPayout ?? 0),
           wingoWon: r.wingo?.wonCount ?? 0,
           wingoLost: r.wingo?.lostCount ?? 0,
           providerBetCount: r.provider?.betCount ?? 0,
-          providerTotalAmt: r.provider?.totalAmount ?? 0,
-          providerPayout: r.provider?.totalPayout ?? 0,
+          providerTotalAmt: fmtAmt(r.provider?.totalAmount ?? 0),
+          providerPayout: fmtAmt(r.provider?.totalPayout ?? 0),
         })),
         filename: 'daily-stats',
       })
@@ -99,13 +102,13 @@ export default function BetRecords() {
         data: (records as ProviderBet[]).map((r) => ({
           userId: r.userId,
           game: r.game,
-          amount: r.amount,
-          payout: r.payout,
+          amount: fmtAmt(Number(r.amount ?? 0)),
+          payout: fmtAmt(Number(r.payout ?? 0)),
           gameId: r.gameId,
           product: r.product,
-          status: r.status,
-          settleTime: r.settleTime,
-          createdAt: r.createdAt,
+          status: r.status === 1 ? 'Valid' : r.status,
+          settleTime: fmtTime(r.settleTime),
+          createdAt: formatDateTime12(r.createdAt),
         })),
         filename: 'provider-bets',
       })
@@ -128,16 +131,16 @@ export default function BetRecords() {
         data: (records as WingoBet[]).map((r) => ({
           userId: r.userId,
           gameMode: r.gameMode,
-          amount: r.amount,
-          realAmount: r.realAmount,
-          fee: r.fee,
-          payout: r.payout,
+          amount: fmtAmt(Number(r.amount ?? 0)),
+          realAmount: fmtAmt(Number(r.realAmount ?? 0)),
+          fee: fmtAmt(Number(r.fee ?? 0)),
+          payout: fmtAmt(Number(r.payout ?? 0)),
           selectType: r.selectType,
           issueNumber: r.issueNumber,
           orderNumber: r.orderNumber,
           status: r.status,
-          settleTime: r.settleTime,
-          createdAt: r.createdAt,
+          settleTime: fmtTime(r.settleTime),
+          createdAt: formatDateTime12(r.createdAt),
         })),
         filename: 'wingo-bets',
       })

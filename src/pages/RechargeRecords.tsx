@@ -8,6 +8,7 @@ import ApproveDialog from '../components/ApproveDialog'
 import Pagination from '../components/Pagination'
 import { useExportBar } from '../components/ExportBarContext'
 import type { ExportColumn } from '../utils/export'
+import { formatDateTime12 } from '../utils/format'
 import { useToast } from '../contexts/ToastContext'
 
 const DEFAULT_LIMIT = 20
@@ -46,8 +47,27 @@ export default function RechargeRecords() {
   const [approveTarget, setApproveTarget] = useState<DepositRecord | null>(null)
   const { setExportProps } = useExportBar()
 
+  const depStatusMap: Record<string, string> = { SUCCESS: 'Success', PENDING: 'Pending', FAILED: 'Failed' }
+
   useEffect(() => {
-    setExportProps({ columns: RECHARGE_COLUMNS, data: records as unknown as Record<string, unknown>[], filename: 'recharge-records' })
+    setExportProps({
+      columns: RECHARGE_COLUMNS,
+      data: records.map((r) => ({
+        orderId: r.orderId,
+        userId: r.userId,
+        amount: `${r.currency === 'INR' ? '₹' : '$'}${Number(r.amount).toLocaleString('en-IN')}`,
+        receivedAmount: r.receivedAmount != null ? `${r.currency === 'INR' ? '₹' : '$'}${Number(r.receivedAmount).toLocaleString('en-IN')}` : '—',
+        currency: r.currency,
+        status: depStatusMap[r.status] || r.status,
+        channelName: r.channelName,
+        gatewayOrderNo: r.gatewayOrderNo || '—',
+        bonusOptIn: r.bonusOptIn ? 'Yes' : 'No',
+        bonusAmount: r.bonusAmount ? `₹${Number(r.bonusAmount).toLocaleString('en-IN')}` : '—',
+        createdAt: formatDateTime12(r.createdAt),
+        updatedAt: r.updatedAt ? formatDateTime12(r.updatedAt) : '—',
+      })),
+      filename: 'recharge-records',
+    })
     return () => setExportProps(null)
   }, [records, setExportProps])
 

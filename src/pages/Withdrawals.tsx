@@ -48,7 +48,24 @@ export default function Withdrawals() {
   const { setExportProps } = useExportBar()
 
   useEffect(() => {
-    setExportProps({ columns: WITHDRAWAL_COLUMNS, data: records as unknown as Record<string, unknown>[], filename: 'withdrawals' })
+    setExportProps({
+      columns: WITHDRAWAL_COLUMNS,
+      data: records.map((r) => ({
+        userId: r.userId,
+        orderId: r.orderId,
+        amount: `₹${Number(r.amount).toLocaleString('en-IN')}`,
+        charge: r.charge != null ? `₹${Number(r.charge).toLocaleString('en-IN')}` : '—',
+        currency: r.currency,
+        status: r.status,
+        method: r.method,
+        channelName: r.channelName || '—',
+        chargeFrom: r.chargeFrom || '—',
+        note: r.note || '—',
+        createdAt: formatDateTime12(r.createdAt),
+        updatedAt: r.updatedAt ? formatDateTime12(r.updatedAt) : '—',
+      })),
+      filename: 'withdrawals',
+    })
     return () => setExportProps(null)
   }, [records, setExportProps])
 

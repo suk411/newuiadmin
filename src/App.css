@@ -1127,7 +1127,6 @@ html.dark .toggle-switch input:checked + .toggle-slider {
   height: 32px;
   border-bottom: 1px solid #d0d0d0;
   background: #fff;
-  overflow: hidden;
   flex-shrink: 0;
 }
 
