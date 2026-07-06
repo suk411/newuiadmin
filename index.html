@@ -3,7 +3,7 @@
   <head>
     <script>
       (function(){
-        var t = localStorage.getItem('theme') || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        var t = localStorage.getItem('theme') || (localStorage.getItem('darkMode') === 'true' ? 'dark' : null) || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
         document.documentElement.className = t;
         document.documentElement.style.colorScheme = t;
         document.documentElement.classList.add('theme-loading');

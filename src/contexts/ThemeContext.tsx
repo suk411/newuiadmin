@@ -19,6 +19,7 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
     if (typeof window === 'undefined') return 'light'
     const stored = localStorage.getItem('theme') as Theme | null
     if (stored === 'light' || stored === 'dark') return stored
+    if (localStorage.getItem('darkMode') === 'true') return 'dark'
     return matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
   })
 

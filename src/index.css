@@ -103,8 +103,8 @@ input, select, textarea, button {
   transition: none !important;
 }
 
-:root.dark *,
-:root.dark *::before,
-:root.dark *::after {
+*,
+*::before,
+*::after {
   transition: background-color 200ms ease-out, border-color 200ms ease-out, box-shadow 200ms ease-out;
 }
