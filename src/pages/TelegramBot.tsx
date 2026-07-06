@@ -96,7 +96,13 @@ export default function TelegramBot() {
       ) : (
         <>
           <section className="card">
-            <h3 style={{ margin: '0 0 12px', fontSize: 14 }}>Owner IDs</h3>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 }}>
+              <h3 style={{ margin: 0, fontSize: 14 }}>Owner IDs</h3>
+              <div style={{ display: 'flex', gap: 8 }}>
+                <input value={ownerInput} onChange={(e) => setOwnerInput(e.target.value)} placeholder="Enter Telegram user ID" style={{ width: 200, height: 35, padding: '0 12px', border: '1px solid var(--color-border)', borderRadius: 'var(--radius-md)', fontSize: 13 }} />
+                <button className="btn-filled" onClick={addOwner} disabled={!ownerInput.trim() || isSaving} style={{ height: 35, padding: '0 12px' }}>{isSaving ? <Spinner /> : 'Add'}</button>
+              </div>
+            </div>
             <div className="table-wrap">
               <table className="table">
                 <thead><tr><th>#</th><th>Owner ID</th><th>Action</th></tr></thead>
@@ -115,14 +121,16 @@ export default function TelegramBot() {
                 </tbody>
               </table>
             </div>
-            <div style={{ display: 'flex', gap: 8, marginTop: 8 }}>
-              <input value={ownerInput} onChange={(e) => setOwnerInput(e.target.value)} placeholder="Enter Telegram user ID" style={{ flex: 1, height: 35, padding: '0 12px', border: '1px solid var(--color-border)', borderRadius: 'var(--radius-md)', fontSize: 13 }} />
-              <button className="btn-filled" onClick={addOwner} disabled={!ownerInput.trim() || isSaving} style={{ height: 35, padding: '0 12px' }}>{isSaving ? <Spinner /> : 'Add'}</button>
-            </div>
           </section>
 
           <section className="card" style={{ marginTop: 12 }}>
-            <h3 style={{ margin: '0 0 12px', fontSize: 14 }}>Allowed User IDs</h3>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 }}>
+              <h3 style={{ margin: 0, fontSize: 14 }}>Allowed User IDs</h3>
+              <div style={{ display: 'flex', gap: 8 }}>
+                <input value={userInput} onChange={(e) => setUserInput(e.target.value)} placeholder="Enter Telegram user ID" style={{ width: 200, height: 35, padding: '0 12px', border: '1px solid var(--color-border)', borderRadius: 'var(--radius-md)', fontSize: 13 }} />
+                <button className="btn-filled" onClick={addUser} disabled={!userInput.trim() || isSaving} style={{ height: 35, padding: '0 12px' }}>{isSaving ? <Spinner /> : 'Add'}</button>
+              </div>
+            </div>
             <div className="table-wrap">
               <table className="table">
                 <thead><tr><th>#</th><th>User ID</th><th>Action</th></tr></thead>
@@ -141,14 +149,16 @@ export default function TelegramBot() {
                 </tbody>
               </table>
             </div>
-            <div style={{ display: 'flex', gap: 8, marginTop: 8 }}>
-              <input value={userInput} onChange={(e) => setUserInput(e.target.value)} placeholder="Enter Telegram user ID" style={{ flex: 1, height: 35, padding: '0 12px', border: '1px solid var(--color-border)', borderRadius: 'var(--radius-md)', fontSize: 13 }} />
-              <button className="btn-filled" onClick={addUser} disabled={!userInput.trim() || isSaving} style={{ height: 35, padding: '0 12px' }}>{isSaving ? <Spinner /> : 'Add'}</button>
-            </div>
           </section>
 
           <section className="card" style={{ marginTop: 12 }}>
-            <h3 style={{ margin: '0 0 12px', fontSize: 14 }}>Allowed Group IDs</h3>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 }}>
+              <h3 style={{ margin: 0, fontSize: 14 }}>Allowed Group IDs</h3>
+              <div style={{ display: 'flex', gap: 8 }}>
+                <input value={groupInput} onChange={(e) => setGroupInput(e.target.value)} placeholder="Enter Telegram group ID (e.g. -100...)" style={{ width: 200, height: 35, padding: '0 12px', border: '1px solid var(--color-border)', borderRadius: 'var(--radius-md)', fontSize: 13 }} />
+                <button className="btn-filled" onClick={addGroup} disabled={!groupInput.trim() || isSaving} style={{ height: 35, padding: '0 12px' }}>{isSaving ? <Spinner /> : 'Add'}</button>
+              </div>
+            </div>
             <div className="table-wrap">
               <table className="table">
                 <thead><tr><th>#</th><th>Group ID</th><th>Action</th></tr></thead>
@@ -166,10 +176,6 @@ export default function TelegramBot() {
                   )}
                 </tbody>
               </table>
-            </div>
-            <div style={{ display: 'flex', gap: 8, marginTop: 8 }}>
-              <input value={groupInput} onChange={(e) => setGroupInput(e.target.value)} placeholder="Enter Telegram group ID (e.g. -100...)" style={{ flex: 1, height: 35, padding: '0 12px', border: '1px solid var(--color-border)', borderRadius: 'var(--radius-md)', fontSize: 13 }} />
-              <button className="btn-filled" onClick={addGroup} disabled={!groupInput.trim() || isSaving} style={{ height: 35, padding: '0 12px' }}>{isSaving ? <Spinner /> : 'Add'}</button>
             </div>
           </section>
         </>
