@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { NavLink } from 'react-router-dom'
 
 const navItems = [
@@ -22,6 +22,15 @@ interface Props {
 }
 
 export default function Sidebar({ open, onClose, onNavigate }: Props) {
+  const [ver, setVer] = useState('')
+
+  useEffect(() => {
+    const fetchVer = () => fetch(`/version.json?t=${Date.now()}`).then(r => r.json()).then(d => setVer(d.version)).catch(() => {})
+    fetchVer()
+    const id = setInterval(fetchVer, 300_000)
+    return () => clearInterval(id)
+  }, [])
+
   useEffect(() => {
     if (open) {
       document.body.style.overflow = 'hidden'
@@ -52,7 +61,7 @@ export default function Sidebar({ open, onClose, onNavigate }: Props) {
           </NavLink>
         ))}
       </nav>
-      <div className="sidebar-footer">v2.4.1 · CS System</div>
+      <div className="sidebar-footer">{ver ? `v${ver}` : ''}</div>
     </aside>
   )
 }
