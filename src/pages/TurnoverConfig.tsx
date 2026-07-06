@@ -104,11 +104,11 @@ export default function TurnoverConfig() {
       >
         {form && (
           <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-3)', fontSize: 14 }}>
-            <div className="filter-group"><label>Type</label><input value={form.type} onChange={(e) => setForm({ ...form, type: e.target.value })} /></div>
-            <div className="filter-group"><label>Description</label><input value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} /></div>
-            <div className="filter-group"><label>Multiplier</label><input type="number" step="0.1" value={form.multiplier} onChange={(e) => setForm({ ...form, multiplier: Number(e.target.value) })} /></div>
-            <div className="filter-group"><label>Active</label>
-              <button type="button" onClick={() => setForm({ ...form, active: !form.active })} style={{ width: 100, background: form.active ? '#22c55e' : '#ef4444', color: '#fff', border: 'none' }}>{form.active ? 'Active' : 'Inactive'}</button>
+            <div className="filter-group"><label htmlFor="to-type">Type</label><input id="to-type" value={form.type} onChange={(e) => setForm({ ...form, type: e.target.value })} /></div>
+            <div className="filter-group"><label htmlFor="to-description">Description</label><input id="to-description" value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} /></div>
+            <div className="filter-group"><label htmlFor="to-multiplier">Multiplier</label><input id="to-multiplier" type="number" step="0.1" value={form.multiplier} onChange={(e) => setForm({ ...form, multiplier: Number(e.target.value) })} /></div>
+            <div className="filter-group"><label htmlFor="to-active">Active</label>
+              <button id="to-active" type="button" onClick={() => setForm({ ...form, active: !form.active })} style={{ width: 100, background: form.active ? '#22c55e' : '#ef4444', color: '#fff', border: 'none' }}>{form.active ? 'Active' : 'Inactive'}</button>
             </div>
           </div>
         )}

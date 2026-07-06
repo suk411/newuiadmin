@@ -106,11 +106,11 @@ export default function VipConfig() {
       >
         {form && (
           <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-3)', fontSize: 14 }}>
-            <div className="filter-group"><label>Name</label><input value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} /></div>
-            <div className="filter-group"><label>Min Deposit (₹)</label><input type="number" value={form.minDeposit} onChange={(e) => setForm({ ...form, minDeposit: Number(e.target.value) })} /></div>
-            <div className="filter-group"><label>Weekly Bonus (₹)</label><input type="number" value={form.weeklyBonus} onChange={(e) => setForm({ ...form, weeklyBonus: Number(e.target.value) })} /></div>
-            <div className="filter-group"><label>Upgrade Bonus (₹)</label><input type="number" value={form.upgradeBonus} onChange={(e) => setForm({ ...form, upgradeBonus: Number(e.target.value) })} /></div>
-            <div className="filter-group"><label>Weekly Deposit Requirement (₹)</label><input type="number" value={form.weeklyDepositRequirement} onChange={(e) => setForm({ ...form, weeklyDepositRequirement: Number(e.target.value) })} /></div>
+            <div className="filter-group"><label htmlFor="vip-name">Name</label><input id="vip-name" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} /></div>
+            <div className="filter-group"><label htmlFor="vip-minDeposit">Min Deposit (₹)</label><input id="vip-minDeposit" type="number" value={form.minDeposit} onChange={(e) => setForm({ ...form, minDeposit: Number(e.target.value) })} /></div>
+            <div className="filter-group"><label htmlFor="vip-weeklyBonus">Weekly Bonus (₹)</label><input id="vip-weeklyBonus" type="number" value={form.weeklyBonus} onChange={(e) => setForm({ ...form, weeklyBonus: Number(e.target.value) })} /></div>
+            <div className="filter-group"><label htmlFor="vip-upgradeBonus">Upgrade Bonus (₹)</label><input id="vip-upgradeBonus" type="number" value={form.upgradeBonus} onChange={(e) => setForm({ ...form, upgradeBonus: Number(e.target.value) })} /></div>
+            <div className="filter-group"><label htmlFor="vip-weeklyDepReq">Weekly Deposit Requirement (₹)</label><input id="vip-weeklyDepReq" type="number" value={form.weeklyDepositRequirement} onChange={(e) => setForm({ ...form, weeklyDepositRequirement: Number(e.target.value) })} /></div>
           </div>
         )}
       </AnimatedDialog>

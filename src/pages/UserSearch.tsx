@@ -175,8 +175,9 @@ export default function UserSearch() {
     <div className="content">
       <form className="filters-bar" onSubmit={(e) => { e.preventDefault(); handleSearch() }}>
         <div className="filter-group">
-          <label>User ID</label>
+          <label htmlFor="us-userId">User ID</label>
           <input
+            id="us-userId"
             type="text"
             placeholder="Enter User ID"
             value={userId}
@@ -184,8 +185,9 @@ export default function UserSearch() {
           />
         </div>
         <div className="filter-group">
-          <label>Mobile</label>
+          <label htmlFor="us-mobile">Mobile</label>
           <input
+            id="us-mobile"
             type="text"
             placeholder="Enter Mobile Number"
             value={mobile}
@@ -258,8 +260,8 @@ export default function UserSearch() {
             </>
           }
         >
-          <div className="filter-group" style={{ marginBottom: 12 }}><label>Status</label>
-            <select value={newStatus} onChange={(e) => setNewStatus(e.target.value)}>
+          <div className="filter-group" style={{ marginBottom: 12 }}><label htmlFor="us-status">Status</label>
+            <select id="us-status" value={newStatus} onChange={(e) => setNewStatus(e.target.value)}>
               <option value="active">Active</option>
               <option value="suspended">Suspended</option>
               <option value="ban">Ban</option>
@@ -267,7 +269,7 @@ export default function UserSearch() {
               <option value="inactive">Inactive</option>
             </select>
           </div>
-          <div className="filter-group"><label>Remark *</label><input placeholder="Enter remark (required)" value={statusRemark} onChange={(e) => setStatusRemark(e.target.value)} /></div>
+          <div className="filter-group"><label htmlFor="us-remark">Remark *</label><input id="us-remark" placeholder="Enter remark (required)" value={statusRemark} onChange={(e) => setStatusRemark(e.target.value)} /></div>
         </AnimatedDialog>
         <AnimatedDialog open={showIpUsers} onClose={() => { setShowIpUsers(false); setIpUsers([]) }} title={`Users with IP: ${user?.lastIp ?? ''}`}>
           {ipUsers.length === 0 ? (
@@ -309,26 +311,26 @@ export default function UserSearch() {
           )}
           <hr style={{ margin: '12px 0', border: 'none', borderTop: '1px solid var(--color-border, rgb(188,198,222))' }} />
           <div style={{ fontWeight: 600, marginBottom: 8, fontSize: 13 }}>Add / Update Payment</div>
-          <div className="filter-group" style={{ marginBottom: 10 }}><label>Type</label>
-            <select value={pmType} onChange={(e) => { setPmType(e.target.value as any); setPmForm({}) }}>
+          <div className="filter-group" style={{ marginBottom: 10 }}><label htmlFor="us-pm-type">Type</label>
+            <select id="us-pm-type" value={pmType} onChange={(e) => { setPmType(e.target.value as any); setPmForm({}) }}>
               <option value="BANK">Bank</option>
               <option value="UPI">UPI</option>
               <option value="UPAY">UPAY</option>
             </select>
           </div>
           {pmType === 'BANK' && (<>
-            <div className="filter-group"><label>Bank Name</label><input placeholder="e.g. SBI" value={pmForm.bankName ?? ''} onChange={(e) => setPmForm({ ...pmForm, bankName: e.target.value })} /></div>
-            <div className="filter-group"><label>IFSC</label><input placeholder="e.g. SBIN0001234" value={pmForm.ifsc ?? ''} onChange={(e) => setPmForm({ ...pmForm, ifsc: e.target.value })} /></div>
-            <div className="filter-group"><label>Account No</label><input placeholder="Account number" value={pmForm.accountNo ?? ''} onChange={(e) => setPmForm({ ...pmForm, accountNo: e.target.value })} /></div>
-            <div className="filter-group"><label>Account Holder</label><input placeholder="Holder name" value={pmForm.accountHolder ?? ''} onChange={(e) => setPmForm({ ...pmForm, accountHolder: e.target.value })} /></div>
+            <div className="filter-group"><label htmlFor="us-bank-name">Bank Name</label><input id="us-bank-name" placeholder="e.g. SBI" value={pmForm.bankName ?? ''} onChange={(e) => setPmForm({ ...pmForm, bankName: e.target.value })} /></div>
+            <div className="filter-group"><label htmlFor="us-bank-ifsc">IFSC</label><input id="us-bank-ifsc" placeholder="e.g. SBIN0001234" value={pmForm.ifsc ?? ''} onChange={(e) => setPmForm({ ...pmForm, ifsc: e.target.value })} /></div>
+            <div className="filter-group"><label htmlFor="us-bank-accountNo">Account No</label><input id="us-bank-accountNo" placeholder="Account number" value={pmForm.accountNo ?? ''} onChange={(e) => setPmForm({ ...pmForm, accountNo: e.target.value })} /></div>
+            <div className="filter-group"><label htmlFor="us-bank-accountHolder">Account Holder</label><input id="us-bank-accountHolder" placeholder="Holder name" value={pmForm.accountHolder ?? ''} onChange={(e) => setPmForm({ ...pmForm, accountHolder: e.target.value })} /></div>
           </>)}
           {pmType === 'UPI' && (<>
-            <div className="filter-group"><label>UPI ID</label><input placeholder="e.g. name@paytm" value={pmForm.upiId ?? ''} onChange={(e) => setPmForm({ ...pmForm, upiId: e.target.value })} /></div>
-            <div className="filter-group"><label>Account Holder</label><input placeholder="Holder name" value={pmForm.accountHolder ?? ''} onChange={(e) => setPmForm({ ...pmForm, accountHolder: e.target.value })} /></div>
+            <div className="filter-group"><label htmlFor="us-upi-id">UPI ID</label><input id="us-upi-id" placeholder="e.g. name@paytm" value={pmForm.upiId ?? ''} onChange={(e) => setPmForm({ ...pmForm, upiId: e.target.value })} /></div>
+            <div className="filter-group"><label htmlFor="us-upi-accountHolder">Account Holder</label><input id="us-upi-accountHolder" placeholder="Holder name" value={pmForm.accountHolder ?? ''} onChange={(e) => setPmForm({ ...pmForm, accountHolder: e.target.value })} /></div>
           </>)}
           {pmType === 'UPAY' && (<>
-            <div className="filter-group"><label>RPL ID</label><input placeholder="e.g. RPL123456" value={pmForm.rplId ?? ''} onChange={(e) => setPmForm({ ...pmForm, rplId: e.target.value })} /></div>
-            <div className="filter-group"><label>Account Holder</label><input placeholder="Holder name" value={pmForm.accountHolder ?? ''} onChange={(e) => setPmForm({ ...pmForm, accountHolder: e.target.value })} /></div>
+            <div className="filter-group"><label htmlFor="us-upay-rplId">RPL ID</label><input id="us-upay-rplId" placeholder="e.g. RPL123456" value={pmForm.rplId ?? ''} onChange={(e) => setPmForm({ ...pmForm, rplId: e.target.value })} /></div>
+            <div className="filter-group"><label htmlFor="us-upay-accountHolder">Account Holder</label><input id="us-upay-accountHolder" placeholder="Holder name" value={pmForm.accountHolder ?? ''} onChange={(e) => setPmForm({ ...pmForm, accountHolder: e.target.value })} /></div>
           </>)}
         </AnimatedDialog>
         <AnimatedDialog open={showTurnover && !!user} onClose={() => { setShowTurnover(false); setShowAddTurnover(false); setTurnoverStatus(null) }} title={`Turnover — User #${user?.user.userId ?? ''}`}
@@ -351,9 +353,9 @@ export default function UserSearch() {
           )}
           {showAddTurnover && (
             <div style={{ marginBottom: 12, display: 'flex', flexWrap: 'wrap', gap: 8, alignItems: 'flex-end' }}>
-              <div className="filter-group" style={{ flex: '1 1 100px', minWidth: 0 }}><label>Amount</label><input type="number" value={addTurnoverAmount} onChange={(e) => setAddTurnoverAmount(e.target.value)} style={{ width: '100%' }} /></div>
-              <div className="filter-group" style={{ flex: '1 1 140px', minWidth: 0 }}><label>Type</label>
-                <select value={addTurnoverType} onChange={(e) => setAddTurnoverType(e.target.value)} style={{ width: '100%' }}>
+              <div className="filter-group" style={{ flex: '1 1 100px', minWidth: 0 }}><label htmlFor="us-to-amount">Amount</label><input id="us-to-amount" type="number" value={addTurnoverAmount} onChange={(e) => setAddTurnoverAmount(e.target.value)} style={{ width: '100%' }} /></div>
+              <div className="filter-group" style={{ flex: '1 1 140px', minWidth: 0 }}><label htmlFor="us-to-type">Type</label>
+                <select id="us-to-type" value={addTurnoverType} onChange={(e) => setAddTurnoverType(e.target.value)} style={{ width: '100%' }}>
                   <option value="ADMIN_BONUS">ADMIN_BONUS</option>
                   <option value="DEPOSIT">DEPOSIT</option>
                   <option value="BONUS">BONUS</option>

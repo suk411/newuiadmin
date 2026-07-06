@@ -59,16 +59,16 @@ export default function AdminLogs() {
     <div className="content content--table">
       <form className="filters-bar" onSubmit={(e) => { e.preventDefault(); if (!level && !since) { toast('Please select a level or date'); return }; load() }}>
         <div className="filter-group">
-          <label>Level</label>
-          <select value={level} onChange={(e) => setLevel(e.target.value)}>
+          <label htmlFor="log-level">Level</label>
+          <select id="log-level" value={level} onChange={(e) => setLevel(e.target.value)}>
             <option value="">All</option>
             <option value="info">Info</option>
             <option value="error">Error</option>
           </select>
         </div>
         <div className="filter-group">
-          <label>Since</label>
-          <input type="datetime-local" value={since} onChange={(e) => setSince(e.target.value)} />
+          <label htmlFor="log-since">Since</label>
+          <input id="log-since" type="datetime-local" value={since} onChange={(e) => setSince(e.target.value)} />
         </div>
         <div className="filter-group" style={{ alignSelf: 'flex-end' }}>
           <div style={{ display: 'flex', gap: 'var(--space-3)' }}>

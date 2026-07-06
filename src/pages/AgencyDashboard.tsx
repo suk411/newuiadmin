@@ -277,14 +277,14 @@ export default function AgencyDashboard() {
         <form className="filters-bar" onSubmit={tab === 'stats' ? handleSearchStats : tab === 'members' ? handleSearchMembers : tab === 'rank' ? handleSearchRanks : handleSearchCommission}>
           {tab !== 'rank' && (
             <div className="filter-group">
-              <label>User ID</label>
-              <input placeholder="Enter User ID" value={userId} onChange={(e) => setUserId(e.target.value)} />
+              <label htmlFor="ad-userId">User ID</label>
+              <input id="ad-userId" placeholder="Enter User ID" value={userId} onChange={(e) => setUserId(e.target.value)} />
             </div>
           )}
           {tab !== 'rank' && (
             <div className="filter-group">
-              <label>Tier</label>
-              <select value={tier} onChange={(e) => setTier(e.target.value)}>
+              <label htmlFor="ad-tier">Tier</label>
+              <select id="ad-tier" value={tier} onChange={(e) => setTier(e.target.value)}>
                 <option value="">All</option>
                 <option value="L1">L1</option>
                 <option value="L2">L2</option>
@@ -294,25 +294,25 @@ export default function AgencyDashboard() {
           )}
           {tab === 'rank' ? (
             <div className="filter-group">
-              <label>Date</label>
-              <input type="date" value={rankDate} onChange={(e) => setRankDate(e.target.value)} />
+              <label htmlFor="ad-date">Date</label>
+              <input id="ad-date" type="date" value={rankDate} onChange={(e) => setRankDate(e.target.value)} />
             </div>
           ) : (
             <>
               <div className="filter-group">
-                <label>From</label>
-                <input type="date" value={dateFrom} onChange={(e) => setDateFrom(e.target.value)} />
+                <label htmlFor="ad-from">From</label>
+                <input id="ad-from" type="date" value={dateFrom} onChange={(e) => setDateFrom(e.target.value)} />
               </div>
               <div className="filter-group">
-                <label>To</label>
-                <input type="date" value={dateTo} onChange={(e) => setDateTo(e.target.value)} />
+                <label htmlFor="ad-to">To</label>
+                <input id="ad-to" type="date" value={dateTo} onChange={(e) => setDateTo(e.target.value)} />
               </div>
             </>
           )}
           {tab === 'members' && (
             <div className="filter-group">
-              <label>Search UserId</label>
-              <input placeholder="Search member ID" value={search} onChange={(e) => setSearch(e.target.value)} />
+              <label htmlFor="ad-searchUserId">Search UserId</label>
+              <input id="ad-searchUserId" placeholder="Search member ID" value={search} onChange={(e) => setSearch(e.target.value)} />
             </div>
           )}
           <div className="filter-group" style={{ alignSelf: 'flex-end' }}>

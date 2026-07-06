@@ -46,32 +46,32 @@ export default function RechargeFilters({ onSearch, loading }: Props) {
   return (
     <form className="filters-bar" onSubmit={handleSubmit}>
       <div className="filter-group">
-        <label>User ID</label>
-        <input
+        <label htmlFor="rc-user">User ID</label>
+        <input id="rc-user"
           placeholder="Enter user ID"
           value={filters.userId}
           onChange={(e) => handleChange('userId', e.target.value)}
         />
       </div>
       <div className="filter-group">
-        <label>Phone</label>
-        <input
+        <label htmlFor="rc-phone">Phone</label>
+        <input id="rc-phone"
           placeholder="Enter phone number"
           value={filters.mobile}
           onChange={(e) => handleChange('mobile', e.target.value)}
         />
       </div>
       <div className="filter-group">
-        <label>Order ID</label>
-        <input
+        <label htmlFor="rc-order">Order ID</label>
+        <input id="rc-order"
           placeholder="Enter order ID"
           value={filters.orderId}
           onChange={(e) => handleChange('orderId', e.target.value)}
         />
       </div>
       <div className="filter-group">
-        <label>Status</label>
-        <select
+        <label htmlFor="rc-status">Status</label>
+        <select id="rc-status"
           value={filters.status}
           onChange={(e) => handleChange('status', e.target.value)}
         >
@@ -82,16 +82,16 @@ export default function RechargeFilters({ onSearch, loading }: Props) {
         </select>
       </div>
       <div className="filter-group">
-        <label>From</label>
-        <input
+        <label htmlFor="rc-from">From</label>
+        <input id="rc-from"
           type="date"
           value={filters.dateFrom}
           onChange={(e) => handleChange('dateFrom', e.target.value)}
         />
       </div>
       <div className="filter-group">
-        <label>To</label>
-        <input
+        <label htmlFor="rc-to">To</label>
+        <input id="rc-to"
           type="date"
           value={filters.dateTo}
           onChange={(e) => handleChange('dateTo', e.target.value)}

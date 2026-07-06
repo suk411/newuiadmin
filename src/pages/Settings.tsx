@@ -420,11 +420,11 @@ export default function Settings() {
       >
         {vipForm && (
           <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-3)', fontSize: 14 }}>
-            <div className="filter-group"><label>Name</label><input value={vipForm.name} onChange={(e) => setVipForm({ ...vipForm, name: e.target.value })} /></div>
-            <div className="filter-group"><label>Min Deposit (₹)</label><input type="number" value={vipForm.minDeposit} onChange={(e) => setVipForm({ ...vipForm, minDeposit: Number(e.target.value) })} /></div>
-            <div className="filter-group"><label>Weekly Bonus (₹)</label><input type="number" value={vipForm.weeklyBonus} onChange={(e) => setVipForm({ ...vipForm, weeklyBonus: Number(e.target.value) })} /></div>
-            <div className="filter-group"><label>Upgrade Bonus (₹)</label><input type="number" value={vipForm.upgradeBonus} onChange={(e) => setVipForm({ ...vipForm, upgradeBonus: Number(e.target.value) })} /></div>
-            <div className="filter-group"><label>Weekly Deposit Requirement (₹)</label><input type="number" value={vipForm.weeklyDepositRequirement} onChange={(e) => setVipForm({ ...vipForm, weeklyDepositRequirement: Number(e.target.value) })} /></div>
+            <div className="filter-group"><label htmlFor="settings-vip-name">Name</label><input id="settings-vip-name" value={vipForm.name} onChange={(e) => setVipForm({ ...vipForm, name: e.target.value })} /></div>
+            <div className="filter-group"><label htmlFor="settings-vip-minDeposit">Min Deposit (₹)</label><input id="settings-vip-minDeposit" type="number" value={vipForm.minDeposit} onChange={(e) => setVipForm({ ...vipForm, minDeposit: Number(e.target.value) })} /></div>
+            <div className="filter-group"><label htmlFor="settings-vip-weeklyBonus">Weekly Bonus (₹)</label><input id="settings-vip-weeklyBonus" type="number" value={vipForm.weeklyBonus} onChange={(e) => setVipForm({ ...vipForm, weeklyBonus: Number(e.target.value) })} /></div>
+            <div className="filter-group"><label htmlFor="settings-vip-upgradeBonus">Upgrade Bonus (₹)</label><input id="settings-vip-upgradeBonus" type="number" value={vipForm.upgradeBonus} onChange={(e) => setVipForm({ ...vipForm, upgradeBonus: Number(e.target.value) })} /></div>
+            <div className="filter-group"><label htmlFor="settings-vip-weeklyDepReq">Weekly Deposit Requirement (₹)</label><input id="settings-vip-weeklyDepReq" type="number" value={vipForm.weeklyDepositRequirement} onChange={(e) => setVipForm({ ...vipForm, weeklyDepositRequirement: Number(e.target.value) })} /></div>
           </div>
         )}
       </AnimatedDialog>
@@ -457,10 +457,10 @@ export default function Settings() {
       >
         {toForm && (
           <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-3)', fontSize: 14 }}>
-            <div className="filter-group"><label>Type</label><input value={toForm.type} onChange={(e) => setToForm({ ...toForm, type: e.target.value })} /></div>
-            <div className="filter-group"><label>Description</label><input value={toForm.description} onChange={(e) => setToForm({ ...toForm, description: e.target.value })} /></div>
-            <div className="filter-group"><label>Multiplier</label><input type="number" step="0.1" value={toForm.multiplier} onChange={(e) => setToForm({ ...toForm, multiplier: Number(e.target.value) })} /></div>
-            <div className="filter-group"><label>Active</label><button type="button" onClick={() => setToForm({ ...toForm, active: !toForm.active })} style={{ width: 100, background: toForm.active ? '#22c55e' : '#ef4444', color: '#fff', border: 'none' }}>{toForm.active ? 'Active' : 'Inactive'}</button></div>
+            <div className="filter-group"><label htmlFor="settings-to-type">Type</label><input id="settings-to-type" value={toForm.type} onChange={(e) => setToForm({ ...toForm, type: e.target.value })} /></div>
+            <div className="filter-group"><label htmlFor="settings-to-description">Description</label><input id="settings-to-description" value={toForm.description} onChange={(e) => setToForm({ ...toForm, description: e.target.value })} /></div>
+            <div className="filter-group"><label htmlFor="settings-to-multiplier">Multiplier</label><input id="settings-to-multiplier" type="number" step="0.1" value={toForm.multiplier} onChange={(e) => setToForm({ ...toForm, multiplier: Number(e.target.value) })} /></div>
+            <div className="filter-group"><label htmlFor="settings-to-active">Active</label><button id="settings-to-active" type="button" onClick={() => setToForm({ ...toForm, active: !toForm.active })} style={{ width: 100, background: toForm.active ? '#22c55e' : '#ef4444', color: '#fff', border: 'none' }}>{toForm.active ? 'Active' : 'Inactive'}</button></div>
           </div>
         )}
       </AnimatedDialog>
@@ -516,13 +516,13 @@ export default function Settings() {
         }
       >
         <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-3)', fontSize: 14 }}>
-          <div className="filter-group"><label>Code</label><div style={{ display: 'flex', gap: 6 }}><input value={gcForm.code} onChange={(e) => setGcForm({ ...gcForm, code: e.target.value.toUpperCase() })} placeholder="e.g. BONUS50" style={{ flex: 1 }} /><button className="btn" onClick={() => setGcForm({ ...gcForm, code: randomCode() })} style={{ whiteSpace: 'nowrap', background: '#f59e0b', color: '#fff', border: 'none' }}>Random</button></div></div>
-          <div className="filter-group"><label>Reward Amount (₹)</label><input type="number" value={gcForm.rewardAmount} onChange={(e) => setGcForm({ ...gcForm, rewardAmount: Number(e.target.value) })} /></div>
-          <div className="filter-group"><label>Turnover Multiplier</label><input type="number" step="0.1" value={gcForm.turnoverMultiplier} onChange={(e) => setGcForm({ ...gcForm, turnoverMultiplier: Number(e.target.value) })} /></div>
-          <div className="filter-group"><label>Max Redemptions</label><input type="number" value={gcForm.maxRedemptions} onChange={(e) => setGcForm({ ...gcForm, maxRedemptions: Number(e.target.value) })} /></div>
-          <div className="filter-group"><label>Expiry Date</label><input type="date" value={gcForm.expiryDate} onChange={(e) => setGcForm({ ...gcForm, expiryDate: e.target.value })} /></div>
-          <div className="filter-group"><label>Min Deposit Today (₹)</label><input type="number" value={gcForm.minDepositToday} onChange={(e) => setGcForm({ ...gcForm, minDepositToday: Number(e.target.value) })} /></div>
-          <div className="filter-group"><label>Description</label><input value={gcForm.description} onChange={(e) => setGcForm({ ...gcForm, description: e.target.value })} /></div>
+          <div className="filter-group"><label htmlFor="settings-gc-code">Code</label><div style={{ display: 'flex', gap: 6 }}><input id="settings-gc-code" value={gcForm.code} onChange={(e) => setGcForm({ ...gcForm, code: e.target.value.toUpperCase() })} placeholder="e.g. BONUS50" style={{ flex: 1 }} /><button className="btn" onClick={() => setGcForm({ ...gcForm, code: randomCode() })} style={{ whiteSpace: 'nowrap', background: '#f59e0b', color: '#fff', border: 'none' }}>Random</button></div></div>
+          <div className="filter-group"><label htmlFor="settings-gc-rewardAmount">Reward Amount (₹)</label><input id="settings-gc-rewardAmount" type="number" value={gcForm.rewardAmount} onChange={(e) => setGcForm({ ...gcForm, rewardAmount: Number(e.target.value) })} /></div>
+          <div className="filter-group"><label htmlFor="settings-gc-turnoverMultiplier">Turnover Multiplier</label><input id="settings-gc-turnoverMultiplier" type="number" step="0.1" value={gcForm.turnoverMultiplier} onChange={(e) => setGcForm({ ...gcForm, turnoverMultiplier: Number(e.target.value) })} /></div>
+          <div className="filter-group"><label htmlFor="settings-gc-maxRedemptions">Max Redemptions</label><input id="settings-gc-maxRedemptions" type="number" value={gcForm.maxRedemptions} onChange={(e) => setGcForm({ ...gcForm, maxRedemptions: Number(e.target.value) })} /></div>
+          <div className="filter-group"><label htmlFor="settings-gc-expiryDate">Expiry Date</label><input id="settings-gc-expiryDate" type="date" value={gcForm.expiryDate} onChange={(e) => setGcForm({ ...gcForm, expiryDate: e.target.value })} /></div>
+          <div className="filter-group"><label htmlFor="settings-gc-minDepositToday">Min Deposit Today (₹)</label><input id="settings-gc-minDepositToday" type="number" value={gcForm.minDepositToday} onChange={(e) => setGcForm({ ...gcForm, minDepositToday: Number(e.target.value) })} /></div>
+          <div className="filter-group"><label htmlFor="settings-gc-description">Description</label><input id="settings-gc-description" value={gcForm.description} onChange={(e) => setGcForm({ ...gcForm, description: e.target.value })} /></div>
         </div>
       </AnimatedDialog>
 
@@ -574,12 +574,12 @@ export default function Settings() {
         }
       >
         <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-3)', fontSize: 14 }}>
-          <div className="filter-group"><label>Name</label><input value={editChanName} onChange={(e) => setEditChanName(e.target.value)} /></div>
-          <div className="filter-group"><label>Description</label><input value={editChanDesc} onChange={(e) => setEditChanDesc(e.target.value)} /></div>
-          <div className="filter-group"><label>Min Amount (₹)</label><input type="number" value={editChanMin} onChange={(e) => setEditChanMin(e.target.value)} /></div>
-          <div className="filter-group"><label>Max Amount (₹)</label><input type="number" value={editChanMax} onChange={(e) => setEditChanMax(e.target.value)} /></div>
-          <div className="filter-group"><label>Exchange Rate</label><input type="number" step="0.01" value={editChanRate} onChange={(e) => setEditChanRate(e.target.value)} /></div>
-          <div className="filter-group"><label>Sort Order</label><input type="number" value={editChanSort} onChange={(e) => setEditChanSort(e.target.value)} /></div>
+          <div className="filter-group"><label htmlFor="settings-chan-name">Name</label><input id="settings-chan-name" value={editChanName} onChange={(e) => setEditChanName(e.target.value)} /></div>
+          <div className="filter-group"><label htmlFor="settings-chan-description">Description</label><input id="settings-chan-description" value={editChanDesc} onChange={(e) => setEditChanDesc(e.target.value)} /></div>
+          <div className="filter-group"><label htmlFor="settings-chan-minAmount">Min Amount (₹)</label><input id="settings-chan-minAmount" type="number" value={editChanMin} onChange={(e) => setEditChanMin(e.target.value)} /></div>
+          <div className="filter-group"><label htmlFor="settings-chan-maxAmount">Max Amount (₹)</label><input id="settings-chan-maxAmount" type="number" value={editChanMax} onChange={(e) => setEditChanMax(e.target.value)} /></div>
+          <div className="filter-group"><label htmlFor="settings-chan-exchangeRate">Exchange Rate</label><input id="settings-chan-exchangeRate" type="number" step="0.01" value={editChanRate} onChange={(e) => setEditChanRate(e.target.value)} /></div>
+          <div className="filter-group"><label htmlFor="settings-chan-sortOrder">Sort Order</label><input id="settings-chan-sortOrder" type="number" value={editChanSort} onChange={(e) => setEditChanSort(e.target.value)} /></div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
             <label style={{ fontSize: 13, fontWeight: 500 }}>Active:</label>
             <button className="btn btn--sm" style={{ background: editChanActive ? '#22c55e' : '#ef4444', color: '#fff', border: 'none', boxShadow: '0 2px 4px rgba(0,0,0,0.2)' }} onClick={() => setEditChanActive(!editChanActive)}>{editChanActive ? 'Active' : 'Inactive'}</button>
@@ -596,8 +596,8 @@ export default function Settings() {
         }
       >
         <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-3)', fontSize: 14 }}>
-          <div className="filter-group"><label>Deposit Number</label><input type="number" value={editBonusCount} onChange={(e) => setEditBonusCount(e.target.value)} /></div>
-          <div className="filter-group"><label>Bonus Rate</label><input type="number" step="0.1" min="0" max="10" value={editBonusRate} onChange={(e) => setEditBonusRate(e.target.value)} /></div>
+          <div className="filter-group"><label htmlFor="settings-bonus-depositNum">Deposit Number</label><input id="settings-bonus-depositNum" type="number" value={editBonusCount} onChange={(e) => setEditBonusCount(e.target.value)} /></div>
+          <div className="filter-group"><label htmlFor="settings-bonus-bonusRate">Bonus Rate</label><input id="settings-bonus-bonusRate" type="number" step="0.1" min="0" max="10" value={editBonusRate} onChange={(e) => setEditBonusRate(e.target.value)} /></div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
             <label style={{ fontSize: 13, fontWeight: 500 }}>Active:</label>
             <button className="btn btn--sm" style={{ background: editBonusActive ? '#22c55e' : '#ef4444', color: '#fff', border: 'none', boxShadow: '0 2px 4px rgba(0,0,0,0.2)' }} onClick={() => setEditBonusActive(!editBonusActive)}>{editBonusActive ? 'Active' : 'Inactive'}</button>
@@ -641,12 +641,12 @@ export default function Settings() {
       >
         {alForm && (
           <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-3)', fontSize: 14 }}>
-            <div className="filter-group"><label>Min Members</label><input type="number" value={alForm.minMembers} onChange={(e) => setAlForm({ ...alForm, minMembers: Number(e.target.value) })} /></div>
-            <div className="filter-group"><label>Min Bets (₹)</label><input type="number" value={alForm.minBets} onChange={(e) => setAlForm({ ...alForm, minBets: Number(e.target.value) })} /></div>
-            <div className="filter-group"><label>Min Deposit (₹)</label><input type="number" value={alForm.minDeposit} onChange={(e) => setAlForm({ ...alForm, minDeposit: Number(e.target.value) })} /></div>
-            <div className="filter-group"><label>L1 Rate (decimal, e.g. 0.15 = 15%)</label><input type="number" step="0.01" value={alForm.l1Rate} onChange={(e) => setAlForm({ ...alForm, l1Rate: Number(e.target.value) })} /></div>
-            <div className="filter-group"><label>L2 Rate (decimal)</label><input type="number" step="0.01" value={alForm.l2Rate} onChange={(e) => setAlForm({ ...alForm, l2Rate: Number(e.target.value) })} /></div>
-            <div className="filter-group"><label>L3 Rate (decimal)</label><input type="number" step="0.01" value={alForm.l3Rate} onChange={(e) => setAlForm({ ...alForm, l3Rate: Number(e.target.value) })} /></div>
+            <div className="filter-group"><label htmlFor="settings-al-minMembers">Min Members</label><input id="settings-al-minMembers" type="number" value={alForm.minMembers} onChange={(e) => setAlForm({ ...alForm, minMembers: Number(e.target.value) })} /></div>
+            <div className="filter-group"><label htmlFor="settings-al-minBets">Min Bets (₹)</label><input id="settings-al-minBets" type="number" value={alForm.minBets} onChange={(e) => setAlForm({ ...alForm, minBets: Number(e.target.value) })} /></div>
+            <div className="filter-group"><label htmlFor="settings-al-minDeposit">Min Deposit (₹)</label><input id="settings-al-minDeposit" type="number" value={alForm.minDeposit} onChange={(e) => setAlForm({ ...alForm, minDeposit: Number(e.target.value) })} /></div>
+            <div className="filter-group"><label htmlFor="settings-al-l1Rate">L1 Rate (decimal, e.g. 0.15 = 15%)</label><input id="settings-al-l1Rate" type="number" step="0.01" value={alForm.l1Rate} onChange={(e) => setAlForm({ ...alForm, l1Rate: Number(e.target.value) })} /></div>
+            <div className="filter-group"><label htmlFor="settings-al-l2Rate">L2 Rate (decimal)</label><input id="settings-al-l2Rate" type="number" step="0.01" value={alForm.l2Rate} onChange={(e) => setAlForm({ ...alForm, l2Rate: Number(e.target.value) })} /></div>
+            <div className="filter-group"><label htmlFor="settings-al-l3Rate">L3 Rate (decimal)</label><input id="settings-al-l3Rate" type="number" step="0.01" value={alForm.l3Rate} onChange={(e) => setAlForm({ ...alForm, l3Rate: Number(e.target.value) })} /></div>
           </div>
         )}
       </AnimatedDialog>
@@ -655,21 +655,21 @@ export default function Settings() {
       <AnimatedDialog open={showWd} onClose={wdCloseDialog} title="Withdrawal Config">
         {wdLoading && !wdConfig ? <div style={{ padding: '24px 0', textAlign: 'center' }}><Spinner /></div> : (
           <>
-            <div className="filter-group"><label>Per Day Limit</label><input type="number" value={wdPerDay} onChange={(e) => setWdPerDay(e.target.value)} /></div>
+            <div className="filter-group"><label htmlFor="settings-wd-perDay">Per Day Limit</label><input id="settings-wd-perDay" type="number" value={wdPerDay} onChange={(e) => setWdPerDay(e.target.value)} /></div>
             <h4 style={{ margin: '16px 0 8px', fontSize: 13 }}>BANK Limits</h4>
             <div style={{ display: 'flex', gap: 12 }}>
-              <div className="filter-group"><label>Min (₹)</label><input type="number" value={wdMinBank} onChange={(e) => setWdMinBank(e.target.value)} /></div>
-              <div className="filter-group"><label>Max (₹)</label><input type="number" value={wdMaxBank} onChange={(e) => setWdMaxBank(e.target.value)} /></div>
+              <div className="filter-group"><label htmlFor="settings-wd-minBank">Min (₹)</label><input id="settings-wd-minBank" type="number" value={wdMinBank} onChange={(e) => setWdMinBank(e.target.value)} /></div>
+              <div className="filter-group"><label htmlFor="settings-wd-maxBank">Max (₹)</label><input id="settings-wd-maxBank" type="number" value={wdMaxBank} onChange={(e) => setWdMaxBank(e.target.value)} /></div>
             </div>
             <h4 style={{ margin: '16px 0 8px', fontSize: 13 }}>UPI Limits</h4>
             <div style={{ display: 'flex', gap: 12 }}>
-              <div className="filter-group"><label>Min (₹)</label><input type="number" value={wdMinUpi} onChange={(e) => setWdMinUpi(e.target.value)} /></div>
-              <div className="filter-group"><label>Max (₹)</label><input type="number" value={wdMaxUpi} onChange={(e) => setWdMaxUpi(e.target.value)} /></div>
+              <div className="filter-group"><label htmlFor="settings-wd-minUpi">Min (₹)</label><input id="settings-wd-minUpi" type="number" value={wdMinUpi} onChange={(e) => setWdMinUpi(e.target.value)} /></div>
+              <div className="filter-group"><label htmlFor="settings-wd-maxUpi">Max (₹)</label><input id="settings-wd-maxUpi" type="number" value={wdMaxUpi} onChange={(e) => setWdMaxUpi(e.target.value)} /></div>
             </div>
             <h4 style={{ margin: '16px 0 8px', fontSize: 13 }}>UPAY Limits</h4>
             <div style={{ display: 'flex', gap: 12 }}>
-              <div className="filter-group"><label>Min (₹)</label><input type="number" value={wdMinUpay} onChange={(e) => setWdMinUpay(e.target.value)} /></div>
-              <div className="filter-group"><label>Max (₹)</label><input type="number" value={wdMaxUpay} onChange={(e) => setWdMaxUpay(e.target.value)} /></div>
+              <div className="filter-group"><label htmlFor="settings-wd-minUpay">Min (₹)</label><input id="settings-wd-minUpay" type="number" value={wdMinUpay} onChange={(e) => setWdMinUpay(e.target.value)} /></div>
+              <div className="filter-group"><label htmlFor="settings-wd-maxUpay">Max (₹)</label><input id="settings-wd-maxUpay" type="number" value={wdMaxUpay} onChange={(e) => setWdMaxUpay(e.target.value)} /></div>
             </div>
             <div style={{ marginTop: 16 }}>
               <button className="btn-filled" onClick={wdHandleSave} disabled={wdLoading}>{wdLoading ? <Spinner /> : 'Save'}</button>

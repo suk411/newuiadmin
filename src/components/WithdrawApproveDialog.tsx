@@ -35,8 +35,8 @@ export default function WithdrawApproveDialog({ open, orderId, userId, amount, c
         <p><strong>Channel:</strong> {channelName}</p>
         <p><strong>Amount:</strong> ₹{Number(amount).toLocaleString('en-IN')}</p>
         <div className="filter-group">
-          <label>Charge From</label>
-          <select value={chargeFrom} onChange={(e) => setChargeFrom(e.target.value)}>
+          <label htmlFor="wd-chargeFrom">Charge From</label>
+          <select id="wd-chargeFrom" value={chargeFrom} onChange={(e) => setChargeFrom(e.target.value)}>
             <option value="platform">Platform</option>
             <option value="user">User</option>
           </select>

@@ -214,9 +214,9 @@ export default function BetRecords() {
       <form className="filters-bar" onSubmit={(e) => { e.preventDefault(); load() }}>
         {tab === 'provider' ? (
           <>
-            <div className="filter-group"><label>Member</label><input placeholder="User ID or u+userId" value={member} onChange={(e) => setMember(e.target.value)} list={memberSuggest.listId} onFocus={memberSuggest.loadSuggestions} /><datalist id={memberSuggest.listId}>{memberSuggest.items.map((v, i) => <option key={i} value={v} />)}</datalist></div>
-            <div className="filter-group"><label>Site</label>
-              <select value={site} onChange={(e) => setSite(e.target.value)}>
+            <div className="filter-group"><label htmlFor="bet-member">Member</label><input id="bet-member" placeholder="User ID or u+userId" value={member} onChange={(e) => setMember(e.target.value)} list={memberSuggest.listId} onFocus={memberSuggest.loadSuggestions} /><datalist id={memberSuggest.listId}>{memberSuggest.items.map((v, i) => <option key={i} value={v} />)}</datalist></div>
+            <div className="filter-group"><label htmlFor="bet-site">Site</label>
+              <select id="bet-site" value={site} onChange={(e) => setSite(e.target.value)}>
                 <option value="">All</option>
                 <option value="JE">JE</option>
                 <option value="PG">PG</option>
@@ -224,20 +224,20 @@ export default function BetRecords() {
                 <option value="TU">TU</option>
               </select>
             </div>
-            <div className="filter-group"><label>Status</label>
-              <select value={provStatus} onChange={(e) => setProvStatus(e.target.value)}>
+            <div className="filter-group"><label htmlFor="bet-prov-status">Status</label>
+              <select id="bet-prov-status" value={provStatus} onChange={(e) => setProvStatus(e.target.value)}>
                 <option value="">All</option>
                 <option value="1">Valid</option>
               </select>
             </div>
-            <div className="filter-group"><label>From</label><input type="date" value={provDateFrom} onChange={(e) => setProvDateFrom(e.target.value)} /></div>
-            <div className="filter-group"><label>To</label><input type="date" value={provDateTo} onChange={(e) => setProvDateTo(e.target.value)} /></div>
+            <div className="filter-group"><label htmlFor="bet-prov-from">From</label><input id="bet-prov-from" type="date" value={provDateFrom} onChange={(e) => setProvDateFrom(e.target.value)} /></div>
+            <div className="filter-group"><label htmlFor="bet-prov-to">To</label><input id="bet-prov-to" type="date" value={provDateTo} onChange={(e) => setProvDateTo(e.target.value)} /></div>
           </>
         ) : tab === 'wingo' ? (
           <>
-            <div className="filter-group"><label>User ID</label><input placeholder="User ID" value={wingoUserId} onChange={(e) => setWingoUserId(e.target.value)} list={wingoSuggest.listId} onFocus={wingoSuggest.loadSuggestions} /><datalist id={wingoSuggest.listId}>{wingoSuggest.items.map((v, i) => <option key={i} value={v} />)}</datalist></div>
-            <div className="filter-group"><label>Game Mode</label>
-              <select value={gameMode} onChange={(e) => setGameMode(e.target.value)}>
+            <div className="filter-group"><label htmlFor="bet-wingo-user">User ID</label><input id="bet-wingo-user" placeholder="User ID" value={wingoUserId} onChange={(e) => setWingoUserId(e.target.value)} list={wingoSuggest.listId} onFocus={wingoSuggest.loadSuggestions} /><datalist id={wingoSuggest.listId}>{wingoSuggest.items.map((v, i) => <option key={i} value={v} />)}</datalist></div>
+            <div className="filter-group"><label htmlFor="bet-game-mode">Game Mode</label>
+              <select id="bet-game-mode" value={gameMode} onChange={(e) => setGameMode(e.target.value)}>
                 <option value="">All</option>
                 <option value="30s">30s</option>
                 <option value="1m">1m</option>
@@ -245,22 +245,22 @@ export default function BetRecords() {
                 <option value="5m">5m</option>
               </select>
             </div>
-            <div className="filter-group"><label>Status</label>
-              <select value={wingoStatus} onChange={(e) => setWingoStatus(e.target.value)}>
+            <div className="filter-group"><label htmlFor="bet-wingo-status">Status</label>
+              <select id="bet-wingo-status" value={wingoStatus} onChange={(e) => setWingoStatus(e.target.value)}>
                 <option value="">All</option>
                 <option value="pending">Pending</option>
                 <option value="won">Won</option>
                 <option value="lost">Lost</option>
               </select>
             </div>
-            <div className="filter-group"><label>From</label><input type="date" value={wingoDateFrom} onChange={(e) => setWingoDateFrom(e.target.value)} /></div>
-            <div className="filter-group"><label>To</label><input type="date" value={wingoDateTo} onChange={(e) => setWingoDateTo(e.target.value)} /></div>
+            <div className="filter-group"><label htmlFor="bet-wingo-from">From</label><input id="bet-wingo-from" type="date" value={wingoDateFrom} onChange={(e) => setWingoDateFrom(e.target.value)} /></div>
+            <div className="filter-group"><label htmlFor="bet-wingo-to">To</label><input id="bet-wingo-to" type="date" value={wingoDateTo} onChange={(e) => setWingoDateTo(e.target.value)} /></div>
           </>
         ) : (
           <>
-            <div className="filter-group"><label>User ID</label><input placeholder="User ID" value={dailyUserId} onChange={(e) => setDailyUserId(e.target.value)} list={dailySuggest.listId} onFocus={dailySuggest.loadSuggestions} /><datalist id={dailySuggest.listId}>{dailySuggest.items.map((v, i) => <option key={i} value={v} />)}</datalist></div>
-            <div className="filter-group"><label>From</label><input type="date" value={dailyDateFrom} onChange={(e) => setDailyDateFrom(e.target.value)} /></div>
-            <div className="filter-group"><label>To</label><input type="date" value={dailyDateTo} onChange={(e) => setDailyDateTo(e.target.value)} /></div>
+            <div className="filter-group"><label htmlFor="bet-daily-user">User ID</label><input id="bet-daily-user" placeholder="User ID" value={dailyUserId} onChange={(e) => setDailyUserId(e.target.value)} list={dailySuggest.listId} onFocus={dailySuggest.loadSuggestions} /><datalist id={dailySuggest.listId}>{dailySuggest.items.map((v, i) => <option key={i} value={v} />)}</datalist></div>
+            <div className="filter-group"><label htmlFor="bet-daily-from">From</label><input id="bet-daily-from" type="date" value={dailyDateFrom} onChange={(e) => setDailyDateFrom(e.target.value)} /></div>
+            <div className="filter-group"><label htmlFor="bet-daily-to">To</label><input id="bet-daily-to" type="date" value={dailyDateTo} onChange={(e) => setDailyDateTo(e.target.value)} /></div>
           </>
         )}
         <div className="filter-group" style={{ alignSelf: 'flex-end' }}>

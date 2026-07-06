@@ -295,12 +295,12 @@ export default function WingoDashboard() {
         <section className="card">
           <div style={{ padding: 'var(--space-6) var(--space-7)' }}>
             <div className="filter-group" style={{ marginBottom: 16 }}>
-              <label>Current Mode</label>
-              <div style={{ fontSize: 14, fontWeight: 600, padding: '6px 0' }}>{modeLoading ? 'Loading...' : resultMode || '—'}</div>
+              <label htmlFor="wingo-currentMode">Current Mode</label>
+              <div id="wingo-currentMode" style={{ fontSize: 14, fontWeight: 600, padding: '6px 0' }}>{modeLoading ? 'Loading...' : resultMode || '—'}</div>
             </div>
             <div className="filter-group" style={{ marginBottom: 16 }}>
-              <label>Set Result Generation Mode</label>
-              <select value={resultMode} onChange={(e) => setResultModeState(e.target.value)} disabled={modeLoading}>
+              <label htmlFor="wingo-resultMode">Set Result Generation Mode</label>
+              <select id="wingo-resultMode" value={resultMode} onChange={(e) => setResultModeState(e.target.value)} disabled={modeLoading}>
                 <option value="">Select mode...</option>
                 <option value="RANDOM">RANDOM — Truly random result</option>
                 <option value="MAX_PROFIT">MAX_PROFIT — Maximum platform profit</option>

@@ -153,13 +153,13 @@ export default function GiftCodes() {
         }
       >
         <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-3)', fontSize: 14 }}>
-          <div className="filter-group"><label>Code</label><div style={{ display: 'flex', gap: 6 }}><input value={form.code} onChange={(e) => setForm({ ...form, code: e.target.value.toUpperCase() })} placeholder="e.g. BONUS50" style={{ flex: 1 }} /><button className="btn" onClick={() => setForm({ ...form, code: randomCode() })} style={{ whiteSpace: 'nowrap', background: '#f59e0b', color: '#fff', border: 'none' }}>Random</button></div></div>
-          <div className="filter-group"><label>Reward Amount (₹)</label><input type="number" value={form.rewardAmount} onChange={(e) => setForm({ ...form, rewardAmount: Number(e.target.value) })} /></div>
-          <div className="filter-group"><label>Turnover Multiplier</label><input type="number" step="0.1" value={form.turnoverMultiplier} onChange={(e) => setForm({ ...form, turnoverMultiplier: Number(e.target.value) })} /></div>
-          <div className="filter-group"><label>Max Redemptions</label><input type="number" value={form.maxRedemptions} onChange={(e) => setForm({ ...form, maxRedemptions: Number(e.target.value) })} /></div>
-          <div className="filter-group"><label>Expiry Date</label><input type="date" value={form.expiryDate} onChange={(e) => setForm({ ...form, expiryDate: e.target.value })} /></div>
-          <div className="filter-group"><label>Min Deposit Today (₹)</label><input type="number" value={form.minDepositToday} onChange={(e) => setForm({ ...form, minDepositToday: Number(e.target.value) })} /></div>
-          <div className="filter-group"><label>Description</label><input value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} /></div>
+          <div className="filter-group"><label htmlFor="gc-code">Code</label><div style={{ display: 'flex', gap: 6 }}><input id="gc-code" value={form.code} onChange={(e) => setForm({ ...form, code: e.target.value.toUpperCase() })} placeholder="e.g. BONUS50" style={{ flex: 1 }} /><button className="btn" onClick={() => setForm({ ...form, code: randomCode() })} style={{ whiteSpace: 'nowrap', background: '#f59e0b', color: '#fff', border: 'none' }}>Random</button></div></div>
+          <div className="filter-group"><label htmlFor="gc-rewardAmount">Reward Amount (₹)</label><input id="gc-rewardAmount" type="number" value={form.rewardAmount} onChange={(e) => setForm({ ...form, rewardAmount: Number(e.target.value) })} /></div>
+          <div className="filter-group"><label htmlFor="gc-turnoverMultiplier">Turnover Multiplier</label><input id="gc-turnoverMultiplier" type="number" step="0.1" value={form.turnoverMultiplier} onChange={(e) => setForm({ ...form, turnoverMultiplier: Number(e.target.value) })} /></div>
+          <div className="filter-group"><label htmlFor="gc-maxRedemptions">Max Redemptions</label><input id="gc-maxRedemptions" type="number" value={form.maxRedemptions} onChange={(e) => setForm({ ...form, maxRedemptions: Number(e.target.value) })} /></div>
+          <div className="filter-group"><label htmlFor="gc-expiryDate">Expiry Date</label><input id="gc-expiryDate" type="date" value={form.expiryDate} onChange={(e) => setForm({ ...form, expiryDate: e.target.value })} /></div>
+          <div className="filter-group"><label htmlFor="gc-minDepositToday">Min Deposit Today (₹)</label><input id="gc-minDepositToday" type="number" value={form.minDepositToday} onChange={(e) => setForm({ ...form, minDepositToday: Number(e.target.value) })} /></div>
+          <div className="filter-group"><label htmlFor="gc-description">Description</label><input id="gc-description" value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} /></div>
         </div>
       </AnimatedDialog>
     </div>
