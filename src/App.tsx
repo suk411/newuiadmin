@@ -11,6 +11,7 @@ import BetRecords from './pages/BetRecords'
 import Settings from './pages/Settings'
 import AgencyDashboard from './pages/AgencyDashboard'
 import WingoDashboard from './pages/WingoDashboard'
+import TelegramBot from './pages/TelegramBot'
 import Sidebar from './components/Sidebar'
 import TagsView from './components/TagsView'
 import { titleMap } from './components/TagsView'
@@ -144,6 +145,7 @@ function ProtectedLayoutContent({ onLogout }: { onLogout: () => void }) {
                 <Route path="/settings" element={<Settings />} />
                 <Route path="/agency" element={<AgencyDashboard />} />
                 <Route path="/wingo" element={<WingoDashboard />} />
+                <Route path="/telegram-bot" element={<TelegramBot />} />
               </Routes>
             </div>
           </main>

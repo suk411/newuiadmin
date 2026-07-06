@@ -24,6 +24,7 @@ export const titleMap: Record<string, string> = {
   '/settings': 'Settings',
   '/agency': 'Agency',
   '/wingo': 'Wingo',
+  '/telegram-bot': 'Telegram Bot',
 }
 
 export default function TagsView({ tags, onClose }: Props) {
