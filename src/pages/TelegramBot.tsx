@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import axios from 'axios'
 import { fetchBotConfig, updateBotConfig } from '../api/botConfig'
 import type { BotConfig } from '../api/botConfig'
@@ -20,69 +20,71 @@ export default function TelegramBot() {
   const [groupInput, setGroupInput] = useState('')
   const { toast } = useToast()
 
-  const load = async () => {
+  const load = useCallback(async () => {
     setLoading(true)
     try {
       const data = await fetchBotConfig()
       setConfig(data)
     } catch (err: unknown) { toast(extractError(err)) }
     finally { setLoading(false) }
-  }
+  }, [])
 
   useEffect(() => { load() }, [])
 
-  const addOwner = () => {
-    if (!ownerInput.trim()) return
-    setConfig(prev => prev ? { ...prev, ownerIds: [...prev.ownerIds, ownerInput.trim()] } : prev)
-    setOwnerInput('')
-  }
-
-  const removeOwner = (idx: number) => {
-    setConfig(prev => prev ? { ...prev, ownerIds: prev.ownerIds.filter((_, i) => i !== idx) } : prev)
-  }
-
-  const addUser = () => {
-    if (!userInput.trim()) return
-    setConfig(prev => prev ? { ...prev, allowedUserIds: [...prev.allowedUserIds, userInput.trim()] } : prev)
-    setUserInput('')
-  }
-
-  const removeUser = (idx: number) => {
-    setConfig(prev => prev ? { ...prev, allowedUserIds: prev.allowedUserIds.filter((_, i) => i !== idx) } : prev)
-  }
-
-  const addGroup = () => {
-    if (!groupInput.trim()) return
-    setConfig(prev => prev ? { ...prev, allowedGroupIds: [...prev.allowedGroupIds, groupInput.trim()] } : prev)
-    setGroupInput('')
-  }
-
-  const removeGroup = (idx: number) => {
-    setConfig(prev => prev ? { ...prev, allowedGroupIds: prev.allowedGroupIds.filter((_, i) => i !== idx) } : prev)
-  }
-
-  const handleSave = async () => {
+  const saveAndUpdate = async (patch: (prev: BotConfig) => BotConfig) => {
     if (!config) return
     setSaving(true)
     try {
-      const updated = await updateBotConfig(config)
+      const next = patch(config)
+      const updated = await updateBotConfig(next)
       setConfig(updated)
-      toast('Bot config saved')
+      toast('Saved')
     } catch (err: unknown) { toast(extractError(err)) }
     finally { setSaving(false) }
   }
+
+  const addOwner = () => {
+    if (!ownerInput.trim() || !config) return
+    const val = ownerInput.trim()
+    setOwnerInput('')
+    saveAndUpdate(prev => ({ ...prev, ownerIds: [...prev.ownerIds, val] }))
+  }
+
+  const removeOwner = (idx: number) => {
+    saveAndUpdate(prev => ({ ...prev, ownerIds: prev.ownerIds.filter((_, i) => i !== idx) }))
+  }
+
+  const addUser = () => {
+    if (!userInput.trim() || !config) return
+    const val = userInput.trim()
+    setUserInput('')
+    saveAndUpdate(prev => ({ ...prev, allowedUserIds: [...prev.allowedUserIds, val] }))
+  }
+
+  const removeUser = (idx: number) => {
+    saveAndUpdate(prev => ({ ...prev, allowedUserIds: prev.allowedUserIds.filter((_, i) => i !== idx) }))
+  }
+
+  const addGroup = () => {
+    if (!groupInput.trim() || !config) return
+    const val = groupInput.trim()
+    setGroupInput('')
+    saveAndUpdate(prev => ({ ...prev, allowedGroupIds: [...prev.allowedGroupIds, val] }))
+  }
+
+  const removeGroup = (idx: number) => {
+    saveAndUpdate(prev => ({ ...prev, allowedGroupIds: prev.allowedGroupIds.filter((_, i) => i !== idx) }))
+  }
+
+  const isSaving = saving
 
   return (
     <div className="content content--table">
       <div className="filters-bar">
         <div className="filter-group" style={{ alignSelf: 'flex-end' }}>
           <div style={{ display: 'flex', gap: 'var(--space-3)' }}>
-            <button className="btn-filled" onClick={load} disabled={loading}
-              style={{ opacity: loading ? 0.6 : 1 }}>Refresh</button>
-            <button className="btn-filled" style={{ background: '#22c55e', borderColor: '#22c55e' }}
-              onClick={handleSave} disabled={saving || !config}>
-              {saving ? <Spinner /> : 'Save'}
-            </button>
+            <button className="btn-filled" onClick={load} disabled={loading || saving}
+              style={{ opacity: loading || saving ? 0.6 : 1 }}>Refresh</button>
           </div>
         </div>
       </div>
@@ -106,7 +108,7 @@ export default function TelegramBot() {
                       <tr key={i} tabIndex={0}>
                         <td>{i + 1}</td>
                         <td style={{ fontFamily: 'monospace', fontSize: 12 }}>{id}</td>
-                        <td><button className="btn btn--danger btn--sm" onClick={() => removeOwner(i)}>Remove</button></td>
+                        <td><button className="btn btn--danger btn--sm" onClick={() => removeOwner(i)} disabled={isSaving}>Remove</button></td>
                       </tr>
                     ))
                   )}
@@ -115,7 +117,7 @@ export default function TelegramBot() {
             </div>
             <div style={{ display: 'flex', gap: 8, marginTop: 8 }}>
               <input value={ownerInput} onChange={(e) => setOwnerInput(e.target.value)} placeholder="Enter Telegram user ID" style={{ flex: 1, height: 35, padding: '0 12px', border: '1px solid var(--color-border)', borderRadius: 'var(--radius-md)', fontSize: 13 }} />
-              <button className="btn-filled" onClick={addOwner} disabled={!ownerInput.trim()} style={{ height: 35, padding: '0 12px' }}>Add</button>
+              <button className="btn-filled" onClick={addOwner} disabled={!ownerInput.trim() || isSaving} style={{ height: 35, padding: '0 12px' }}>{isSaving ? <Spinner /> : 'Add'}</button>
             </div>
           </section>
 
@@ -132,7 +134,7 @@ export default function TelegramBot() {
                       <tr key={i} tabIndex={0}>
                         <td>{i + 1}</td>
                         <td style={{ fontFamily: 'monospace', fontSize: 12 }}>{id}</td>
-                        <td><button className="btn btn--danger btn--sm" onClick={() => removeUser(i)}>Remove</button></td>
+                        <td><button className="btn btn--danger btn--sm" onClick={() => removeUser(i)} disabled={isSaving}>Remove</button></td>
                       </tr>
                     ))
                   )}
@@ -141,7 +143,7 @@ export default function TelegramBot() {
             </div>
             <div style={{ display: 'flex', gap: 8, marginTop: 8 }}>
               <input value={userInput} onChange={(e) => setUserInput(e.target.value)} placeholder="Enter Telegram user ID" style={{ flex: 1, height: 35, padding: '0 12px', border: '1px solid var(--color-border)', borderRadius: 'var(--radius-md)', fontSize: 13 }} />
-              <button className="btn-filled" onClick={addUser} disabled={!userInput.trim()} style={{ height: 35, padding: '0 12px' }}>Add</button>
+              <button className="btn-filled" onClick={addUser} disabled={!userInput.trim() || isSaving} style={{ height: 35, padding: '0 12px' }}>{isSaving ? <Spinner /> : 'Add'}</button>
             </div>
           </section>
 
@@ -158,7 +160,7 @@ export default function TelegramBot() {
                       <tr key={i} tabIndex={0}>
                         <td>{i + 1}</td>
                         <td style={{ fontFamily: 'monospace', fontSize: 12 }}>{id}</td>
-                        <td><button className="btn btn--danger btn--sm" onClick={() => removeGroup(i)}>Remove</button></td>
+                        <td><button className="btn btn--danger btn--sm" onClick={() => removeGroup(i)} disabled={isSaving}>Remove</button></td>
                       </tr>
                     ))
                   )}
@@ -167,7 +169,7 @@ export default function TelegramBot() {
             </div>
             <div style={{ display: 'flex', gap: 8, marginTop: 8 }}>
               <input value={groupInput} onChange={(e) => setGroupInput(e.target.value)} placeholder="Enter Telegram group ID (e.g. -100...)" style={{ flex: 1, height: 35, padding: '0 12px', border: '1px solid var(--color-border)', borderRadius: 'var(--radius-md)', fontSize: 13 }} />
-              <button className="btn-filled" onClick={addGroup} disabled={!groupInput.trim()} style={{ height: 35, padding: '0 12px' }}>Add</button>
+              <button className="btn-filled" onClick={addGroup} disabled={!groupInput.trim() || isSaving} style={{ height: 35, padding: '0 12px' }}>{isSaving ? <Spinner /> : 'Add'}</button>
             </div>
           </section>
         </>
