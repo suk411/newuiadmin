@@ -168,9 +168,14 @@
 
 .filters-bar .filter-group { max-height: 200px; }
 
-.filters-bar--collapsed .filter-group:not(.filter-actions) {
-  animation: collapseFilter 0.25s ease forwards;
+.filters-bar .filter-group:not(.filter-actions) {
   overflow: hidden;
+  transition: max-height 2s ease, opacity 2s ease;
+}
+
+.filters-bar--collapsed .filter-group:not(.filter-actions) {
+  max-height: 0;
+  opacity: 0;
   pointer-events: none;
 }
 .filters-bar--collapsed .filter-actions { border-top: 1px solid var(--color-border); padding-top: 8px; }
