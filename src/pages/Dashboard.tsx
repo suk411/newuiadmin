@@ -5,11 +5,11 @@ import { useTheme } from '../contexts/ThemeContext'
 import Spinner from '../components/Spinner'
 import {
   ResponsiveContainer, AreaChart, Area, BarChart, Bar, PieChart, Pie, Cell,
-  XAxis, YAxis, CartesianGrid, Tooltip, Legend,
+  XAxis, YAxis, CartesianGrid, Tooltip,
 } from 'recharts'
 
-const COLORS_LIGHT = ['#409eff', '#22c55e', '#f97316', '#ef4444', '#8b5cf6', '#14b8a6', '#eab308']
-const COLORS_DARK  = ['#60a5fa', '#4ade80', '#fb923c', '#f87171', '#a78bfa', '#2dd4bf', '#facc15']
+const COLORS_LIGHT = ['#409eff', '#22c55e', '#f97316', '#ef4444', '#8b5cf6', '#14b8a6']
+const COLORS_DARK  = ['#60a5fa', '#4ade80', '#fb923c', '#f87171', '#a78bfa', '#2dd4bf']
 
 function fmt(num: number | undefined | null, suffix = ''): string {
   if (num == null) return '—'
