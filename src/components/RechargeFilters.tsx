@@ -18,6 +18,7 @@ const emptyFilters = (page = 1, limit = 20): DepositFilters => ({
 })
 
 export default function RechargeFilters({ onSearch, loading }: Props) {
+  const [filterOpen, setFilterOpen] = useState(true)
   const [filters, setFilters] = useState<DepositFilters>(emptyFilters)
 
   const handleChange = (field: keyof DepositFilters, value: string) => {
@@ -44,7 +45,7 @@ export default function RechargeFilters({ onSearch, loading }: Props) {
   }
 
   return (
-    <form className="filters-bar" onSubmit={handleSubmit}>
+    <form className={"filters-bar" + (filterOpen ? '' : ' filters-bar--collapsed')} onSubmit={handleSubmit}>
       <div className="filter-group">
         <label htmlFor="rc-user">User ID</label>
         <input id="rc-user"
@@ -97,7 +98,7 @@ export default function RechargeFilters({ onSearch, loading }: Props) {
           onChange={(e) => handleChange('dateTo', e.target.value)}
         />
       </div>
-      <div className="filter-group" style={{ alignSelf: 'flex-end' }}>
+      <div className="filter-group filter-actions" style={{ alignSelf: 'flex-end' }}>
         <div style={{ display: 'flex', gap: 'var(--space-3)' }}>
           <button type="submit" className="btn-filled" disabled={loading || !hasAnyFilter}
             style={{ opacity: loading || !hasAnyFilter ? 0.6 : 1 }}>
@@ -106,6 +107,7 @@ export default function RechargeFilters({ onSearch, loading }: Props) {
           <button type="button" className="btn-outline" onClick={handleReset}>
             Reset
           </button>
+          <button type="button" className="btn-outline" onClick={() => setFilterOpen(!filterOpen)} style={{ fontSize: 12, padding: '2px 8px' }} aria-label={filterOpen ? 'Collapse filters' : 'Expand filters'}>{filterOpen ? '−' : '+'}</button>
         </div>
       </div>
     </form>

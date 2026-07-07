@@ -32,6 +32,7 @@ export default function BetRecords() {
   const [provDateTo, setProvDateTo] = useState('')
 
   const [wingoUserId, setWingoUserId] = useState('')
+  const [filterOpen, setFilterOpen] = useState(true)
   const [gameMode, setGameMode] = useState('')
   const [wingoStatus, setWingoStatus] = useState('')
   const [wingoDateFrom, setWingoDateFrom] = useState('')
@@ -205,7 +206,7 @@ export default function BetRecords() {
           <TabButton active={tab === 'daily'} onClick={() => { setTab('daily'); reset() }}>Daily Stats</TabButton>
         </div>
       </div>
-      <form className="filters-bar" onSubmit={(e) => { e.preventDefault(); load() }}>
+      <form className={"filters-bar" + (filterOpen ? '' : ' filters-bar--collapsed')} onSubmit={(e) => { e.preventDefault(); load() }}>
         {tab === 'provider' ? (
           <>
             <div className="filter-group"><label htmlFor="bet-member">Member</label><input id="bet-member" placeholder="User ID or u+userId" value={member} onChange={(e) => setMember(e.target.value)} list={memberSuggest.listId} onFocus={memberSuggest.loadSuggestions} /><datalist id={memberSuggest.listId}>{memberSuggest.items.map((v, i) => <option key={i} value={v} />)}</datalist></div>
@@ -257,11 +258,12 @@ export default function BetRecords() {
             <div className="filter-group"><label htmlFor="bet-daily-to">To</label><input id="bet-daily-to" type="date" value={dailyDateTo} onChange={(e) => setDailyDateTo(e.target.value)} /></div>
           </>
         )}
-        <div className="filter-group" style={{ alignSelf: 'flex-end' }}>
+        <div className="filter-group filter-actions" style={{ alignSelf: 'flex-end' }}>
           <div style={{ display: 'flex', gap: 'var(--space-3)' }}>
             <button type="submit" className="btn-filled" disabled={loading || !canSearch}
               style={{ opacity: loading || !canSearch ? 0.6 : 1 }}>Search</button>
             <button type="button" className="btn-outline" onClick={reset}>Reset</button>
+            <button type="button" className="btn-outline" onClick={() => setFilterOpen(!filterOpen)} style={{ fontSize: 12, padding: '2px 8px' }} aria-label={filterOpen ? 'Collapse filters' : 'Expand filters'}>{filterOpen ? '−' : '+'}</button>
           </div>
         </div>
       </form>

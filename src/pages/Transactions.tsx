@@ -28,6 +28,7 @@ export default function Transactions() {
   const [records, setRecords] = useState<TransactionRecord[]>([])
   const [total, setTotal] = useState(0)
   const [page, setPage] = useState(1)
+  const [filterOpen, setFilterOpen] = useState(true)
   const { toast } = useToast()
   const [loading, setLoading] = useState(false)
   const [userId, setUserId] = useState('')
@@ -88,7 +89,7 @@ export default function Transactions() {
 
   return (
     <div className="content content--table">
-      <form className="filters-bar" onSubmit={(e) => { e.preventDefault(); load() }}>
+      <form className={"filters-bar" + (filterOpen ? '' : ' filters-bar--collapsed')} onSubmit={(e) => { e.preventDefault(); load() }}>
         <div className="filter-group"><label htmlFor="txn-user">User ID</label><input id="txn-user" placeholder="User ID" value={userId} onChange={(e) => handleUserId(e.target.value)} /></div>
         <div className="filter-group"><label htmlFor="txn-order">Order ID</label><input id="txn-order" placeholder="Order ID" value={orderId} onChange={(e) => handleOrderId(e.target.value)} /></div>
         <div className="filter-group"><label htmlFor="txn-txnid">Transaction ID</label><input id="txn-txnid" placeholder="Transaction ID" value={transactionId} onChange={(e) => handleTransactionId(e.target.value)} /></div>
@@ -102,11 +103,12 @@ export default function Transactions() {
         </div>
         <div className="filter-group"><label htmlFor="txn-from">From</label><input id="txn-from" type="date" value={dateFrom} onChange={(e) => setDateFrom(e.target.value)} /></div>
         <div className="filter-group"><label htmlFor="txn-to">To</label><input id="txn-to" type="date" value={dateTo} onChange={(e) => setDateTo(e.target.value)} /></div>
-        <div className="filter-group" style={{ alignSelf: 'flex-end' }}>
+        <div className="filter-group filter-actions" style={{ alignSelf: 'flex-end' }}>
           <div style={{ display: 'flex', gap: 'var(--space-3)' }}>
             <button type="submit" className="btn-filled" disabled={loading || !hasAny}
               style={{ opacity: loading || !hasAny ? 0.6 : 1 }}>Search</button>
             <button type="button" className="btn-outline" onClick={() => { setUserId(''); setOrderId(''); setTransactionId(''); setType(''); setDateFrom(''); setDateTo(''); setRecords([]); setTotal(0) }}>Reset</button>
+            <button type="button" className="btn-outline" onClick={() => setFilterOpen(!filterOpen)} style={{ fontSize: 12, padding: '2px 8px' }} aria-label={filterOpen ? 'Collapse filters' : 'Expand filters'}>{filterOpen ? '−' : '+'}</button>
           </div>
         </div>
       </form>

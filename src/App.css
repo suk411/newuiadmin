@@ -164,6 +164,9 @@
   outline: none;
 }
 
+.filters-bar--collapsed .filter-group:not(.filter-actions) { display: none; }
+.filters-bar--collapsed .filter-actions { border-top: 1px solid var(--color-border); padding-top: 8px; }
+
 /* ── Buttons ── */
 
 .btn {

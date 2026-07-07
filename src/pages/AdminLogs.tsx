@@ -15,6 +15,7 @@ const LOG_COLUMNS: ExportColumn[] = [
 ]
 
 export default function AdminLogs() {
+  const [filterOpen, setFilterOpen] = useState(true)
   const [logs, setLogs] = useState<LogEntry[]>([])
   const [level, setLevel] = useState('')
   const [since, setSince] = useState('')
@@ -51,7 +52,7 @@ export default function AdminLogs() {
 
   return (
     <div className="content content--table">
-      <form className="filters-bar" onSubmit={(e) => { e.preventDefault(); if (!level && !since) { toast('Please select a level or date'); return }; load() }}>
+      <form className={"filters-bar" + (filterOpen ? '' : ' filters-bar--collapsed')} onSubmit={(e) => { e.preventDefault(); if (!level && !since) { toast('Please select a level or date'); return }; load() }}>
         <div className="filter-group">
           <label htmlFor="log-level">Level</label>
           <select id="log-level" value={level} onChange={(e) => setLevel(e.target.value)}>
@@ -64,11 +65,12 @@ export default function AdminLogs() {
           <label htmlFor="log-since">Since</label>
           <input id="log-since" type="datetime-local" value={since} onChange={(e) => setSince(e.target.value)} />
         </div>
-        <div className="filter-group" style={{ alignSelf: 'flex-end' }}>
+        <div className="filter-group filter-actions" style={{ alignSelf: 'flex-end' }}>
           <div style={{ display: 'flex', gap: 'var(--space-3)' }}>
             <button type="submit" className="btn-filled" disabled={loading || (!level && !since)}
               style={{ opacity: loading || (!level && !since) ? 0.6 : 1 }}>Apply</button>
             <button type="button" className="btn-outline" onClick={() => { setLevel(''); setSince('') }}>Reset</button>
+            <button type="button" className="btn-outline" onClick={() => setFilterOpen(!filterOpen)} style={{ fontSize: 12, padding: '2px 8px' }} aria-label={filterOpen ? 'Collapse filters' : 'Expand filters'}>{filterOpen ? '−' : '+'}</button>
           </div>
         </div>
       </form>

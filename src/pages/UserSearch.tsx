@@ -20,6 +20,7 @@ function statusBadge(status: string): string {
 }
 
 export default function UserSearch() {
+  const [filterOpen, setFilterOpen] = useState(true)
   const [userId, setUserId] = useState('')
   const [mobile, setMobile] = useState('')
 
@@ -163,7 +164,7 @@ export default function UserSearch() {
 
   return (
     <div className="content">
-      <form className="filters-bar" onSubmit={(e) => { e.preventDefault(); handleSearch() }}>
+      <form className={"filters-bar" + (filterOpen ? '' : ' filters-bar--collapsed')} onSubmit={(e) => { e.preventDefault(); handleSearch() }}>
         <div className="filter-group">
           <label htmlFor="us-userId">User ID</label>
           <input
@@ -184,7 +185,7 @@ export default function UserSearch() {
             onChange={(e) => handleMobile(e.target.value)}
           />
         </div>
-        <div className="filter-group" style={{ alignSelf: 'flex-end' }}>
+        <div className="filter-group filter-actions" style={{ alignSelf: 'flex-end' }}>
           <div style={{ display: 'flex', gap: 'var(--space-3)' }}>
             <button type="submit" className="btn-filled" disabled={loading || (!userId.trim() && !mobile.trim())}
               style={{ opacity: loading || (!userId.trim() && !mobile.trim()) ? 0.6 : 1 }}>
@@ -193,6 +194,7 @@ export default function UserSearch() {
             <button type="button" className="btn-outline" onClick={() => { setUserId(''); setMobile(''); setUser(null) }}>
               Reset
             </button>
+            <button type="button" className="btn-outline" onClick={() => setFilterOpen(!filterOpen)} style={{ fontSize: 12, padding: '2px 8px' }} aria-label={filterOpen ? 'Collapse filters' : 'Expand filters'}>{filterOpen ? '−' : '+'}</button>
           </div>
         </div>
       </form>

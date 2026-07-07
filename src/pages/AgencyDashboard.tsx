@@ -66,6 +66,7 @@ export default function AgencyDashboard() {
   const [statsLoading, setStatsLoading] = useState(false)
   const [statsData, setStatsData] = useState<TeamStats | null>(null)
 
+  const [filterOpen, setFilterOpen] = useState(true)
   const [membersLoading, setMembersLoading] = useState(false)
   const [members, setMembers] = useState<TeamMember[]>([])
   const [membersTotal, setMembersTotal] = useState(0)
@@ -268,7 +269,7 @@ export default function AgencyDashboard() {
         </div>
       </div>
       {tab !== 'calc' && (
-        <form className="filters-bar" onSubmit={tab === 'stats' ? handleSearchStats : tab === 'members' ? handleSearchMembers : tab === 'rank' ? handleSearchRanks : handleSearchCommission}>
+        <form className={"filters-bar" + (filterOpen ? '' : ' filters-bar--collapsed')} onSubmit={tab === 'stats' ? handleSearchStats : tab === 'members' ? handleSearchMembers : tab === 'rank' ? handleSearchRanks : handleSearchCommission}>
           {tab !== 'rank' && (
             <div className="filter-group">
               <label htmlFor="ad-userId">User ID</label>
@@ -309,13 +310,14 @@ export default function AgencyDashboard() {
               <input id="ad-searchUserId" placeholder="Search member ID" value={search} onChange={(e) => setSearch(e.target.value)} />
             </div>
           )}
-          <div className="filter-group" style={{ alignSelf: 'flex-end' }}>
+          <div className="filter-group filter-actions" style={{ alignSelf: 'flex-end' }}>
             <div style={{ display: 'flex', gap: 'var(--space-3)' }}>
               <button type="submit" className="btn-filled" disabled={tab === 'rank' ? !rankDate.trim() : !userId.trim()}
                 style={{ opacity: tab === 'rank' ? (!rankDate.trim() ? 0.6 : 1) : (!userId.trim() ? 0.6 : 1) }}>
                 {(tab === 'stats' ? statsLoading : tab === 'members' ? membersLoading : tab === 'rank' ? rankLoading : commissionLoading) ? <Spinner /> : 'Search'}
               </button>
               <button type="button" className="btn-outline" onClick={reset}>Reset</button>
+              <button type="button" className="btn-outline" onClick={() => setFilterOpen(!filterOpen)} style={{ fontSize: 12, padding: '2px 8px' }} aria-label={filterOpen ? 'Collapse filters' : 'Expand filters'}>{filterOpen ? '−' : '+'}</button>
             </div>
           </div>
         </form>
