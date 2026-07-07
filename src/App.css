@@ -125,6 +125,9 @@
   padding: 13px 15px;
   align-items: flex-end;
   border-bottom: 1px solid var(--color-border);
+  overflow: hidden;
+  max-height: 800px;
+  transition: max-height 2s ease, padding 2s ease, opacity 2s ease;
 }
 
 .filter-group {
@@ -164,21 +167,14 @@
   outline: none;
 }
 
-@keyframes collapseFilter { to { opacity: 0; max-height: 0; } }
+@keyframes collapseFilter { to { opacity: 0; } }
 
-.filters-bar .filter-group { max-height: 200px; }
-
-.filters-bar .filter-group:not(.filter-actions) {
-  overflow: hidden;
-  transition: max-height 2s ease, opacity 2s ease;
-}
-
-.filters-bar--collapsed .filter-group:not(.filter-actions) {
+.filters-bar--collapsed {
   max-height: 0;
+  padding: 0 15px;
   opacity: 0;
   pointer-events: none;
 }
-.filters-bar--collapsed .filter-actions { border-top: 1px solid var(--color-border); padding-top: 8px; }
 
 /* ── Buttons ── */
 
