@@ -1,4 +1,5 @@
 import axiosInstance from './axiosInstance'
+import { ValidationError, check, required, numeric } from '../utils/validate'
 
 export interface TurnoverRule {
   _id?: string
@@ -15,5 +16,10 @@ export async function fetchTurnoverConfig(): Promise<TurnoverRule[]> {
 }
 
 export async function updateTurnoverConfig(data: TurnoverRule[]): Promise<void> {
+  if (!Array.isArray(data) || data.length === 0) throw new ValidationError('turnover config must be a non-empty array')
+  for (const rule of data) {
+    check('type', rule.type, required())
+    check('multiplier', rule.multiplier, required(), numeric())
+  }
   await axiosInstance.put('/turnover-config', data)
 }

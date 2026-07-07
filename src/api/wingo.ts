@@ -1,4 +1,8 @@
 import axiosInstance from './axiosInstance'
+import { check, required, numeric, min, max, oneOf } from '../utils/validate'
+
+const WINGO_MODES = ['30s', '1m', '3m', '5m'] as const
+const RESULT_MODES = ['RANDOM', 'MAX_PROFIT', 'MAX_LOSS'] as const
 
 export interface RoundResult {
   number: number | null
@@ -82,33 +86,42 @@ export interface RoundDetail {
 }
 
 export async function fetchCurrentRound(mode = '30s'): Promise<{ round: CurrentRound; stats: RoundStats }> {
+  check('mode', mode, oneOf(WINGO_MODES))
   const res = await axiosInstance.get('/current-round', { params: { mode } })
   return res.data
 }
 
 export async function fetchCurrentRoundBets(mode = '30s', page = 1, limit = 50): Promise<{ data: CurrentRoundBetsItem[]; total: number }> {
+  check('mode', mode, oneOf(WINGO_MODES))
+  check('limit', limit, numeric(), min(1), max(100))
   const res = await axiosInstance.get('/current-round/bets', { params: { mode, page, limit } })
   const body = res.data
   return { data: body.items ?? body.data ?? [], total: body.total ?? 0 }
 }
 
 export async function fetchSettledRounds(mode = '30s', page = 1, limit = 25): Promise<{ data: SettledRound[]; total: number }> {
+  check('mode', mode, oneOf(WINGO_MODES))
+  check('limit', limit, numeric(), min(1), max(50))
   const res = await axiosInstance.get('/rounds', { params: { mode, page, limit } })
   const body = res.data
   return { data: body.items ?? body.data ?? [], total: body.total ?? 0 }
 }
 
 export async function fetchRoundStats(issueNumber: string): Promise<RoundDetail> {
+  check('issueNumber', issueNumber, required())
   const res = await axiosInstance.get(`/round-stats/${issueNumber}`)
   return res.data
 }
 
 export async function fetchResultMode(mode = '30s'): Promise<{ mode: string }> {
+  check('mode', mode, oneOf(WINGO_MODES))
   const res = await axiosInstance.get('/result-mode', { params: { mode } })
   return res.data
 }
 
 export async function setResultMode(mode: string, gameMode = '30s'): Promise<{ currentIssue: string; applyIssue: string }> {
+  check('mode', mode, required(), oneOf(RESULT_MODES))
+  check('gameMode', gameMode, oneOf(WINGO_MODES))
   const res = await axiosInstance.post('/result-mode', { mode, gameMode })
   return res.data
 }

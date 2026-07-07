@@ -1,4 +1,5 @@
 import axiosInstance from './axiosInstance'
+import { check, required, numeric, min, max, oneOf } from '../utils/validate'
 
 export interface AgencyStats {
   totalAgents: number
@@ -35,6 +36,7 @@ export async function fetchAgencyLevels(): Promise<AgencyLevelConfig[]> {
 }
 
 export async function updateAgencyLevel(level: number, data: Partial<AgencyLevelConfig>): Promise<AgencyLevelConfig> {
+  check('level', level, required(), numeric(), min(0), max(10))
   const res = await axiosInstance.put(`/agency-levels/${level}`, data)
   return res.data.config
 }
@@ -54,6 +56,7 @@ export interface TeamStats {
 }
 
 export async function fetchTeamStats(params: Record<string, string>): Promise<TeamStats> {
+  check('userId', params.userId, required(), numeric())
   const res = await axiosInstance.get('/agent/team-stats', { params })
   return res.data
 }
@@ -81,6 +84,9 @@ export interface TeamMembersResponse {
 }
 
 export async function fetchTeamMembers(params: Record<string, string | number>): Promise<TeamMembersResponse> {
+  check('userId', params.userId, required(), numeric())
+  if (params.tier) check('tier', params.tier, oneOf(['L1', 'L2', 'L3']))
+  check('limit', params.limit, numeric(), min(1), max(100))
   const res = await axiosInstance.get('/agent/team-members', { params })
   return res.data
 }
@@ -114,6 +120,7 @@ export interface AgentCommissionResponse {
 }
 
 export async function fetchAgentCommission(params: Record<string, string | number>): Promise<AgentCommissionResponse> {
+  check('userId', params.userId, required(), numeric())
   const res = await axiosInstance.get('/agent/agentcomm', { params })
   return res.data
 }
@@ -147,6 +154,7 @@ export interface CommissionRankResponse {
 }
 
 export async function fetchCommissionRanks(params: Record<string, string | number>): Promise<CommissionRankResponse> {
+  check('limit', params.limit, numeric(), min(1), max(100))
   const res = await axiosInstance.get('/agent/commision-records', { params })
   return res.data
 }

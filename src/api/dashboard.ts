@@ -1,4 +1,5 @@
 import axiosInstance from './axiosInstance'
+import { check, oneOf } from '../utils/validate'
 
 export interface DashboardOverview {
   totalUsers: number
@@ -42,6 +43,7 @@ export interface DashboardResponse {
 }
 
 export async function fetchDashboard(period: string): Promise<DashboardResponse> {
+  check('period', period, oneOf(['today', 'month']))
   const params: Record<string, string> = { period }
   const res = await axiosInstance.get('/dashboard', { params })
   return res.data

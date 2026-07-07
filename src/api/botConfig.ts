@@ -1,4 +1,5 @@
 import axiosInstance from './axiosInstance'
+import { check, required } from '../utils/validate'
 
 export interface BotConfig {
   ownerIds: string[]
@@ -17,6 +18,9 @@ export async function fetchBotConfig(): Promise<BotConfig> {
 }
 
 export async function updateBotConfig(config: BotConfig): Promise<BotConfig> {
+  check('ownerIds', config.ownerIds, required())
+  check('allowedUserIds', config.allowedUserIds, required())
+  check('allowedGroupIds', config.allowedGroupIds, required())
   const res = await axiosInstance.put<BotConfigResponse>('/bot-config', config)
   return res.data.data
 }

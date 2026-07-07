@@ -1,4 +1,5 @@
 import axiosInstance from './axiosInstance'
+import { check, required, numeric, min, max, oneOf } from '../utils/validate'
 
 export interface PaymentDetails {
   upiId?: string
@@ -34,6 +35,7 @@ export interface WithdrawalListResponse {
 }
 
 export async function fetchWithdrawals(params: Record<string, string | number>): Promise<WithdrawalListResponse> {
+  check('limit', params.limit, numeric(), min(1), max(100))
   const res = await axiosInstance.get('/withdrawals', { params })
   const body = res.data
   if (body.items && Array.isArray(body.items)) {
@@ -42,12 +44,13 @@ export async function fetchWithdrawals(params: Record<string, string | number>):
   return { data: [], total: 0, page: 1, limit: 20 }
 }
 
-export async function approveWithdrawal(orderId: string, chargeFrom?: string): Promise<void> {
-  const body: Record<string, any> = { orderId }
-  if (chargeFrom) body.chargeFrom = chargeFrom
-  await axiosInstance.post('/withdrawals/approve', body)
+export async function approveWithdrawal(orderId: string, chargeFrom: string): Promise<void> {
+  check('orderId', orderId, required())
+  check('chargeFrom', chargeFrom, required(), oneOf(['user', 'platform']))
+  await axiosInstance.post('/withdrawals/approve', { orderId, chargeFrom })
 }
 
 export async function cancelWithdrawal(orderId: string, reason: string): Promise<void> {
+  check('orderId', orderId, required())
   await axiosInstance.post('/withdrawals/cancel', { orderId, reason })
 }

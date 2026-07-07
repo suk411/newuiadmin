@@ -1,4 +1,5 @@
 import axiosInstance from './axiosInstance'
+import { check, required, numeric, min, max } from '../utils/validate'
 
 export interface DepositRecord {
   orderId: string
@@ -34,6 +35,7 @@ export interface DepositFilters {
 }
 
 export async function fetchDeposits(filters: DepositFilters): Promise<DepositListResponse> {
+  check('limit', filters.limit, numeric(), min(1), max(100))
   const params: Record<string, string | number> = { page: filters.page, limit: filters.limit }
   if (filters.userId) params.userId = filters.userId
   if (filters.mobile) params.mobile = filters.mobile
@@ -53,5 +55,6 @@ export async function fetchDeposits(filters: DepositFilters): Promise<DepositLis
 }
 
 export async function approveDeposit(orderId: string): Promise<void> {
+  check('orderId', orderId, required())
   await axiosInstance.post('/deposits/approve', { orderId })
 }

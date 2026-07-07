@@ -1,4 +1,5 @@
 import axiosInstance from './axiosInstance'
+import { check, required, numeric, min, futureDate } from '../utils/validate'
 
 export interface GiftCode {
   _id?: string
@@ -32,13 +33,18 @@ export async function fetchGiftCodes(params: Record<string, string | number>): P
 }
 
 export async function createGiftCode(data: Partial<GiftCode>): Promise<void> {
+  check('rewardAmount', data.rewardAmount, required(), numeric(), min(1))
+  check('maxRedemptions', data.maxRedemptions, required(), numeric(), min(1))
+  check('expiryDate', data.expiryDate, required(), futureDate())
   await axiosInstance.post('/gift-codes', data)
 }
 
 export async function toggleGiftCode(code: string, isActive: boolean): Promise<void> {
+  check('code', code, required())
   await axiosInstance.patch(`/gift-codes/${code}/toggle`, { isActive })
 }
 
 export async function deleteGiftCode(code: string): Promise<void> {
+  check('code', code, required())
   await axiosInstance.delete(`/gift-codes/${code}`)
 }

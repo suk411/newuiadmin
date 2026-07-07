@@ -1,4 +1,5 @@
 import axiosInstance from './axiosInstance'
+import { check, required, numeric, min, max } from '../utils/validate'
 
 export interface ProviderBet {
   userId: number
@@ -60,10 +61,14 @@ async function fetchList<T>(url: string, params: Record<string, string | number>
 }
 
 export async function fetchProviderBets(params: Record<string, string | number>): Promise<ListResponse<ProviderBet>> {
+  check('member', params.member, required())
+  check('limit', params.limit, numeric(), min(1), max(100))
   return fetchList<ProviderBet>('/bets/provider', params)
 }
 
 export async function fetchWingoBets(params: Record<string, string | number>): Promise<ListResponse<WingoBet>> {
+  if (params.userId) check('userId', params.userId, numeric())
+  check('limit', params.limit, numeric(), min(1), max(100))
   return fetchList<WingoBet>('/bets/wingo', params)
 }
 
@@ -88,6 +93,8 @@ export interface DailyStat {
 }
 
 export async function fetchDailyStats(params: Record<string, string | number>): Promise<{ data: DailyStat[]; total: number; page: number }> {
+  if (params.userId) check('userId', params.userId, numeric())
+  check('limit', params.limit, numeric(), min(1), max(365))
   const res = await axiosInstance.get('/bets/daily-stats', { params })
   const body = res.data
   return {
