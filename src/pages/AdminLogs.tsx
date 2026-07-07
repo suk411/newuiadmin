@@ -53,17 +53,19 @@ export default function AdminLogs() {
   return (
     <div className="content content--table">
       <form className={"filters-bar" + (filterOpen ? '' : ' filters-bar--collapsed')} onSubmit={(e) => { e.preventDefault(); if (!level && !since) { toast('Please select a level or date'); return }; load() }}>
-        <div className="filter-group">
-          <label htmlFor="log-level">Level</label>
-          <select id="log-level" value={level} onChange={(e) => setLevel(e.target.value)}>
-            <option value="">All</option>
-            <option value="info">Info</option>
-            <option value="error">Error</option>
-          </select>
-        </div>
-        <div className="filter-group">
-          <label htmlFor="log-since">Since</label>
-          <input id="log-since" type="datetime-local" value={since} onChange={(e) => setSince(e.target.value)} />
+        <div className="filter-groups">
+          <div className="filter-group">
+            <label htmlFor="log-level">Level</label>
+            <select id="log-level" value={level} onChange={(e) => setLevel(e.target.value)}>
+              <option value="">All</option>
+              <option value="info">Info</option>
+              <option value="error">Error</option>
+            </select>
+          </div>
+          <div className="filter-group">
+            <label htmlFor="log-since">Since</label>
+            <input id="log-since" type="datetime-local" value={since} onChange={(e) => setSince(e.target.value)} />
+          </div>
         </div>
         <div className="filter-group filter-actions" style={{ alignSelf: 'flex-end' }}>
           <div style={{ display: 'flex', gap: 'var(--space-3)' }}>

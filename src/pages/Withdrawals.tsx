@@ -132,25 +132,27 @@ export default function Withdrawals() {
   return (
     <div className="content content--table">
       <form className={"filters-bar" + (filterOpen ? '' : ' filters-bar--collapsed')} onSubmit={(e) => { e.preventDefault(); load() }}>
-        <div className="filter-group"><label htmlFor="wd-user">User ID</label><input id="wd-user" placeholder="User ID" value={userId} onChange={(e) => handleUserId(e.target.value)} /></div>
-        <div className="filter-group"><label htmlFor="wd-order">Order ID</label><input id="wd-order" placeholder="Order ID" value={orderId} onChange={(e) => handleOrderId(e.target.value)} /></div>
-        <div className="filter-group"><label htmlFor="wd-status">Status</label>
-          <select id="wd-status" value={status} onChange={(e) => setStatus(e.target.value)}>
-            <option value="">All</option>
-            <option value="pending">Pending</option>
-            <option value="success">Success</option>
-            <option value="cancelled">Cancelled</option>
-          </select>
+        <div className="filter-groups">
+          <div className="filter-group"><label htmlFor="wd-user">User ID</label><input id="wd-user" placeholder="User ID" value={userId} onChange={(e) => handleUserId(e.target.value)} /></div>
+          <div className="filter-group"><label htmlFor="wd-order">Order ID</label><input id="wd-order" placeholder="Order ID" value={orderId} onChange={(e) => handleOrderId(e.target.value)} /></div>
+          <div className="filter-group"><label htmlFor="wd-status">Status</label>
+            <select id="wd-status" value={status} onChange={(e) => setStatus(e.target.value)}>
+              <option value="">All</option>
+              <option value="pending">Pending</option>
+              <option value="success">Success</option>
+              <option value="cancelled">Cancelled</option>
+            </select>
+          </div>
+          <div className="filter-group"><label htmlFor="wd-charge">Charge From</label>
+            <select id="wd-charge" value={chargeFrom} onChange={(e) => setChargeFrom(e.target.value)}>
+              <option value="">All</option>
+              <option value="platform">Platform</option>
+              <option value="user">User</option>
+            </select>
+          </div>
+          <div className="filter-group"><label htmlFor="wd-from">From</label><input id="wd-from" type="date" value={dateFrom} onChange={(e) => setDateFrom(e.target.value)} /></div>
+          <div className="filter-group"><label htmlFor="wd-to">To</label><input id="wd-to" type="date" value={dateTo} onChange={(e) => setDateTo(e.target.value)} /></div>
         </div>
-        <div className="filter-group"><label htmlFor="wd-charge">Charge From</label>
-          <select id="wd-charge" value={chargeFrom} onChange={(e) => setChargeFrom(e.target.value)}>
-            <option value="">All</option>
-            <option value="platform">Platform</option>
-            <option value="user">User</option>
-          </select>
-        </div>
-        <div className="filter-group"><label htmlFor="wd-from">From</label><input id="wd-from" type="date" value={dateFrom} onChange={(e) => setDateFrom(e.target.value)} /></div>
-        <div className="filter-group"><label htmlFor="wd-to">To</label><input id="wd-to" type="date" value={dateTo} onChange={(e) => setDateTo(e.target.value)} /></div>
         <div className="filter-group filter-actions" style={{ alignSelf: 'flex-end' }}>
           <div style={{ display: 'flex', gap: 'var(--space-3)' }}>
             <button type="submit" className="btn-filled" disabled={loading || !hasAnyFilter}

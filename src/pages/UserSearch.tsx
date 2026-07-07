@@ -165,25 +165,27 @@ export default function UserSearch() {
   return (
     <div className="content">
       <form className={"filters-bar" + (filterOpen ? '' : ' filters-bar--collapsed')} onSubmit={(e) => { e.preventDefault(); handleSearch() }}>
-        <div className="filter-group">
-          <label htmlFor="us-userId">User ID</label>
-          <input
-            id="us-userId"
-            type="text"
-            placeholder="Enter User ID"
-            value={userId}
-            onChange={(e) => handleUserId(e.target.value)}
-          />
-        </div>
-        <div className="filter-group">
-          <label htmlFor="us-mobile">Mobile</label>
-          <input
-            id="us-mobile"
-            type="text"
-            placeholder="Enter Mobile Number"
-            value={mobile}
-            onChange={(e) => handleMobile(e.target.value)}
-          />
+        <div className="filter-groups">
+          <div className="filter-group">
+            <label htmlFor="us-userId">User ID</label>
+            <input
+              id="us-userId"
+              type="text"
+              placeholder="Enter User ID"
+              value={userId}
+              onChange={(e) => handleUserId(e.target.value)}
+            />
+          </div>
+          <div className="filter-group">
+            <label htmlFor="us-mobile">Mobile</label>
+            <input
+              id="us-mobile"
+              type="text"
+              placeholder="Enter Mobile Number"
+              value={mobile}
+              onChange={(e) => handleMobile(e.target.value)}
+            />
+          </div>
         </div>
         <div className="filter-group filter-actions" style={{ alignSelf: 'flex-end' }}>
           <div style={{ display: 'flex', gap: 'var(--space-3)' }}>

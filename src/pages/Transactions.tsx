@@ -90,19 +90,21 @@ export default function Transactions() {
   return (
     <div className="content content--table">
       <form className={"filters-bar" + (filterOpen ? '' : ' filters-bar--collapsed')} onSubmit={(e) => { e.preventDefault(); load() }}>
-        <div className="filter-group"><label htmlFor="txn-user">User ID</label><input id="txn-user" placeholder="User ID" value={userId} onChange={(e) => handleUserId(e.target.value)} /></div>
-        <div className="filter-group"><label htmlFor="txn-order">Order ID</label><input id="txn-order" placeholder="Order ID" value={orderId} onChange={(e) => handleOrderId(e.target.value)} /></div>
-        <div className="filter-group"><label htmlFor="txn-txnid">Transaction ID</label><input id="txn-txnid" placeholder="Transaction ID" value={transactionId} onChange={(e) => handleTransactionId(e.target.value)} /></div>
-        <div className="filter-group"><label htmlFor="txn-type">Type</label>
-          <select id="txn-type" value={type} onChange={(e) => setType(e.target.value)}>
-            <option value="">All</option>
-            <option value="deposit">Deposit</option>
-            <option value="withdrawal">Withdrawal</option>
-            <option value="bet">Bet</option>
-          </select>
+        <div className="filter-groups">
+          <div className="filter-group"><label htmlFor="txn-user">User ID</label><input id="txn-user" placeholder="User ID" value={userId} onChange={(e) => handleUserId(e.target.value)} /></div>
+          <div className="filter-group"><label htmlFor="txn-order">Order ID</label><input id="txn-order" placeholder="Order ID" value={orderId} onChange={(e) => handleOrderId(e.target.value)} /></div>
+          <div className="filter-group"><label htmlFor="txn-txnid">Transaction ID</label><input id="txn-txnid" placeholder="Transaction ID" value={transactionId} onChange={(e) => handleTransactionId(e.target.value)} /></div>
+          <div className="filter-group"><label htmlFor="txn-type">Type</label>
+            <select id="txn-type" value={type} onChange={(e) => setType(e.target.value)}>
+              <option value="">All</option>
+              <option value="deposit">Deposit</option>
+              <option value="withdrawal">Withdrawal</option>
+              <option value="bet">Bet</option>
+            </select>
+          </div>
+          <div className="filter-group"><label htmlFor="txn-from">From</label><input id="txn-from" type="date" value={dateFrom} onChange={(e) => setDateFrom(e.target.value)} /></div>
+          <div className="filter-group"><label htmlFor="txn-to">To</label><input id="txn-to" type="date" value={dateTo} onChange={(e) => setDateTo(e.target.value)} /></div>
         </div>
-        <div className="filter-group"><label htmlFor="txn-from">From</label><input id="txn-from" type="date" value={dateFrom} onChange={(e) => setDateFrom(e.target.value)} /></div>
-        <div className="filter-group"><label htmlFor="txn-to">To</label><input id="txn-to" type="date" value={dateTo} onChange={(e) => setDateTo(e.target.value)} /></div>
         <div className="filter-group filter-actions" style={{ alignSelf: 'flex-end' }}>
           <div style={{ display: 'flex', gap: 'var(--space-3)' }}>
             <button type="submit" className="btn-filled" disabled={loading || !hasAny}

@@ -46,57 +46,59 @@ export default function RechargeFilters({ onSearch, loading }: Props) {
 
   return (
     <form className={"filters-bar" + (filterOpen ? '' : ' filters-bar--collapsed')} onSubmit={handleSubmit}>
-      <div className="filter-group">
-        <label htmlFor="rc-user">User ID</label>
-        <input id="rc-user"
-          placeholder="Enter user ID"
-          value={filters.userId}
-          onChange={(e) => handleChange('userId', e.target.value)}
-        />
-      </div>
-      <div className="filter-group">
-        <label htmlFor="rc-phone">Phone</label>
-        <input id="rc-phone"
-          placeholder="Enter phone number"
-          value={filters.mobile}
-          onChange={(e) => handleChange('mobile', e.target.value)}
-        />
-      </div>
-      <div className="filter-group">
-        <label htmlFor="rc-order">Order ID</label>
-        <input id="rc-order"
-          placeholder="Enter order ID"
-          value={filters.orderId}
-          onChange={(e) => handleChange('orderId', e.target.value)}
-        />
-      </div>
-      <div className="filter-group">
-        <label htmlFor="rc-status">Status</label>
-        <select id="rc-status"
-          value={filters.status}
-          onChange={(e) => handleChange('status', e.target.value)}
-        >
-          <option value="">All</option>
-          <option value="pending">Pending</option>
-          <option value="success">Success</option>
-          <option value="failed">Failed</option>
-        </select>
-      </div>
-      <div className="filter-group">
-        <label htmlFor="rc-from">From</label>
-        <input id="rc-from"
-          type="date"
-          value={filters.dateFrom}
-          onChange={(e) => handleChange('dateFrom', e.target.value)}
-        />
-      </div>
-      <div className="filter-group">
-        <label htmlFor="rc-to">To</label>
-        <input id="rc-to"
-          type="date"
-          value={filters.dateTo}
-          onChange={(e) => handleChange('dateTo', e.target.value)}
-        />
+      <div className="filter-groups">
+        <div className="filter-group">
+          <label htmlFor="rc-user">User ID</label>
+          <input id="rc-user"
+            placeholder="Enter user ID"
+            value={filters.userId}
+            onChange={(e) => handleChange('userId', e.target.value)}
+          />
+        </div>
+        <div className="filter-group">
+          <label htmlFor="rc-phone">Phone</label>
+          <input id="rc-phone"
+            placeholder="Enter phone number"
+            value={filters.mobile}
+            onChange={(e) => handleChange('mobile', e.target.value)}
+          />
+        </div>
+        <div className="filter-group">
+          <label htmlFor="rc-order">Order ID</label>
+          <input id="rc-order"
+            placeholder="Enter order ID"
+            value={filters.orderId}
+            onChange={(e) => handleChange('orderId', e.target.value)}
+          />
+        </div>
+        <div className="filter-group">
+          <label htmlFor="rc-status">Status</label>
+          <select id="rc-status"
+            value={filters.status}
+            onChange={(e) => handleChange('status', e.target.value)}
+          >
+            <option value="">All</option>
+            <option value="pending">Pending</option>
+            <option value="success">Success</option>
+            <option value="failed">Failed</option>
+          </select>
+        </div>
+        <div className="filter-group">
+          <label htmlFor="rc-from">From</label>
+          <input id="rc-from"
+            type="date"
+            value={filters.dateFrom}
+            onChange={(e) => handleChange('dateFrom', e.target.value)}
+          />
+        </div>
+        <div className="filter-group">
+          <label htmlFor="rc-to">To</label>
+          <input id="rc-to"
+            type="date"
+            value={filters.dateTo}
+            onChange={(e) => handleChange('dateTo', e.target.value)}
+          />
+        </div>
       </div>
       <div className="filter-group filter-actions" style={{ alignSelf: 'flex-end' }}>
         <div style={{ display: 'flex', gap: 'var(--space-3)' }}>
