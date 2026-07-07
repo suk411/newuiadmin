@@ -18,7 +18,7 @@ const emptyFilters = (page = 1, limit = 20): DepositFilters => ({
 })
 
 export default function RechargeFilters({ onSearch, loading }: Props) {
-  const [filters, setFilters] = useState<DepositFilters>(emptyFilters())
+  const [filters, setFilters] = useState<DepositFilters>(emptyFilters)
 
   const handleChange = (field: keyof DepositFilters, value: string) => {
     setFilters((prev) => {

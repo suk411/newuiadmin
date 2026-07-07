@@ -35,19 +35,10 @@ export async function createGiftCode(data: Partial<GiftCode>): Promise<void> {
   await axiosInstance.post('/gift-codes', data)
 }
 
-export async function updateGiftCode(code: string, data: Partial<GiftCode>): Promise<void> {
-  await axiosInstance.put(`/gift-codes/${code}`, data)
-}
-
 export async function toggleGiftCode(code: string, isActive: boolean): Promise<void> {
   await axiosInstance.patch(`/gift-codes/${code}/toggle`, { isActive })
 }
 
 export async function deleteGiftCode(code: string): Promise<void> {
   await axiosInstance.delete(`/gift-codes/${code}`)
-}
-
-export async function fetchRedemptions(code: string, page = 1, limit = 20): Promise<{ data: unknown[]; total: number }> {
-  const res = await axiosInstance.get(`/gift-codes/${code}/redemptions`, { params: { page, limit } })
-  return res.data
 }

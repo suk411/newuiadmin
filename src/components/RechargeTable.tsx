@@ -54,7 +54,6 @@ export default function RechargeTable({ records, loading, onApprove }: Props) {
                     {record.status === 'PENDING' && (
                       <>
                         <button className="btn btn--success btn--sm" onClick={() => onApprove(record)}>Approve</button>
-                        <button className="btn btn--danger btn--sm">Reject</button>
                       </>
                     )}
                   </div>

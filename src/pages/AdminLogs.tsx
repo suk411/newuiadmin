@@ -1,11 +1,11 @@
 import { useState, useEffect } from 'react'
-import axios from 'axios'
 import { fetchLogs } from '../api/logs'
 import type { LogEntry } from '../api/logs'
 import { formatDateTime12 } from '../utils/format'
 import { useToast } from '../contexts/ToastContext'
 import Spinner from '../components/Spinner'
 import { useExportBar } from '../components/ExportBarContext'
+import { extractError } from '../utils/error'
 import type { ExportColumn } from '../utils/export'
 
 const LOG_COLUMNS: ExportColumn[] = [
@@ -13,12 +13,6 @@ const LOG_COLUMNS: ExportColumn[] = [
   { key: 'message', label: 'Message' },
   { key: 'timestamp', label: 'Timestamp' },
 ]
-
-function extractError(err: unknown): string {
-  if (axios.isAxiosError(err) && err.response?.data?.msg) return err.response.data.msg
-  if (err instanceof Error) return err.message
-  return 'Something went wrong'
-}
 
 export default function AdminLogs() {
   const [logs, setLogs] = useState<LogEntry[]>([])

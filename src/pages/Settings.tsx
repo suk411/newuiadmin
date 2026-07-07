@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react'
-import axios from 'axios'
 import { fetchVipConfig, updateVipConfig } from '../api/vipConfig'
 import type { VipTier } from '../api/vipConfig'
 import { fetchTurnoverConfig, updateTurnoverConfig } from '../api/turnoverConfig'
@@ -16,13 +15,8 @@ import { useToast } from '../contexts/ToastContext'
 import Spinner from '../components/Spinner'
 import AnimatedDialog from '../components/AnimatedDialog'
 import Pagination from '../components/Pagination'
+import { extractError } from '../utils/error'
 import { formatDateTime12 } from '../utils/format'
-
-function extractError(err: unknown): string {
-  if (axios.isAxiosError(err) && err.response?.data?.msg) return err.response.data.msg
-  if (err instanceof Error) return err.message
-  return 'Something went wrong'
-}
 
 function randomCode() {
   const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
@@ -111,7 +105,6 @@ export default function Settings() {
   const vipHandleSave = async () => {
     if (vipForm == null || vipEditIdx == null) return
     setVipSaving(true)
-    /* */
     try {
       const copy = [...vipTiers]
       copy[vipEditIdx] = vipForm
@@ -133,12 +126,11 @@ export default function Settings() {
   }
 
   const toOpenDialog = () => { setShowTo(true); loadTo() }
-  const toCloseDialog = () => { setShowTo(false); setToEditIdx(null); setToForm(null); /* */ }
+  const toCloseDialog = () => { setShowTo(false); setToEditIdx(null); setToForm(null) }
 
   const toOpenEdit = (i: number) => {
     setToEditIdx(i)
     setToForm({ ...toRules[i] })
-    /* */
   }
 
   const toCloseEdit = () => { setToEditIdx(null); setToForm(null) }
@@ -146,7 +138,6 @@ export default function Settings() {
   const toHandleSave = async () => {
     if (toForm == null || toEditIdx == null) return
     setToSaving(true)
-    /* */
     try {
       const copy = [...toRules]
       copy[toEditIdx] = toForm
@@ -160,7 +151,6 @@ export default function Settings() {
   // ---- Gift Codes ----
   const loadGc = async (p = 1) => {
     setGcLoading(true)
-    /* */
     try {
       const res = await fetchGiftCodes({ page: p, limit: GC_LIMIT })
       setGcRecords(res.data)
@@ -171,7 +161,7 @@ export default function Settings() {
   }
 
   const gcOpenDialog = () => { setShowGc(true); loadGc() }
-  const gcCloseDialog = () => { setShowGc(false); setGcRecords([]); setGcShowCreate(false); /* */ }
+  const gcCloseDialog = () => { setShowGc(false); setGcRecords([]); setGcShowCreate(false) }
 
   const gcHandleToggle = async (code: string, isActive: boolean) => {
     try {
@@ -192,12 +182,11 @@ export default function Settings() {
   const [gcForm, setGcForm] = useState({ code: '', rewardAmount: 0, turnoverMultiplier: 1, maxRedemptions: 100, expiryDate: '', minDepositToday: 0, description: '' })
   const [gcSaving, setGcSaving] = useState(false)
 
-  const gcOpenCreate = () => { setGcForm({ code: '', rewardAmount: 0, turnoverMultiplier: 1, maxRedemptions: 100, expiryDate: '', minDepositToday: 0, description: '' }); setGcShowCreate(true); /* */ }
+  const gcOpenCreate = () => { setGcForm({ code: '', rewardAmount: 0, turnoverMultiplier: 1, maxRedemptions: 100, expiryDate: '', minDepositToday: 0, description: '' }); setGcShowCreate(true) }
 
   const gcHandleCreate = async () => {
     if (!gcForm.code || !gcForm.rewardAmount) return
     setGcSaving(true)
-    /* */
     try {
       await createGiftCode(gcForm)
       setGcShowCreate(false)
@@ -218,7 +207,7 @@ export default function Settings() {
   }
 
   const depOpenDialog = () => { setShowDep(true); loadDep() }
-  const depCloseDialog = () => { setShowDep(false); setEditChan(null); /* */ }
+  const depCloseDialog = () => { setShowDep(false); setEditChan(null) }
 
   const depAddBonus = async () => {
     const c = prompt('Deposit number (e.g. 4):')
@@ -311,11 +300,10 @@ export default function Settings() {
   }
 
   const wdOpenDialog = () => { setShowWd(true); loadWd() }
-  const wdCloseDialog = () => { setShowWd(false); /* */ }
+  const wdCloseDialog = () => { setShowWd(false) }
 
   const wdHandleSave = async () => {
     setWdLoading(true)
-    /* */
     try {
       const updated = await updateWithdrawalConfig({
         perDayLimit: Number(wdPerDay),

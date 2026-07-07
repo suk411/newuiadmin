@@ -96,10 +96,6 @@ export async function viewUserPaymentMethods(userId: string): Promise<PaymentMet
   return body
 }
 
-export async function updatePaymentMethod(id: string, data: Record<string, unknown>): Promise<void> {
-  await axiosInstance.put(`/user/payment-methods/${id}`, data)
-}
-
 export interface TurnoverAddResponse {
   status: string
   batchId: string

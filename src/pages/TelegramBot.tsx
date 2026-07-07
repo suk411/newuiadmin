@@ -1,15 +1,9 @@
 import { useState, useEffect, useCallback } from 'react'
-import axios from 'axios'
 import { fetchBotConfig, updateBotConfig } from '../api/botConfig'
 import type { BotConfig } from '../api/botConfig'
 import { useToast } from '../contexts/ToastContext'
+import { extractError } from '../utils/error'
 import Spinner from '../components/Spinner'
-
-function extractError(err: unknown): string {
-  if (axios.isAxiosError(err) && err.response?.data?.msg) return err.response.data.msg
-  if (err instanceof Error) return err.message
-  return 'Something went wrong'
-}
 
 export default function TelegramBot() {
   const [config, setConfig] = useState<BotConfig | null>(null)
@@ -76,8 +70,6 @@ export default function TelegramBot() {
     saveAndUpdate(prev => ({ ...prev, allowedGroupIds: prev.allowedGroupIds.filter((_, i) => i !== idx) }))
   }
 
-  const isSaving = saving
-
   return (
     <div className="content content--table">
       <div className="filters-bar">
@@ -101,7 +93,7 @@ export default function TelegramBot() {
               <h3 className="bot-section__title">Owner IDs</h3>
               <div className="input-addon">
                 <input className="bot-input" value={ownerInput} onChange={(e) => setOwnerInput(e.target.value)} placeholder="Enter Telegram user ID" aria-label="Add owner ID" />
-                <button className="btn-filled bot-add-btn" onClick={addOwner} disabled={!ownerInput.trim() || isSaving} aria-label="Add owner">{isSaving ? <Spinner size={12} /> : 'Add'}</button>
+                <button className="btn-filled bot-add-btn" onClick={addOwner} disabled={!ownerInput.trim() || saving} aria-label="Add owner">{saving ? <Spinner size={12} /> : 'Add'}</button>
               </div>
             </div>
             <div className="table-wrap">
@@ -115,7 +107,7 @@ export default function TelegramBot() {
                       <tr key={i}>
                         <td>{i + 1}</td>
                         <td className="cell-mono">{id}</td>
-                        <td><button className="btn btn--danger btn--sm" onClick={() => removeOwner(i)} disabled={isSaving}>Remove</button></td>
+                        <td><button className="btn btn--danger btn--sm" onClick={() => removeOwner(i)} disabled={saving}>Remove</button></td>
                       </tr>
                     ))
                   )}
@@ -129,7 +121,7 @@ export default function TelegramBot() {
               <h3 className="bot-section__title">Allowed User IDs</h3>
               <div className="input-addon">
                 <input className="bot-input" value={userInput} onChange={(e) => setUserInput(e.target.value)} placeholder="Enter Telegram user ID" aria-label="Add allowed user ID" />
-                <button className="btn-filled bot-add-btn" onClick={addUser} disabled={!userInput.trim() || isSaving} aria-label="Add user">{isSaving ? <Spinner size={12} /> : 'Add'}</button>
+                <button className="btn-filled bot-add-btn" onClick={addUser} disabled={!userInput.trim() || saving} aria-label="Add user">{saving ? <Spinner size={12} /> : 'Add'}</button>
               </div>
             </div>
             <div className="table-wrap">
@@ -143,7 +135,7 @@ export default function TelegramBot() {
                       <tr key={i}>
                         <td>{i + 1}</td>
                         <td className="cell-mono">{id}</td>
-                        <td><button className="btn btn--danger btn--sm" onClick={() => removeUser(i)} disabled={isSaving}>Remove</button></td>
+                        <td><button className="btn btn--danger btn--sm" onClick={() => removeUser(i)} disabled={saving}>Remove</button></td>
                       </tr>
                     ))
                   )}
@@ -157,7 +149,7 @@ export default function TelegramBot() {
               <h3 className="bot-section__title">Allowed Group IDs</h3>
               <div className="input-addon">
                 <input className="bot-input" value={groupInput} onChange={(e) => setGroupInput(e.target.value)} placeholder="Enter Telegram group ID (e.g. -100...)" aria-label="Add group ID" />
-                <button className="btn-filled bot-add-btn" onClick={addGroup} disabled={!groupInput.trim() || isSaving} aria-label="Add group">{isSaving ? <Spinner size={12} /> : 'Add'}</button>
+                <button className="btn-filled bot-add-btn" onClick={addGroup} disabled={!groupInput.trim() || saving} aria-label="Add group">{saving ? <Spinner size={12} /> : 'Add'}</button>
               </div>
             </div>
             <div className="table-wrap">
@@ -171,7 +163,7 @@ export default function TelegramBot() {
                       <tr key={i}>
                         <td>{i + 1}</td>
                         <td className="cell-mono">{id}</td>
-                        <td><button className="btn btn--danger btn--sm" onClick={() => removeGroup(i)} disabled={isSaving}>Remove</button></td>
+                        <td><button className="btn btn--danger btn--sm" onClick={() => removeGroup(i)} disabled={saving}>Remove</button></td>
                       </tr>
                     ))
                   )}

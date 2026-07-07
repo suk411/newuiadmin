@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react'
-import axios from 'axios'
 import { fetchWithdrawals, approveWithdrawal, cancelWithdrawal } from '../api/withdrawals'
 import type { WithdrawalRecord } from '../api/withdrawals'
 import { formatDateTime12 } from '../utils/format'
@@ -9,6 +8,7 @@ import Spinner from '../components/Spinner'
 import Pagination from '../components/Pagination'
 import { useExportBar } from '../components/ExportBarContext'
 import type { ExportColumn } from '../utils/export'
+import { extractError } from '../utils/error'
 
 const LIMIT = 20
 
@@ -26,12 +26,6 @@ const WITHDRAWAL_COLUMNS: ExportColumn[] = [
   { key: 'createdAt', label: 'Created' },
   { key: 'updatedAt', label: 'Updated' },
 ]
-
-function extractError(err: unknown): string {
-  if (axios.isAxiosError(err) && err.response?.data?.msg) return err.response.data.msg
-  if (err instanceof Error) return err.message
-  return 'Something went wrong'
-}
 
 export default function Withdrawals() {
   const [records, setRecords] = useState<WithdrawalRecord[]>([])

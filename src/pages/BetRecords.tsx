@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react'
-import axios from 'axios'
 import { fetchProviderBets, fetchWingoBets, fetchDailyStats } from '../api/bets'
 import type { ProviderBet, WingoBet, DailyStat, BetSummary } from '../api/bets'
 import { formatDateTime12 } from '../utils/format'
@@ -10,15 +9,10 @@ import TabButton from '../components/TabButton'
 import { useExportBar } from '../components/ExportBarContext'
 import type { ExportColumn } from '../utils/export'
 import { useSearchSuggest } from '../hooks/useSearchSuggest'
+import { extractError } from '../utils/error'
 
 const LIMIT = 20
 type Tab = 'provider' | 'wingo' | 'daily'
-
-function extractError(err: unknown): string {
-  if (axios.isAxiosError(err) && err.response?.data?.msg) return err.response.data.msg
-  if (err instanceof Error) return err.message
-  return 'Something went wrong'
-}
 
 export default function BetRecords() {
   const fmt = (v: number) => { const a = Math.abs(v).toLocaleString('en-IN'); return v >= 0 ? `₹${a}` : `-₹${a}` }

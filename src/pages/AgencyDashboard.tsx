@@ -1,5 +1,4 @@
 import { useState, useRef, useEffect } from 'react'
-import axios from 'axios'
 import { fetchTeamStats, fetchTeamMembers, fetchAgentCommission, runMidnightCalc, fetchCommissionRanks } from '../api/agency'
 import type { TeamStats, TeamMember, AgentCommissionRecord, CommissionRankRecord, CommissionRankSummary } from '../api/agency'
 import { useToast } from '../contexts/ToastContext'
@@ -8,6 +7,7 @@ import Pagination from '../components/Pagination'
 import TabButton from '../components/TabButton'
 import { useExportBar } from '../components/ExportBarContext'
 import type { ExportColumn } from '../utils/export'
+import { extractError } from '../utils/error'
 import { formatDateTime12 } from '../utils/format'
 
 const MEMBER_LIMIT = 20
@@ -52,12 +52,6 @@ const RANK_COLUMNS: ExportColumn[] = [
   { key: 'l3Bets', label: 'L3 Bets' },
   { key: 'totalComm', label: 'Total Commission' },
 ]
-
-function extractError(err: unknown): string {
-  if (axios.isAxiosError(err) && err.response?.data?.msg) return err.response.data.msg
-  if (err instanceof Error) return err.message
-  return 'Something went wrong'
-}
 
 export default function AgencyDashboard() {
   const [tab, setTab] = useState<'stats' | 'members' | 'commission' | 'calc' | 'rank'>('stats')

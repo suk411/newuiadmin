@@ -1,5 +1,4 @@
 import { useState, useCallback, useEffect } from 'react'
-import axios from 'axios'
 import { fetchDeposits, approveDeposit } from '../api/deposits'
 import type { DepositRecord, DepositFilters } from '../api/deposits'
 import RechargeFilters from '../components/RechargeFilters'
@@ -9,6 +8,7 @@ import Pagination from '../components/Pagination'
 import { useExportBar } from '../components/ExportBarContext'
 import type { ExportColumn } from '../utils/export'
 import { formatDateTime12 } from '../utils/format'
+import { extractError } from '../utils/error'
 import { useToast } from '../contexts/ToastContext'
 
 const DEFAULT_LIMIT = 20
@@ -27,14 +27,6 @@ const RECHARGE_COLUMNS: ExportColumn[] = [
   { key: 'createdAt', label: 'Created' },
   { key: 'updatedAt', label: 'Updated' },
 ]
-
-function extractError(err: unknown): string {
-  if (axios.isAxiosError(err) && err.response?.data?.msg) {
-    return err.response.data.msg
-  }
-  if (err instanceof Error) return err.message
-  return 'Something went wrong'
-}
 
 export default function RechargeRecords() {
   const [records, setRecords] = useState<DepositRecord[]>([])

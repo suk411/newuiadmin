@@ -1,17 +1,11 @@
 import { useState, useMemo } from 'react'
-import axios from 'axios'
 import { searchUser, searchUserByMobile, updateUserStatus, fetchUsersByIp, viewUserPaymentMethods, updateUserPayments, addTurnover, clearTurnover, checkTurnoverStatus } from '../api/users'
 import type { UserSearchResponse, PaymentMethods, TurnoverStatusResponse } from '../api/users'
 import { formatDateTime12 } from '../utils/format'
+import { extractError } from '../utils/error'
 import { useToast } from '../contexts/ToastContext'
 import Spinner from '../components/Spinner'
 import AnimatedDialog from '../components/AnimatedDialog'
-
-function extractError(err: unknown): string {
-  if (axios.isAxiosError(err) && err.response?.data?.msg) return err.response.data.msg
-  if (err instanceof Error) return err.message
-  return 'Something went wrong'
-}
 
 function statusBadge(status: string): string {
   switch (status) {
@@ -78,7 +72,6 @@ export default function UserSearch() {
   const handleLoadSameIp = async () => {
     if (!user) return
     setIpUsersLoading(true)
-    /* */
     setShowIpUsers(true)
     try {
       const res = await fetchUsersByIp(user.lastIp)
@@ -92,7 +85,6 @@ export default function UserSearch() {
 
   const handleLoadPaymentMethods = async () => {
     if (!user) return
-    /* */
     setShowPmDialog(true)
     try {
       const data = await viewUserPaymentMethods(String(user.user.userId))
@@ -108,7 +100,6 @@ export default function UserSearch() {
   const handleUpdatePayment = async () => {
     if (!user) return
     setPmUpdating(true)
-    /* */
     try {
       const body = { userId: user.user.userId, type: pmType, ...pmForm } as any
       await updateUserPayments(body)
@@ -158,7 +149,6 @@ export default function UserSearch() {
   const handleStatusChange = async () => {
     if (!user) return
     setUpdatingStatus(true)
-    /* */
     try {
       await updateUserStatus({ userId: user.user.userId, status: newStatus as 'active' | 'suspended' | 'inactive' | 'ban' | 'banned', remark: statusRemark })
       setUser({ ...user, account: { ...user.account, status: newStatus as any } })
