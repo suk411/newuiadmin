@@ -195,16 +195,6 @@
 .btn--sm { min-height: 44px; padding: 0 12px; font-size: var(--font-size-xs, 10px); }
 .btn--full { width: 100%; }
 
-.btn-primary {
-  background: transparent;
-  color: #000;
-  border-radius: 0px;
-  padding: 0px 0px;
-  font-size: 0px;
-  font-weight: 400;
-  border: none;
-}
-
 .btn-filled {
   background: var(--color-secondary);
   color: #fff;
@@ -641,6 +631,10 @@
   animation: spin 0.6s linear infinite;
 }
 
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
 /* ── Dialog ── */
 
 .dialog-overlay {
@@ -726,20 +720,6 @@
 }
 
 .empty-state__icon { font-size: 32px; opacity: 0.4; }
-
-.spinner {
-  display: inline-block;
-  width: 20px;
-  height: 20px;
-  border: 2px solid var(--color-border);
-  border-top-color: var(--color-primary);
-  border-radius: 50%;
-  animation: spin 0.6s linear infinite;
-}
-
-@keyframes spin {
-  to { transform: rotate(360deg); }
-}
 
 .error-banner {
   margin: var(--space-6) var(--space-5);
@@ -1139,6 +1119,12 @@ html.dark .toggle-switch input:checked + .toggle-slider {
 
 .route-transition {
   height: 100%;
+  animation: routeEnter 0.3s ease;
+}
+
+@keyframes routeEnter {
+  from { opacity: 0; transform: translateX(-30px); }
+  to   { opacity: 1; transform: translateX(0); }
 }
 
 .app-content .content {
@@ -1174,46 +1160,6 @@ html.dark .toggle-switch input:checked + .toggle-slider {
 .app-content .content::-webkit-scrollbar-track { background: transparent; }
 .app-content .content::-webkit-scrollbar-thumb { background: #ccc; border-radius: 3px; }
 .app-content .content::-webkit-scrollbar-thumb:hover { background: #aaa; }
-
-/* ── Toast ── */
-
-.toast-container {
-  position: fixed;
-  top: 60px;
-  right: 16px;
-  z-index: 2000;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.toast {
-  padding: 10px 16px;
-  background: #fef2f2;
-  color: #dc2626;
-  border: 1px solid #fecaca;
-  border-radius: 4px;
-  font-size: 13px;
-  cursor: pointer;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-  animation: toastIn 0.25s ease;
-}
-
-@keyframes toastIn {
-  from { opacity: 0; transform: translateX(40px); }
-  to { opacity: 1; transform: translateX(0); }
-}
-
-/* ── Route Transition ── */
-
-.route-transition {
-  animation: routeEnter 0.3s ease;
-}
-
-@keyframes routeEnter {
-  from { opacity: 0; transform: translateX(-30px); }
-  to   { opacity: 1; transform: translateX(0); }
-}
 
 /* ── TagsView ── */
 
@@ -1394,13 +1340,6 @@ html.dark .sidebar-footer {
 }
 
 html.dark .filters-bar { border-bottom-color: #333; }
-html.dark .filters-bar--tabs { border-bottom: none; padding-bottom: 0; }
-
-.filters-bar--tabs {
-  border-bottom: none;
-  padding-bottom: 0;
-}
-
 html.dark .page-header { border-bottom-color: #333; }
 html.dark .page-header h2 { color: #fff; }
 
@@ -1418,13 +1357,6 @@ html.dark .dashboard-card {
   background: #111;
   border-color: #333;
 }
-
-html.dark .card__header {
-  background: #111;
-  border-bottom-color: #333;
-}
-
-html.dark .card__title { color: #fff; }
 
 html.dark .table th {
   background: #1a1a1a;
@@ -1453,17 +1385,6 @@ html.dark .tags-view-item {
 
 html.dark .tags-view-item-close:hover {
   background: rgba(255, 255, 255, 0.15);
-}
-
-html.dark .pagination__btn {
-  background: #111;
-  border-color: #333;
-  color: #fff;
-}
-html.dark .pagination__btn.active {
-  background: #409eff;
-  border-color: #409eff;
-  color: #fff;
 }
 
 html.dark .btn-prev,
@@ -1536,24 +1457,9 @@ html.dark .btn-logout-header:hover {
 html.dark .badge--info { background: #333; color: #fff; }
 html.dark .badge--primary { background: #1a3a5c; color: #fff; }
 
-html.dark .stat-card {
-  background: #111;
-  border-color: #333;
-}
-html.dark .stat-card__label { color: #fff; }
-html.dark .stat-card__value { color: #fff; }
-html.dark .stat-card__value.text-green { color: #4ade80; }
-html.dark .stat-card__value.text-red { color: #f87171; }
-html.dark .stat-card__value.text-orange { color: #fb923c; }
 html.dark .section-title { color: #fff; border-bottom-color: #333; }
 
 html.dark .empty-state { color: #aaa; }
-
-html.dark .toast {
-  background: #1a0000;
-  border-color: #5c0000;
-  color: #f87171;
-}
 
 html.dark .error-banner {
   background: #1a0000;
@@ -1561,17 +1467,8 @@ html.dark .error-banner {
   border-color: #5c0000;
 }
 
-html.dark .spinner {
-  border-color: #333;
-  border-top-color: #60a5fa;
-}
-
 html.dark .btn-filled-2 {
   background: #1a1a2e;
-  color: #e2e2ea;
-}
-
-html.dark .btn-primary {
   color: #e2e2ea;
 }
 
@@ -1670,9 +1567,6 @@ html.dark .btn-outline:active {
   background: #1a1a2e;
 }
 
-html.dark .pagination__btn:focus-visible {
-  outline-color: #60a5fa;
-}
 html.dark .btn-prev:focus-visible,
 html.dark .btn-next:focus-visible,
 html.dark .el-pager .number:focus-visible {
@@ -1704,26 +1598,8 @@ html.dark .badge--primary {
   color: #93c5fd;
 }
 
-html.dark .toast {
-  background: #1a0000;
-  border-color: #5c0000;
-  color: #f87171;
-}
-
 html.dark .dialog-overlay {
   background: rgba(0, 0, 0, 0.6);
-}
-
-html.dark .toast--success {
-  background: #001a0a;
-  border-color: #005c20;
-  color: #4ade80;
-}
-
-html.dark .toast--info {
-  background: #001a2e;
-  border-color: #003c5c;
-  color: #60a5fa;
 }
 
 /* ── Responsive ── */
@@ -1818,9 +1694,6 @@ html.dark .toast--info {
   .header-btn-icon { width: 36px; height: 36px; }
 
   /* ── Smaller / responsive font sizes ── */
-  .stat-card__value {
-    font-size: 16px;
-  }
   .page-header h2,
   .section-title {
     font-size: 14px;
@@ -1847,19 +1720,9 @@ html.dark .toast--info {
   .tags-view-item.active { padding-left: 14px; }
   .tags-view-item.active::before { width: 4px; height: 4px; left: 5px; }
 
-  /* ── Stat cards single column ── */
-  .stat-cards {
-    grid-template-columns: 1fr;
-    gap: 12px;
-  }
-  .stat-card { padding: 14px; }
-
   /* ── Content padding ── */
   .app-content .content {
     padding: 10px;
-  }
-  .card__header {
-    padding: 8px 10px;
   }
   .page-header {
     padding: 10px 12px;
@@ -1872,16 +1735,6 @@ html.dark .toast--info {
   .dialog .btn-outline {
     width: 100%;
     justify-content: center;
-  }
-
-  /* ── Toast fits screen ── */
-  .toast-container {
-    right: 8px;
-    left: 8px;
-  }
-  .toast {
-    font-size: 12px;
-    padding: 8px 12px;
   }
 
   /* ── Filters tighter ── */

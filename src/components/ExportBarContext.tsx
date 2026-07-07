@@ -5,7 +5,6 @@ export interface ExportProps {
   columns: ExportColumn[]
   data: Record<string, unknown>[]
   filename: string
-  loading?: boolean
 }
 
 interface ExportBarContextValue {

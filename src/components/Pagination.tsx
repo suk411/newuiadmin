@@ -28,7 +28,7 @@ export default function Pagination({ page, total, limit, loading, onChange }: Pr
   return (
     <div className="pagination-wrap">
       <div className="el-pagination">
-        <span className="el-pagination__total">Total {totalPages}</span>
+        <span className="el-pagination__total">Total {total}</span>
         <button type="button" className="btn-prev" disabled={page <= 1 || loading} onClick={() => onChange(page - 1)} aria-label="Previous page">
           <i className="el-icon-arrow-left"></i>
         </button>

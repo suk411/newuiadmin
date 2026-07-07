@@ -60,14 +60,12 @@ function ProtectedLayoutContent({ onLogout }: { onLogout: () => void }) {
 
   const handleTagClose = useCallback((path: string) => {
     setTags((prev) => {
-      const idx = prev.findIndex((t) => t.path === path)
-      if (idx === -1) return prev
-      return prev.filter((t) => t.path !== path)
+      const remaining = prev.filter((t) => t.path !== path)
+      if (path === location.pathname) {
+        navigate(remaining.length > 0 ? remaining[remaining.length - 1].path : '/dashboard')
+      }
+      return remaining
     })
-    if (path === location.pathname) {
-      const remaining = tags.filter((t) => t.path !== path)
-      navigate(remaining.length > 0 ? remaining[remaining.length - 1].path : '/dashboard')
-    }
   }, [location.pathname, navigate])
 
   return (

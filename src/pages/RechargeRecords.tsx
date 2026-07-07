@@ -39,7 +39,7 @@ export default function RechargeRecords() {
   const [approveTarget, setApproveTarget] = useState<DepositRecord | null>(null)
   const { setExportProps } = useExportBar()
 
-  const depStatusMap: Record<string, string> = { SUCCESS: 'Success', PENDING: 'Pending', FAILED: 'Failed' }
+  const statusLabels: Record<string, string> = { SUCCESS: 'Success', PENDING: 'Pending', FAILED: 'Failed' }
 
   useEffect(() => {
     setExportProps({
@@ -50,7 +50,7 @@ export default function RechargeRecords() {
         amount: `${r.currency === 'INR' ? '₹' : '$'}${Number(r.amount).toLocaleString('en-IN')}`,
         receivedAmount: r.receivedAmount != null ? `${r.currency === 'INR' ? '₹' : '$'}${Number(r.receivedAmount).toLocaleString('en-IN')}` : '—',
         currency: r.currency,
-        status: depStatusMap[r.status] || r.status,
+        status: statusLabels[r.status] || r.status,
         channelName: r.channelName,
         gatewayOrderNo: r.gatewayOrderNo || '—',
         bonusOptIn: r.bonusOptIn ? 'Yes' : 'No',
